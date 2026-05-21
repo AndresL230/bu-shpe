@@ -44,7 +44,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
             <a
               href={href}
               class:list={[
-                "eyebrow text-[0.72rem] transition-colors hover:text-accent",
+                "eyebrow text-[0.72rem] transition-colors hover:text-accent group-data-[transparent=true]/nav:text-cream/90 group-data-[transparent=true]/nav:hover:text-white",
                 currentPath === href ? "text-accent" : "text-ink/80"
               ]}
             >{label}</a>
@@ -61,7 +61,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     <!-- Mobile menu (native <details>) -->
     <details class="md:hidden relative">
       <summary
-        class="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-rule/40 text-ink list-none [&::-webkit-details-marker]:hidden"
+        class="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-rule/40 text-ink group-data-[transparent=true]/nav:border-cream/40 group-data-[transparent=true]/nav:text-cream list-none [&::-webkit-details-marker]:hidden"
         aria-label="Open menu"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

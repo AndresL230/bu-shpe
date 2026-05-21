@@ -99,6 +99,13 @@ body {
   margin-bottom: 1rem;
 }
 
+/* ---------- Focus-visible: global keyboard ring ---------- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 /* ---------- Reveal-on-scroll (CSS-only via @starting-style) ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .reveal {

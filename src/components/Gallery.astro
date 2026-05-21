@@ -22,6 +22,8 @@ const { photos } = Astro.props;
 
 <dialog
   id="gallery-lightbox"
+  aria-label="Photo lightbox"
+  aria-modal="true"
   class="m-0 max-h-dvh max-w-screen-md p-0 backdrop:bg-deep/90 open:flex"
 >
   <button

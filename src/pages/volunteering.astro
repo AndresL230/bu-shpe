@@ -39,8 +39,8 @@ import siteData from "@/data/site.json";
           ]}
         >
           {program.photos.length >= 2 ? (
-            /* Two photos: primary + overlapping secondary */
-            <div class="relative">
+            /* Two photos: stacked on mobile, overlapping on md+ */
+            <div class="relative pb-8 md:pb-10">
               <div class="rounded-lg overflow-hidden shadow-[var(--shadow-card)] photo-warm">
                 <img
                   src={program.photos[0]}
@@ -49,7 +49,7 @@ import siteData from "@/data/site.json";
                   loading="lazy"
                 />
               </div>
-              <div class="absolute bottom-[-2rem] right-[-1rem] w-1/2 rounded-lg overflow-hidden shadow-[var(--shadow-card)] photo-warm border-4 border-bg">
+              <div class="md:absolute md:bottom-[-2rem] md:right-[-1rem] mt-3 md:mt-0 w-1/2 rounded-lg overflow-hidden shadow-[var(--shadow-card)] photo-warm border-4 border-bg">
                 <img
                   src={program.photos[1]}
                   alt={`${program.name} — photo 2`}
