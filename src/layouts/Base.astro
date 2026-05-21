@@ -8,15 +8,12 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
-  /** When true, the nav renders transparent over the hero until scrolled. */
-  transparentNav?: boolean;
 }
 
 const {
   title,
   description = siteData.mission,
   ogImage = "/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png",
-  transparentNav = false,
 } = Astro.props;
 
 const fullTitle = title ? `${title} — ${siteData.name}` : `${siteData.name} — ${siteData.tagline}`;
@@ -53,7 +50,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-cream"
     >Skip to content</a>
 
-    <Nav transparent={transparentNav} />
+    <Nav />
 
     <main id="main">
       <slot />

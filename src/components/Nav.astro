@@ -1,11 +1,6 @@
 ---
 import siteData from "@/data/site.json";
 
-interface Props {
-  transparent?: boolean;
-}
-const { transparent = false } = Astro.props;
-
 const links = [
   { href: "/about",         label: "About" },
   { href: "/board",         label: "E-Board" },
@@ -19,11 +14,7 @@ const links = [
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 <header
-  data-transparent={transparent}
-  class="group/nav fixed inset-x-0 top-0 z-40 transition-colors duration-300
-         data-[transparent=true]:bg-transparent
-         data-[transparent=false]:bg-surface
-         data-[transparent=false]:border-b data-[transparent=false]:border-ink/10"
+  class="fixed inset-x-0 top-0 z-40 bg-deep border-b border-cream/10"
   id="site-nav"
 >
   <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-4">
@@ -32,15 +23,13 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
       class="flex items-center"
       aria-label={`${siteData.name} home`}
     >
-      <!-- Full chapter logo on a navy chip so the white wordmark + BU mark stay readable -->
-      <span class="inline-flex items-center rounded-md bg-deep px-3 py-2">
-        <img
-          src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
-          alt={siteData.name}
-          width="3266" height="647"
-          class="block h-5 w-auto md:h-6"
-        />
-      </span>
+      <!-- Full chapter logo — navy nav is the dark backdrop the DKBG logo was designed for -->
+      <img
+        src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+        alt={siteData.name}
+        width="3266" height="647"
+        class="block h-7 w-auto md:h-8"
+      />
     </a>
 
     <nav aria-label="Primary" class="hidden md:block">
@@ -50,8 +39,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
             <a
               href={href}
               class:list={[
-                "eyebrow text-[0.72rem] transition-colors hover:text-accent group-data-[transparent=true]/nav:text-cream/90 group-data-[transparent=true]/nav:hover:text-white",
-                currentPath === href ? "text-accent" : "text-ink/80"
+                "eyebrow text-[0.72rem] transition-colors hover:text-accent",
+                currentPath === href ? "text-accent" : "text-cream/85"
               ]}
             >{label}</a>
           </li>
@@ -67,7 +56,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     <!-- Mobile menu (native <details>) -->
     <details class="md:hidden relative">
       <summary
-        class="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-rule/40 text-ink group-data-[transparent=true]/nav:border-cream/40 group-data-[transparent=true]/nav:text-cream list-none [&::-webkit-details-marker]:hidden"
+        class="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-cream/30 text-cream list-none [&::-webkit-details-marker]:hidden"
         aria-label="Open menu"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -97,17 +86,5 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   </div>
 </header>
 
-<!-- Push content below fixed nav (only when not transparent) -->
-{!transparent && <div class="h-[72px]" aria-hidden="true" />}
-
-<script>
-  // Toggle the [data-transparent] flag after the user scrolls past the hero.
-  const nav = document.getElementById('site-nav');
-  if (nav && nav.dataset.transparent === 'true') {
-    const onScroll = () => {
-      nav.dataset.transparent = window.scrollY > 80 ? 'false' : 'true';
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
-</script>
+<!-- Push content below fixed nav -->
+<div class="h-[72px]" aria-hidden="true"></div>
