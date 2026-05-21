@@ -70,16 +70,20 @@ const communityCards = [
 
       <!-- Centerpiece — minimalist swirl left, headline right -->
       <div class="mt-12 grid grid-cols-1 gap-12 md:grid-cols-[1fr_1.7fr] md:items-center md:gap-16">
-        <!-- Left: minimalist swirl mark (clipped from DKBG logo) -->
+        <!-- Left: minimalist swirl mark — clipped from DKBG to show only the four-shape S logogram -->
         <div class="md:border-r md:border-cream/15 md:pr-10 flex md:justify-end">
-          <span class="block h-44 w-44 overflow-hidden md:h-56 md:w-56" aria-hidden="true">
+          <div
+            class="relative h-48 w-48 overflow-hidden md:h-64 md:w-64"
+            aria-label="SHPE logomark"
+            role="img"
+          >
             <img
               src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
               alt=""
-              width="3266" height="647"
-              class="block h-44 max-w-none md:h-56"
+              class="absolute left-0 top-1/2 max-w-none -translate-y-1/2"
+              style="height: 115%;"
             />
-          </span>
+          </div>
         </div>
 
         <!-- Right: headline + mission + CTAs -->
