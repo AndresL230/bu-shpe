@@ -1,0 +1,11 @@
+[
+  { "title": "Splash 2022", "date": "2022-09", "category": "Social", "description": "Welcomed incoming engineering students at the College of Engineering's annual Splash recruiting event.", "photo": "/assets/events/splash-2022.jpeg" },
+  { "title": "Resume Review with GE", "date": "2022-10", "category": "Professional", "description": "Three General Electric engineers gave one-on-one resume feedback to members ahead of fall recruiting.", "photo": "/assets/events/resume-review-ge.png" },
+  { "title": "SHPE National Convention", "date": "2022-11", "category": "Conference", "description": "Charlotte, NC. Interviews, offers, workshops, and a two-day career fair with the largest gathering of Hispanics in STEM.", "photo": "/assets/events/national-convention-2022.jpg" },
+  { "title": "Mechanical Workshop with EPIC", "date": "2022-11", "category": "Professional", "description": "Toured EPIC's Boston facility and laser-cut SHPE logos with the engineering team.", "photo": "/assets/events/mechanical-workshop-epic.jpg" },
+  { "title": "Navidad En Familia", "date": "2022-12", "category": "Cultural", "description": "Annual Christmas celebration with a white-elephant gift exchange and traditional food.", "photo": "/assets/events/navidad-en-familia.jpg" },
+  { "title": "Money Matters Workshop with Capital One", "date": "2023-02", "category": "Professional", "description": "Capital One led a personal-finance and budgeting workshop. Chick-fil-A catered.", "photo": "/assets/events/capital-one-workshop.jpg" },
+  { "title": "Boston Scientific Company Visit", "date": "2023-03", "category": "Professional", "description": "Joint visit with BU BMES to Boston Scientific's Marlborough, MA campus.", "photo": "/assets/events/boston-scientific-visit.jpg" },
+  { "title": "Indoor Field Day 2023", "date": "2023-04", "category": "Social", "description": "Games, food, and music — a familia-bonding afternoon.", "photo": "/assets/events/indoor-field-day.jpg" },
+  { "title": "LeaderSHPE Live 2023", "date": "2023-04", "category": "Conference", "description": "Region 4 leadership development conference in Dallas, TX.", "photo": "/assets/events/leadershpe-live-2023.jpg" }
+]

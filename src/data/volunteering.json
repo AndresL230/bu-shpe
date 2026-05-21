@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Museum of Science — Women's History Month",
+    "description": "Hosted a hands-on station teaching kids about science and engineering during Women's History Month programming.",
+    "photos": ["/assets/volunteering/museum-of-science-1.jpeg", "/assets/volunteering/museum-of-science-2.jpeg"]
+  },
+  {
+    "name": "Swipes for Boston",
+    "description": "Student-led project feeding the unhoused — 'Rhetty-to-Go' meals distributed in Kenmore and Back Bay.",
+    "photos": ["/assets/volunteering/swipes-for-boston.jpg"]
+  },
+  {
+    "name": "Greater Boston Food Bank",
+    "description": "Sorted 16,000 lbs of food in three hours and got a private tour. GBFB's goal: a hunger-free Greater Boston by 2028.",
+    "photos": []
+  }
+]

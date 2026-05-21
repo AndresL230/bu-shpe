@@ -1,0 +1,19 @@
+{
+  "name": "SHPE-BostonU",
+  "shortName": "SHPE BU",
+  "tagline": "¡Bienvenidos a la Familia!",
+  "mission": "SHPE changes lives by empowering the Hispanic community to realize its fullest potential and to impact the world through STEM awareness, access, support and development.",
+  "contactEmail": "shpe@bu.edu",
+  "facultyAdvisorEmail": "esgw@bu.edu",
+  "region": "Region 4",
+  "calendarEmbedUrl": "https://calendar.google.com/calendar/b/1/embed?height=600&wkst=1&bgcolor=%23FFFFFF&src=su3ufu2bs53q74amc9qg9kml7k%40group.calendar.google.com&color=%232952A3&ctz=America%2FNew_York",
+  "donateUrl": "https://trusted.bu.edu/s/1759/2-bu/giving/interior.aspx?sid=1759&gid=2&pgid=412&cid=1044&dids=492&bledit=1&appealcode=WEBAGC",
+  "sponsorshipPacketUrl": "https://drive.google.com/file/d/11UCqS11SdZRJClQxOOEe1bhlhLfPor3b/view?usp=sharing",
+  "constitutionUrl": "/assets/logos/constitution-2020-2021.pdf",
+  "socials": {
+    "linkedin": "https://www.linkedin.com/company/shpebostonu",
+    "instagram": "https://www.instagram.com/shpe.bostonu/",
+    "facebook": "https://www.facebook.com/Boston-University-SHPE-318100551956450/",
+    "shpe": "https://shpe.org/"
+  }
+}

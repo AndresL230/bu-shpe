@@ -1,0 +1,9 @@
+[
+  { "name": "BU College of Engineering", "logo": "/assets/sponsors/bu-college-of-engineering.jpg", "url": "https://www.bu.edu/eng/" },
+  { "name": "BU Student Activities Office", "logo": "/assets/sponsors/bu-sao.png", "url": "https://www.bu.edu/sao/" },
+  { "name": "Capital One", "logo": "/assets/sponsors/capital-one.png", "url": "https://www.capitalonecareers.com/" },
+  { "name": "Brooks", "logo": "/assets/sponsors/brooks.png", "url": "https://www.brooksrunning.com/" },
+  { "name": "General Electric", "logo": "/assets/sponsors/general-electric.png", "url": "https://www.ge.com/" },
+  { "name": "Akamai", "logo": "/assets/sponsors/akamai.png", "url": "https://www.akamai.com/" },
+  { "name": "Vertex", "logo": "/assets/sponsors/vertex.png", "url": "https://www.vrtx.com/" }
+]

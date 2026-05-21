@@ -1,0 +1,13 @@
+[
+  { "name": "TBD", "role": "President", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "VP Corporate Affairs", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "VP University Affairs", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "Secretary", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "Treasurer", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "Webmaster", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "Director of Fundraising & Development", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "Director of Public Relations", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "SHPEtina Representative", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "TBD", "role": "Undergraduate Representative", "major": "TBD", "year": "TBD", "hometown": "TBD", "bio": "TBD", "photo": "/assets/board/placeholder.svg" },
+  { "name": "Enrique Gutierrez-Wing, Ph.D.", "role": "Faculty Advisor", "major": "Faculty", "year": "—", "hometown": "Boston, MA", "bio": "Faculty Advisor to SHPE-BostonU. Contact: esgw@bu.edu.", "photo": "/assets/board/placeholder.svg" }
+]
