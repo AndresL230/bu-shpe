@@ -1,11 +1,8 @@
 {
   "name": "bu-shpe",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "BU SHPE chapter website — Astro 5 static site",
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -16,10 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/AndresL230/bu-shpe.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/AndresL230/bu-shpe/issues"
   },
