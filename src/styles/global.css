@@ -14,14 +14,19 @@
   --color-deep:        #001F5B;   /* dark sections (alias of ink for clarity) */
 
   /* Fonts (loaded via <link> in Base.astro)
-     SHPE's official primary face is Univers LT Std (paid). DM Sans is the
-     closest free Google Fonts equivalent — geometric sans, designed for
-     screens, the SHPE brand brief's explicit web-alternative recommendation.
-     Barlow Condensed echoes SHPE's secondary "Univers Condensed" for
-     eyebrows and tracked labels. */
-  --font-sans:    "DM Sans", "Helvetica Neue", "Arial", sans-serif;
-  --font-display: "DM Sans", "Helvetica Neue", "Arial", sans-serif;
+     SHPE's official primary face is Univers LT Std (paid). The brand brief's
+     own web-fallback recommendation is "bold condensed sans-serif for
+     headlines + clean sans-serif for body."
+       - Headlines (display): Barlow Condensed Bold — matches Univers 67 Bold
+         Condensed exactly in spirit.
+       - Body + UI + buttons: Inter — clean grotesque, more distinctive than
+         system defaults, highly legible at all sizes.
+       - Italic accent ("Familia"): Playfair Display Italic — serif italic
+         carries the editorial contrast against the bold-condensed display. */
+  --font-sans:    "Inter", "Helvetica Neue", "Arial", sans-serif;
+  --font-display: "Barlow Condensed", "Helvetica Neue Condensed", sans-serif;
   --font-cond:    "Barlow Condensed", "Helvetica Neue Condensed", sans-serif;
+  --font-serif:   "Playfair Display", "Georgia", "Times New Roman", serif;
 
   /* Editorial rhythm */
   --radius-card: 12px;
@@ -40,6 +45,10 @@ html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+button, input, select, textarea {
+  font-family: var(--font-sans);
 }
 
 body {
@@ -62,19 +71,18 @@ body {
 }
 
 .display {
-  font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);   /* Barlow Condensed Bold */
+  font-weight: 700;
+  letter-spacing: -0.005em;
   line-height: 1.05;
 }
 
 .pullquote {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);     /* Playfair Display italic */
   font-style: italic;
   font-weight: 400;
   font-size: clamp(1.4rem, 2.4vw, 2.1rem);
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  line-height: 1.3;
   color: var(--color-ink);
 }
 

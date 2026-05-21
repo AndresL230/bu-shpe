@@ -33,14 +33,14 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     </a>
 
     <nav aria-label="Primary" class="hidden md:block">
-      <ul class="flex items-center gap-7">
+      <ul class="flex items-center gap-8">
         {links.map(({ href, label }) => (
           <li>
             <a
               href={href}
               class:list={[
-                "eyebrow text-[0.72rem] transition-colors hover:text-accent",
-                currentPath === href ? "text-accent" : "text-cream/85"
+                "font-sans text-[0.95rem] font-medium tracking-tight transition-colors hover:text-accent",
+                currentPath === href ? "text-accent" : "text-cream"
               ]}
             >{label}</a>
           </li>
@@ -50,13 +50,13 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
     <a
       href="/join"
-      class="hidden md:inline-flex items-center rounded-full bg-accent px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      class="hidden md:inline-flex items-center rounded-full bg-accent px-6 py-2.5 font-sans text-[0.95rem] font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
     >Join SHPE</a>
 
     <!-- Mobile menu (native <details>) -->
     <details class="md:hidden relative">
       <summary
-        class="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-cream/30 text-cream list-none [&::-webkit-details-marker]:hidden"
+        class="grid h-11 w-11 cursor-pointer place-items-center rounded-md border border-cream/40 text-cream list-none [&::-webkit-details-marker]:hidden"
         aria-label="Open menu"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -76,7 +76,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
             <li>
               <a
                 href="/join"
-                class="mt-4 inline-flex items-center rounded-full bg-accent px-6 py-3 text-base font-medium text-white"
+                class="mt-4 inline-flex items-center rounded-full bg-accent px-6 py-3 font-sans text-base font-medium text-white"
               >Join SHPE</a>
             </li>
           </ul>
