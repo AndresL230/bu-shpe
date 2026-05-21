@@ -1,0 +1,24 @@
+---
+import type { Sponsor } from "@/types";
+interface Props { sponsors: Sponsor[] }
+const { sponsors } = Astro.props;
+---
+<ul class="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] bg-rule/20 md:grid-cols-3 lg:grid-cols-4">
+  {sponsors.map(s => (
+    <li class="bg-surface">
+      <a
+        href={s.url ?? "#"}
+        rel="noopener"
+        class="group flex aspect-[4/3] items-center justify-center p-8 transition hover:bg-cream/40"
+        aria-label={s.name}
+      >
+        <img
+          src={s.logo}
+          alt={s.name}
+          class="max-h-20 w-auto max-w-[80%] object-contain opacity-70 grayscale transition duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+          loading="lazy"
+        />
+      </a>
+    </li>
+  ))}
+</ul>

@@ -1,0 +1,26 @@
+---
+import type { BoardMember } from "@/types";
+interface Props { member: BoardMember }
+const { member } = Astro.props;
+---
+<article class="group flex flex-col rounded-[var(--radius-card)] bg-surface shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)] overflow-hidden">
+  <div class="aspect-[4/5] overflow-hidden bg-cream">
+    <img
+      src={member.photo}
+      alt={member.name === "TBD" ? "" : member.name}
+      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+      loading="lazy"
+    />
+  </div>
+  <div class="flex flex-col gap-2 p-6">
+    <p class="eyebrow text-accent">{member.role}</p>
+    <h3 class="display text-2xl">{member.name}</h3>
+    <p class="text-sm text-ink-muted">
+      {member.major}{member.year && member.year !== "—" ? ` · ${member.year}` : ""}
+      {member.hometown && member.hometown !== "TBD" ? ` · ${member.hometown}` : ""}
+    </p>
+    {member.bio && member.bio !== "TBD" && (
+      <p class="mt-2 text-sm leading-relaxed text-ink-muted">{member.bio}</p>
+    )}
+  </div>
+</article>

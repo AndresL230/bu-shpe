@@ -1,0 +1,19 @@
+---
+import siteData from "@/data/site.json";
+const items = [
+  { href: siteData.socials.instagram, label: "Instagram" },
+  { href: siteData.socials.linkedin,  label: "LinkedIn" },
+  { href: siteData.socials.facebook,  label: "Facebook" },
+];
+---
+<ul class="flex flex-wrap gap-3">
+  {items.map(({ href, label }) => (
+    <li>
+      <a
+        href={href}
+        rel="noopener"
+        class="eyebrow inline-flex items-center rounded-full border border-rule/60 px-4 py-2 text-ink/80 transition hover:border-accent hover:text-accent"
+      >{label}</a>
+    </li>
+  ))}
+</ul>

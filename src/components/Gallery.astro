@@ -1,0 +1,50 @@
+---
+interface Props { photos: { src: string; alt: string }[] }
+const { photos } = Astro.props;
+---
+<div
+  class="gap-3 [column-count:1] sm:[column-count:2] lg:[column-count:3]"
+  id="gallery-grid"
+>
+  {photos.map((p, i) => (
+    <button
+      type="button"
+      class="mb-3 block w-full break-inside-avoid overflow-hidden rounded-lg shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent"
+      data-gallery-index={i}
+    >
+      <img
+        src={p.src} alt={p.alt} loading="lazy"
+        class="w-full object-cover transition duration-500 hover:scale-[1.02]"
+      />
+    </button>
+  ))}
+</div>
+
+<dialog
+  id="gallery-lightbox"
+  class="m-0 max-h-dvh max-w-screen-md p-0 backdrop:bg-deep/90 open:flex"
+>
+  <button
+    type="button"
+    id="lightbox-close"
+    class="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-ink"
+    aria-label="Close"
+  >×</button>
+  <img id="lightbox-image" alt="" class="max-h-dvh w-full object-contain" />
+</dialog>
+
+<script is:inline define:vars={{ photos }}>
+  const dlg = document.getElementById('gallery-lightbox');
+  const img = document.getElementById('lightbox-image');
+  const close = document.getElementById('lightbox-close');
+  document.querySelectorAll('[data-gallery-index]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const i = Number(btn.getAttribute('data-gallery-index'));
+      img.src = photos[i].src;
+      img.alt = photos[i].alt;
+      dlg.showModal();
+    });
+  });
+  close?.addEventListener('click', () => dlg.close());
+  dlg?.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+</script>

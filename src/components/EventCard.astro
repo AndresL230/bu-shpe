@@ -1,0 +1,28 @@
+---
+import type { EventItem } from "@/types";
+interface Props { event: EventItem }
+const { event } = Astro.props;
+
+const dateLabel = new Date(event.date + (event.date.length === 7 ? "-01" : "")).toLocaleDateString("en-US", {
+  month: "short",
+  year: "numeric",
+});
+---
+<article class="group flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]">
+  <div class="aspect-[4/3] overflow-hidden photo-warm">
+    <img
+      src={event.photo}
+      alt={event.title}
+      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+      loading="lazy"
+    />
+  </div>
+  <div class="flex flex-1 flex-col gap-3 p-6">
+    <div class="flex items-center justify-between">
+      <span class="eyebrow text-accent">{event.category}</span>
+      <time class="text-xs text-ink-muted">{dateLabel}</time>
+    </div>
+    <h3 class="display text-2xl leading-tight">{event.title}</h3>
+    <p class="text-sm leading-relaxed text-ink-muted">{event.description}</p>
+  </div>
+</article>
