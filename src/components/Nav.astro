@@ -22,19 +22,19 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   data-transparent={transparent}
   class="group/nav fixed inset-x-0 top-0 z-40 transition-colors duration-300
          data-[transparent=true]:bg-transparent
-         data-[transparent=false]:bg-[color-mix(in_srgb,var(--color-bg)_94%,transparent)]
-         data-[transparent=false]:backdrop-blur
-         data-[transparent=false]:border-b data-[transparent=false]:border-rule/30"
+         data-[transparent=false]:bg-surface
+         data-[transparent=false]:border-b data-[transparent=false]:border-ink/10"
   id="site-nav"
 >
   <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-4">
-    <a href="/" class="flex items-center gap-3" aria-label={`${siteData.name} home`}>
-      <img
-        src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
-        alt=""
-        width="180" height="40"
-        class="h-9 w-auto"
-      />
+    <a
+      href="/"
+      class="flex items-baseline gap-2 group-data-[transparent=true]/nav:text-cream"
+      aria-label={`${siteData.name} home`}
+    >
+      <span class="display text-2xl leading-none text-ink group-data-[transparent=true]/nav:text-cream">
+        SHPE<span class="text-accent">·</span>BostonU
+      </span>
     </a>
 
     <nav aria-label="Primary" class="hidden md:block">
