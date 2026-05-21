@@ -1,0 +1,68 @@
+---
+import siteData from "@/data/site.json";
+
+const quickLinks = [
+  { href: "/about", label: "About" },
+  { href: "/board", label: "E-Board" },
+  { href: "/events", label: "Events" },
+  { href: "/sponsors", label: "Sponsors" },
+  { href: "/join", label: "Join Us" },
+];
+---
+<footer class="mt-32 bg-deep text-cream">
+  <div class="mx-auto grid max-w-[1200px] gap-12 px-6 py-16 md:grid-cols-3">
+    <div>
+      <img
+        src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+        alt={siteData.name}
+        width="220" height="48"
+        class="h-12 w-auto"
+      />
+      <p class="mt-6 max-w-sm text-sm leading-relaxed text-cream/80">
+        {siteData.mission}
+      </p>
+      <a
+        href={siteData.socials.shpe}
+        class="eyebrow mt-6 inline-block text-cream/60 hover:text-accent"
+        rel="noopener"
+      >Part of SHPE National →</a>
+    </div>
+
+    <div>
+      <p class="eyebrow text-cream/60">Explore</p>
+      <ul class="mt-4 space-y-2">
+        {quickLinks.map(l => (
+          <li><a href={l.href} class="text-cream hover:text-accent transition-colors">{l.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <p class="eyebrow text-cream/60">Contact</p>
+      <ul class="mt-4 space-y-2 text-cream">
+        <li><a href={`mailto:${siteData.contactEmail}`} class="hover:text-accent">{siteData.contactEmail}</a></li>
+        <li class="text-cream/70 text-sm">Faculty Advisor: <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="hover:text-accent">{siteData.facultyAdvisorEmail}</a></li>
+      </ul>
+
+      <p class="eyebrow mt-8 text-cream/60">Follow</p>
+      <ul class="mt-4 flex gap-4">
+        <li><a href={siteData.socials.instagram} aria-label="Instagram" class="hover:text-accent" rel="noopener">Instagram</a></li>
+        <li><a href={siteData.socials.linkedin} aria-label="LinkedIn" class="hover:text-accent" rel="noopener">LinkedIn</a></li>
+        <li><a href={siteData.socials.facebook} aria-label="Facebook" class="hover:text-accent" rel="noopener">Facebook</a></li>
+      </ul>
+
+      <a
+        href={siteData.donateUrl}
+        rel="noopener"
+        class="mt-8 inline-flex items-center rounded-full border border-accent px-5 py-2 text-sm font-medium text-accent transition hover:bg-accent hover:text-white"
+      >Donate to BU SHPE</a>
+    </div>
+  </div>
+
+  <div class="border-t border-cream/10">
+    <div class="mx-auto flex max-w-[1200px] flex-col gap-2 px-6 py-6 text-xs text-cream/60 md:flex-row md:items-center md:justify-between">
+      <p>© {new Date().getFullYear()} SHPE-BostonU. Designed con familia.</p>
+      <p>{siteData.region} · Boston University</p>
+    </div>
+  </div>
+</footer>

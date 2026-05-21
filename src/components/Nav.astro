@@ -1,0 +1,107 @@
+---
+import siteData from "@/data/site.json";
+
+interface Props {
+  transparent?: boolean;
+}
+const { transparent = false } = Astro.props;
+
+const links = [
+  { href: "/about",         label: "About" },
+  { href: "/board",         label: "E-Board" },
+  { href: "/events",        label: "Events" },
+  { href: "/conferences",   label: "Conferences" },
+  { href: "/volunteering",  label: "Volunteering" },
+  { href: "/gallery",       label: "Gallery" },
+  { href: "/sponsors",      label: "Sponsors" },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+<header
+  data-transparent={transparent}
+  class="group/nav fixed inset-x-0 top-0 z-40 transition-colors duration-300
+         data-[transparent=true]:bg-transparent
+         data-[transparent=false]:bg-[color-mix(in_srgb,var(--color-bg)_94%,transparent)]
+         data-[transparent=false]:backdrop-blur
+         data-[transparent=false]:border-b data-[transparent=false]:border-rule/30"
+  id="site-nav"
+>
+  <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-4">
+    <a href="/" class="flex items-center gap-3" aria-label={`${siteData.name} home`}>
+      <img
+        src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+        alt=""
+        width="180" height="40"
+        class="h-9 w-auto"
+      />
+    </a>
+
+    <nav aria-label="Primary" class="hidden md:block">
+      <ul class="flex items-center gap-7">
+        {links.map(({ href, label }) => (
+          <li>
+            <a
+              href={href}
+              class:list={[
+                "eyebrow text-[0.72rem] transition-colors hover:text-accent",
+                currentPath === href ? "text-accent" : "text-ink/80"
+              ]}
+            >{label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a
+      href="/join"
+      class="hidden md:inline-flex items-center rounded-full bg-accent px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+    >Join SHPE</a>
+
+    <!-- Mobile menu (native <details>) -->
+    <details class="md:hidden relative">
+      <summary
+        class="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-rule/40 text-ink list-none [&::-webkit-details-marker]:hidden"
+        aria-label="Open menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </summary>
+      <div
+        class="fixed inset-0 top-[72px] z-30 grid place-items-center bg-bg/98 backdrop-blur"
+      >
+        <nav aria-label="Mobile" class="px-8 text-center">
+          <ul class="flex flex-col gap-6">
+            {links.map(({ href, label }) => (
+              <li>
+                <a href={href} class="display text-3xl text-ink hover:text-accent">{label}</a>
+              </li>
+            ))}
+            <li>
+              <a
+                href="/join"
+                class="mt-4 inline-flex items-center rounded-full bg-accent px-6 py-3 text-base font-medium text-white"
+              >Join SHPE</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </details>
+  </div>
+</header>
+
+<!-- Push content below fixed nav (only when not transparent) -->
+{!transparent && <div class="h-[72px]" aria-hidden="true" />}
+
+<script>
+  // Toggle the [data-transparent] flag after the user scrolls past the hero.
+  const nav = document.getElementById('site-nav');
+  if (nav && nav.dataset.transparent === 'true') {
+    const onScroll = () => {
+      nav.dataset.transparent = window.scrollY > 80 ? 'false' : 'true';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+</script>

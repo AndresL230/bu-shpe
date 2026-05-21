@@ -1,0 +1,64 @@
+---
+import "@/styles/global.css";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import siteData from "@/data/site.json";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  /** When true, the nav renders transparent over the hero until scrolled. */
+  transparentNav?: boolean;
+}
+
+const {
+  title,
+  description = siteData.mission,
+  ogImage = "/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png",
+  transparentNav = false,
+} = Astro.props;
+
+const fullTitle = title ? `${title} — ${siteData.name}` : `${siteData.name} — ${siteData.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap"
+    />
+  </head>
+  <body class="min-h-dvh bg-bg text-ink antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-cream"
+    >Skip to content</a>
+
+    <Nav transparent={transparentNav} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>
