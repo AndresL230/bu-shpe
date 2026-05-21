@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import EventCard from "@/components/EventCard.astro";
 import MailingListForm from "@/components/MailingListForm.astro";
@@ -36,13 +36,13 @@ const filteredEvents = activeCat
 <Base title="Events" transparentNav={false}>
 
   <!-- ① Compact Hero -->
-  <Hero
-    size="compact"
-    image="/assets/events/navidad-en-familia.jpg"
-    imageAlt="BU SHPE Navidad En Familia celebration"
+  <PageHero
     eyebrow="EVENTS"
     headline="What's coming up at SHPE-BostonU."
+    headlineAccent="coming up"
     subtitle="Professional, cultural, social, and academic gatherings — all in one calendar."
+    size="compact"
+    meta="EVENTS / CALENDAR + ARCHIVE"
   />
 
   <!-- ② Upcoming — Google Calendar embed -->

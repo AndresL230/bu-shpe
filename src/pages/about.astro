@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 
 import siteData from "@/data/site.json";
@@ -54,13 +54,14 @@ const eventCategories = [
 <Base title="About" transparentNav={false}>
 
   <!-- ① Tall Hero -->
-  <Hero
-    size="tall"
-    image="/assets/events/national-convention-2022.jpg"
-    imageAlt="BU SHPE delegation at the 2022 SHPE National Convention in Charlotte"
+  <PageHero
     eyebrow="WHO WE ARE"
     headline="A familia of Hispanic engineers at Boston University."
+    headlineAccent="Hispanic engineers"
     subtitle="We are STEM students, future researchers, mentors, allies — and a chapter of the largest network of Hispanic professionals in STEM."
+    size="tall"
+    meta="ABOUT / SHPE-BOSTONU"
+    metaRight="Familia · Service · Education · Resilience"
   />
 
   <!-- ② Mission section — asymmetric two-column -->

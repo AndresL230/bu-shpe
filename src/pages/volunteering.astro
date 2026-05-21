@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 
 import volunteeringData from "@/data/volunteering.json";
@@ -10,13 +10,13 @@ import siteData from "@/data/site.json";
 <Base title="Volunteering" description="BU SHPE shows up for Greater Boston — at museums, food banks, and on the street with meals." transparentNav={false}>
 
   <!-- ① Tall Hero -->
-  <Hero
-    size="tall"
-    image="/assets/volunteering/museum-of-science-1.jpeg"
-    imageAlt="SHPE-BostonU member volunteering at the Museum of Science"
+  <PageHero
     eyebrow="VOLUNTEERING"
     headline="Service is part of the SHPE familia."
+    headlineAccent="Service"
     subtitle="We show up for Greater Boston — at museums, food banks, and on the street with meals."
+    size="tall"
+    meta="VOLUNTEERING / GREATER BOSTON"
   />
 
   <!-- ② Intro pull-quote -->

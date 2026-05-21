@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import ConferenceCard from "@/components/ConferenceCard.astro";
 
@@ -19,13 +19,14 @@ const stats = [
 <Base title="Conferences" description="BU SHPE sends a delegation to the SHPE National Convention and Region 4 leadership events each year." transparentNav={false}>
 
   <!-- ① Tall Hero -->
-  <Hero
-    size="tall"
-    image="/assets/conferences/national-convention-2022-charlotte.jpg"
-    imageAlt="BU SHPE delegation at the 2022 SHPE National Convention in Charlotte"
+  <PageHero
     eyebrow="CONFERENCES"
     headline="Where the familia goes national."
+    headlineAccent="national"
     subtitle="Each year we send a delegation to the SHPE National Convention and Region 4 leadership events. We come back with offers, friendships, and stories."
+    size="tall"
+    meta="CONFERENCES / 2022 — PRESENT"
+    metaRight="SHPE National · Region 4 · LeaderSHPE"
   />
 
   <!-- ② Intro paragraphs -->

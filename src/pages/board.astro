@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import BoardCard from "@/components/BoardCard.astro";
 import type { BoardMember } from "@/types";
@@ -20,13 +20,13 @@ const allOfficersTBD = officers.every((m) => m.name === "TBD");
   transparentNav={false}
 >
   <!-- 1. Compact Hero -->
-  <Hero
-    size="compact"
-    image="/assets/events/indoor-field-day.jpg"
-    imageAlt="BU SHPE members at the 2023 Indoor Field Day"
+  <PageHero
     eyebrow="E-BOARD"
     headline="Meet the team running SHPE-BostonU."
+    headlineAccent="team"
     subtitle="A board of student leaders and one faculty advisor — elected each year, committed to familia, service, education, and resilience."
+    size="compact"
+    meta="ROSTER / 2025–2026"
   />
 
   <!-- 2. Roster grid -->

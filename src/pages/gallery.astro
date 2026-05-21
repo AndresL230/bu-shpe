@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import Gallery from "@/components/Gallery.astro";
 
@@ -31,12 +31,12 @@ const filters = ["All", "Events", "Volunteering", "Conferences"];
 <Base title="Gallery" transparentNav={false}>
 
   <!-- ① Compact Hero -->
-  <Hero
-    size="compact"
-    image="/assets/events/leadershpe-live-2023.jpg"
-    imageAlt="BU SHPE members at LeaderSHPE Live 2023"
+  <PageHero
     eyebrow="GALLERY"
     headline="Moments from the familia."
+    headlineAccent="familia"
+    size="compact"
+    meta="GALLERY / EVENTS · VOLUNTEERING · CONFERENCES"
   />
 
   <!-- ② Filter + Gallery -->

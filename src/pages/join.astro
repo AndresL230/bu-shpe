@@ -1,6 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
+import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 import MailingListForm from "@/components/MailingListForm.astro";
@@ -29,13 +29,14 @@ const steps = [
 <Base title="Join Us" transparentNav={false}>
 
   <!-- ① Compact Hero -->
-  <Hero
-    size="compact"
-    image="/assets/events/splash-2022.jpeg"
-    imageAlt="BU SHPE recruiting at Splash 2022"
+  <PageHero
     eyebrow="JOIN"
     headline="Find your familia."
+    headlineAccent="familia"
     subtitle="There's no membership fee. There's no application. Just say hi."
+    size="tall"
+    meta="JOIN / MAILING LIST + SOCIALS"
+    metaRight="@shpe.bostonu"
   />
 
   <!-- ② Three-step "How to join" -->
