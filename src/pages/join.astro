@@ -1,0 +1,144 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import SocialLinks from "@/components/SocialLinks.astro";
+import MailingListForm from "@/components/MailingListForm.astro";
+
+import siteData from "@/data/site.json";
+
+const steps = [
+  {
+    numeral: "01",
+    label: "SUBSCRIBE",
+    body: "Get on the mailing list so you hear about every meeting and event.",
+  },
+  {
+    numeral: "02",
+    label: "FOLLOW",
+    body: "Follow @shpe.bostonu on Instagram for daily updates and stories.",
+  },
+  {
+    numeral: "03",
+    label: "SHOW UP",
+    body: "Walk into the next event. You don't need to RSVP — bring a friend.",
+  },
+];
+---
+
+<Base title="Join Us" transparentNav={false}>
+
+  <!-- ① Compact Hero -->
+  <Hero
+    size="compact"
+    image="/assets/events/splash-2022.jpeg"
+    imageAlt="BU SHPE recruiting at Splash 2022"
+    eyebrow="JOIN"
+    headline="Find your familia."
+    subtitle="There's no membership fee. There's no application. Just say hi."
+  />
+
+  <!-- ② Three-step "How to join" -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <SectionHeading
+      eyebrow="HOW IT WORKS"
+      title="Three small steps."
+    />
+
+    <div class="mt-12 grid grid-cols-1 gap-10 md:grid-cols-3">
+      {steps.map(({ numeral, label, body }) => (
+        <div class="flex flex-col gap-3">
+          <span class="display text-6xl text-accent leading-none tabular-nums">
+            {numeral}
+          </span>
+          <p class="eyebrow mt-2">{label}</p>
+          <p class="text-base leading-relaxed text-ink-muted">{body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ③ Mailing list signup -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <div class="grid grid-cols-1 gap-12 items-start md:grid-cols-2">
+
+      <!-- Left: heading -->
+      <SectionHeading
+        eyebrow="MAILING LIST"
+        title="Get event invites in your inbox."
+        lede="One email per major event. We don't share your address."
+      />
+
+      <!-- Right: form -->
+      <div>
+        <MailingListForm />
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ④ Stay social -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <SectionHeading
+      eyebrow="FOLLOW"
+      title="Stay close to the familia."
+      lede="We post most updates on Instagram. LinkedIn is for jobs and conferences."
+    />
+
+    <div class="mt-8">
+      <SocialLinks />
+    </div>
+
+    <p class="mt-6 text-sm text-ink-muted">
+      Curious about the national org? Visit{" "}
+      <a
+        href={siteData.socials.shpe}
+        class="text-accent hover:underline underline-offset-4 transition"
+        target="_blank"
+        rel="noopener"
+      >shpe.org</a>.
+    </p>
+  </section>
+
+  <!-- ⑤ Contact card -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <div class="grain max-w-2xl mx-auto rounded-lg bg-deep p-12 text-cream">
+      <p class="eyebrow text-cream/70">CONTACT</p>
+      <h2 class="display mt-4 text-3xl text-cream">Have a question?</h2>
+      <p class="mt-4 text-base leading-relaxed text-cream/90">Email us anytime.</p>
+      <a
+        href={`mailto:${siteData.contactEmail}`}
+        class="mt-6 inline-flex items-center rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+      >
+        {siteData.contactEmail}
+      </a>
+      <p class="mt-6 text-sm text-cream/70">
+        Faculty Advisor:{" "}
+        <a
+          href={`mailto:${siteData.facultyAdvisorEmail}`}
+          class="hover:underline underline-offset-4 transition"
+        >
+          Enrique Gutierrez-Wing, Ph.D.
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ⑥ Donate ribbon -->
+  <section class="bg-cream py-24">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <p class="pullquote">
+        Support the next generation of Hispanic engineers.
+      </p>
+      <a
+        href={siteData.donateUrl}
+        class="mt-8 inline-flex items-center rounded-full border border-accent px-6 py-3 text-sm font-medium text-accent transition hover:bg-accent hover:text-white"
+        target="_blank"
+        rel="noopener"
+      >
+        Donate via BU Trusted
+      </a>
+    </div>
+  </section>
+
+</Base>

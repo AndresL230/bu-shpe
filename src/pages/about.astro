@@ -1,0 +1,221 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+
+import siteData from "@/data/site.json";
+
+const missionItems = [
+  "Professional development events geared toward industry jobs and graduate school",
+  "Study nights to promote academic success",
+  "Volunteering with the Greater Boston area",
+  "Social events that foster the sense of familia",
+  "Cultural events that educate ourselves and our community about Latin American topics",
+  "Attending the SHPE National Convention and Regional Leadership Development Conferences",
+];
+
+const joinReasons = [
+  "Access to cutting-edge programs — webinars, workshops, lectures, publications",
+  "Turbocharge your career — the largest gathering of Hispanics in STEM with onsite interviews",
+  "Build a resume that wows — SHPE membership signals to employers",
+  "Grow your network — local, regional, national connections",
+  "Sharpen your leadership skills",
+  "Pay it forward as a mentor — through the MentorSHPE program",
+  "Be exposed to the world's top companies — exclusive access",
+  "Give back to the community",
+  "Benefit from strength in numbers — an established support system",
+  "Enjoy a familia for life",
+];
+
+const eventCategories = [
+  {
+    label: "Professional",
+    description: "Resume reviews, company visits, recruiter sessions",
+  },
+  {
+    label: "Cultural",
+    description: "Cafecitos and conversations on Latin American topics",
+  },
+  {
+    label: "Social",
+    description: "Familia-bonding events, game nights, field days",
+  },
+  {
+    label: "Study Nights",
+    description: "Peer tutoring across STEM courses",
+  },
+  {
+    label: "Volunteering",
+    description: "Service across Greater Boston",
+  },
+];
+---
+
+<Base title="About" transparentNav={false}>
+
+  <!-- ① Tall Hero -->
+  <Hero
+    size="tall"
+    image="/assets/events/national-convention-2022.jpg"
+    imageAlt="BU SHPE delegation at the 2022 SHPE National Convention in Charlotte"
+    eyebrow="WHO WE ARE"
+    headline="A familia of Hispanic engineers at Boston University."
+    subtitle="We are STEM students, future researchers, mentors, allies — and a chapter of the largest network of Hispanic professionals in STEM."
+  />
+
+  <!-- ② Mission section — asymmetric two-column -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <div class="grid grid-cols-1 gap-12 items-start md:grid-cols-[1fr_1.4fr]">
+
+      <!-- Left: heading -->
+      <div>
+        <SectionHeading
+          eyebrow="OUR MISSION"
+          title="Empowering the Hispanic community through STEM."
+        />
+      </div>
+
+      <!-- Right: prose + ordered list -->
+      <div class="prose-block">
+        <p class="text-lg leading-relaxed text-ink-muted max-w-2xl">
+          At BU, SHPE's mission lives through the people we bring together and the work we do across six fronts. Every event, every study night, every trip to a national convention is a direct expression of our commitment to the Hispanic community in STEM.
+        </p>
+
+        <ol class="mt-10 flex flex-col gap-6 list-none p-0 m-0">
+          {missionItems.map((item, i) => (
+            <li class="flex gap-5 items-baseline">
+              <span
+                class="display shrink-0 text-4xl leading-none text-accent tabular-nums"
+                aria-hidden="true"
+              >
+                {String(i + 1)}
+              </span>
+              <span class="text-base leading-relaxed text-ink-muted">{item}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ③ Core values pull-quote -->
+  <section class="reveal border-t border-rule/20 bg-surface py-24">
+    <div class="mx-auto max-w-[1200px] px-6">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="pullquote">
+          Familia&ensp;<span class="text-rule not-italic font-sans text-2xl leading-none align-middle">·</span>&ensp;Service&ensp;<span class="text-rule not-italic font-sans text-2xl leading-none align-middle">·</span>&ensp;Education&ensp;<span class="text-rule not-italic font-sans text-2xl leading-none align-middle">·</span>&ensp;Resilience
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ Why join section -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <SectionHeading
+      eyebrow="WHY JOIN"
+      title="Ten reasons to become a SHPE member."
+    />
+
+    <div class="mt-16 grid grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2">
+      {joinReasons.map((reason, i) => (
+        <div class="flex gap-5 items-baseline">
+          <span
+            class="display shrink-0 text-5xl leading-none text-accent/30 tabular-nums w-12 text-right"
+            aria-hidden="true"
+          >
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span class="text-base leading-relaxed text-ink-muted">{reason}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ⑤ Event categories — five columns -->
+  <section class="reveal border-t border-rule/20 bg-surface py-24">
+    <div class="mx-auto max-w-[1200px] px-6">
+      <SectionHeading
+        eyebrow="WHAT WE DO"
+        title="Five kinds of gatherings."
+      />
+
+      <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-5">
+        {eventCategories.map((cat) => (
+          <div class="flex flex-col gap-3">
+            <span class="eyebrow text-accent">{cat.label}</span>
+            <p class="text-sm leading-relaxed text-ink-muted">{cat.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑥ Constitution + Faculty Advisor -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
+
+      <!-- Left: Constitution -->
+      <div class="flex flex-col gap-4">
+        <p class="eyebrow">GOVERNANCE</p>
+        <h3 class="display text-4xl md:text-5xl">Read our Constitution</h3>
+        <p class="text-base leading-relaxed text-ink-muted max-w-md">
+          Our chapter operates under a written constitution that outlines our structure, values, and operating procedures.
+        </p>
+        <a
+          href={siteData.constitutionUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 text-accent font-medium text-sm hover:underline underline-offset-4 transition-opacity hover:opacity-80 mt-1"
+        >
+          Download the chapter constitution (PDF) →
+        </a>
+      </div>
+
+      <!-- Right: Faculty Advisor -->
+      <div class="flex flex-col gap-4">
+        <p class="eyebrow">ADVISOR</p>
+        <h3 class="display text-4xl md:text-5xl">Faculty Advisor</h3>
+        <p class="text-base leading-relaxed text-ink-muted max-w-md">
+          BU SHPE is guided by <strong class="font-medium text-ink">Enrique Gutierrez-Wing, Ph.D.</strong>, who provides academic oversight and institutional support for our chapter. His mentorship bridges the student experience with the broader goals of SHPE's national mission.
+        </p>
+        <a
+          href={`mailto:${siteData.facultyAdvisorEmail}`}
+          class="inline-flex items-center gap-1 text-link font-medium text-sm hover:underline underline-offset-4 transition-opacity hover:opacity-80 mt-1"
+        >
+          {siteData.facultyAdvisorEmail}
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ⑦ Join CTA band -->
+  <section class="reveal grain bg-deep text-cream py-24">
+    <div class="relative z-10 mx-auto max-w-[1200px] px-6 text-center">
+      <h2 class="display text-5xl text-cream md:text-6xl lg:text-7xl">
+        Become part of the familia.
+      </h2>
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-cream/80">
+        Whether you're a first-year student or a senior with one semester left, there's always a seat at our table.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/join"
+          class="inline-flex items-center rounded-full bg-accent px-8 py-3.5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Join SHPE
+        </a>
+        <a
+          href={siteData.donateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center rounded-full border border-cream/50 px-8 py-3.5 text-sm font-medium text-cream transition hover:bg-cream hover:text-deep"
+        >
+          Donate
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Base>

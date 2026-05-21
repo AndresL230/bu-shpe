@@ -1,0 +1,83 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import ConferenceCard from "@/components/ConferenceCard.astro";
+
+import conferencesData from "@/data/conferences.json";
+import type { Conference } from "@/types";
+
+const conferences = conferencesData as Conference[];
+
+const stats = [
+  { value: "1974",    caption: "SHPE FOUNDED" },
+  { value: "Region 4", caption: "BU'S HOME REGION" },
+  { value: "10,000+", caption: "ANNUAL CONVENTION ATTENDANCE" },
+];
+---
+
+<Base title="Conferences" description="BU SHPE sends a delegation to the SHPE National Convention and Region 4 leadership events each year." transparentNav={false}>
+
+  <!-- ① Tall Hero -->
+  <Hero
+    size="tall"
+    image="/assets/conferences/national-convention-2022-charlotte.jpg"
+    imageAlt="BU SHPE delegation at the 2022 SHPE National Convention in Charlotte"
+    eyebrow="CONFERENCES"
+    headline="Where the familia goes national."
+    subtitle="Each year we send a delegation to the SHPE National Convention and Region 4 leadership events. We come back with offers, friendships, and stories."
+  />
+
+  <!-- ② Intro paragraphs -->
+  <section class="mx-auto max-w-3xl px-6 py-24 reveal">
+    <p class="text-lg leading-relaxed text-ink-muted">
+      The SHPE National Convention is the largest annual gathering of Hispanics in STEM — a multi-day career fair, technical workshops, and cultural celebration that draws thousands of students and professionals from across the country. Recruiters from top companies come specifically to meet SHPE members, making it one of the most productive networking events in the engineering calendar.
+    </p>
+    <p class="mt-8 text-lg leading-relaxed text-ink-muted">
+      Region 4 — BU's home region — also runs LeaderSHPE conferences focused on professional and leadership development, bringing chapters together throughout the year. Together, these events are catalysts for job offers, mentorship relationships, and the kind of bonds that hold the familia together long after graduation.
+    </p>
+  </section>
+
+  <!-- ③ Stats strip -->
+  <section class="mx-auto max-w-[1200px] px-6 py-12 reveal">
+    <div class="grid grid-cols-1 gap-8 text-center md:grid-cols-3">
+      {stats.map((stat) => (
+        <div class="flex flex-col items-center gap-3">
+          <span class="display text-5xl text-accent">{stat.value}</span>
+          <span class="eyebrow text-ink-muted">{stat.caption}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ④ Conference list -->
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+    <SectionHeading eyebrow="RECAPS" title="Recent conventions." />
+    <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+      {conferences.map((conference) => (
+        <ConferenceCard conference={conference} />
+      ))}
+    </div>
+  </section>
+
+  <!-- ⑤ Want to attend? CTA band -->
+  <section class="grain bg-deep py-24 text-cream reveal">
+    <div class="relative z-10 mx-auto max-w-[1200px] px-6 text-center">
+      <h2 class="display text-5xl text-cream md:text-6xl lg:text-7xl">
+        Want to be in next year's delegation?
+      </h2>
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-cream/80">
+        Members get priority for convention registration and travel support — join the mailing list to be the first to know when spots open up.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/join"
+          class="inline-flex items-center rounded-full bg-accent px-8 py-3.5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Join the mailing list
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Base>

@@ -1,0 +1,129 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import EventCard from "@/components/EventCard.astro";
+import MailingListForm from "@/components/MailingListForm.astro";
+
+import siteData from "@/data/site.json";
+import eventsRaw from "@/data/events.json";
+
+import type { EventItem, EventCategory } from "@/types";
+
+// All possible filter chips (in display order)
+const ALL_CHIPS: { label: string; value: string }[] = [
+  { label: "All",          value: ""            },
+  { label: "Professional", value: "Professional" },
+  { label: "Cultural",     value: "Cultural"     },
+  { label: "Social",       value: "Social"       },
+  { label: "Conference",   value: "Conference"   },
+  { label: "Study Night",  value: "Study Night"  },
+  { label: "Volunteering", value: "Volunteering" },
+];
+
+// Read active category from URL
+const activeCat = Astro.url.searchParams.get("cat") ?? "";
+
+// Sort all events descending by date, then filter
+const allEvents = [...(eventsRaw as EventItem[])].sort((a, b) =>
+  b.date.localeCompare(a.date)
+);
+const filteredEvents = activeCat
+  ? allEvents.filter((e) => e.category === (activeCat as EventCategory))
+  : allEvents;
+---
+
+<Base title="Events" transparentNav={false}>
+
+  <!-- ① Compact Hero -->
+  <Hero
+    size="compact"
+    image="/assets/events/navidad-en-familia.jpg"
+    imageAlt="BU SHPE Navidad En Familia celebration"
+    eyebrow="EVENTS"
+    headline="What's coming up at SHPE-BostonU."
+    subtitle="Professional, cultural, social, and academic gatherings — all in one calendar."
+  />
+
+  <!-- ② Upcoming — Google Calendar embed -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <SectionHeading eyebrow="UPCOMING" title="On our calendar." />
+
+    <div class="mt-10 overflow-hidden rounded-lg bg-surface shadow-[var(--shadow-card)]">
+      <iframe
+        src={siteData.calendarEmbedUrl}
+        width="100%"
+        height="600"
+        title="SHPE-BostonU events calendar"
+        loading="lazy"
+        style="border:0"
+      ></iframe>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+      <a
+        href={siteData.calendarEmbedUrl}
+        target="_blank"
+        rel="noopener"
+        class="eyebrow text-accent hover:underline underline-offset-4 transition-opacity hover:opacity-80"
+      >
+        Open the full calendar →
+      </a>
+    </div>
+  </section>
+
+  <!-- ③ Past events archive -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <SectionHeading eyebrow="ARCHIVE" title="Recent events." />
+
+    <!-- Category filter chips -->
+    <nav aria-label="Filter events by category" class="mt-10 flex flex-wrap gap-3">
+      {ALL_CHIPS.map(({ label, value }) => {
+        const isActive = value === activeCat;
+        const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
+        return (
+          <a
+            href={href}
+            class:list={[
+              "eyebrow inline-flex items-center rounded-full border px-4 py-2 transition",
+              isActive
+                ? "border-ink bg-ink text-cream"
+                : "border-rule/60 text-ink/80 hover:border-accent hover:text-accent",
+            ]}
+            aria-current={isActive ? "true" : undefined}
+          >
+            {label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <!-- Event grid or empty state -->
+    {filteredEvents.length > 0 ? (
+      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {filteredEvents.map((event) => (
+          <EventCard event={event} />
+        ))}
+      </div>
+    ) : (
+      <div class="mt-12 flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-rule/30 bg-surface py-20 text-center">
+        <p class="pullquote mx-auto max-w-md">
+          Nothing in this category yet. Check back soon.
+        </p>
+      </div>
+    )}
+  </section>
+
+  <!-- ④ Subscribe nudge -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
+    <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
+      <SectionHeading
+        eyebrow="STAY IN THE LOOP"
+        title="Get event invites in your inbox."
+        lede="Subscribe to our mailing list — one email per major event, no spam."
+      />
+      <MailingListForm />
+    </div>
+  </section>
+
+</Base>

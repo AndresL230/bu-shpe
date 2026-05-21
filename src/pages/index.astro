@@ -1,0 +1,177 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import EventCard from "@/components/EventCard.astro";
+import SponsorGrid from "@/components/SponsorGrid.astro";
+
+import siteData from "@/data/site.json";
+import eventsRaw from "@/data/events.json";
+import sponsorsRaw from "@/data/sponsors.json";
+
+import type { EventItem, Sponsor } from "@/types";
+
+// Sort events descending by date string (ISO yyyy-mm or yyyy-mm-dd sorts correctly lexicographically)
+const events = [...(eventsRaw as EventItem[])].sort((a, b) => b.date.localeCompare(a.date));
+const recentEvents = events.slice(0, 3);
+
+const sponsors = sponsorsRaw as Sponsor[];
+const featuredSponsors = sponsors.slice(0, 4);
+
+const pillars = [
+  {
+    label: "Professional",
+    description: "Resume reviews, company visits, and one-on-one recruiter sessions to fuel your career.",
+  },
+  {
+    label: "Cultural",
+    description: "Cafecitos and conversations that explore Latin American heritage, history, and identity.",
+  },
+  {
+    label: "Social",
+    description: "Familia-bonding game nights, field days, and celebrations that make BU feel like home.",
+  },
+  {
+    label: "Study Nights",
+    description: "Peer-led tutoring sessions spanning math, engineering, and every STEM course in between.",
+  },
+  {
+    label: "Volunteering",
+    description: "Service programs across Greater Boston — from the Museum of Science to food-pantry drives.",
+  },
+];
+
+const communityCards = [
+  {
+    label: "STEM Students",
+    clarifier: "Anyone pursuing science, technology, engineering, or math",
+  },
+  {
+    label: "Hispanic Students",
+    clarifier: "A familia rooted in shared culture and heritage",
+  },
+  {
+    label: "Anyone Who Cares",
+    clarifier: "Allies, mentors, and community builders welcome",
+  },
+];
+---
+
+<Base transparentNav={true}>
+  <!-- ① Full-bleed Hero -->
+  <Hero
+    size="full"
+    image="/assets/conferences/national-convention-2023-slc.jpeg"
+    imageAlt="BU SHPE members at the 2023 SHPE National Convention in Salt Lake City"
+    eyebrow="SHPE-BostonU"
+    headline={siteData.tagline}
+    subtitle={siteData.mission}
+    ctas={[
+      { href: "/join", label: "Join SHPE" },
+      { href: "/events", label: "Upcoming Events", variant: "outline" },
+    ]}
+  />
+
+  <!-- ② Mission callout band -->
+  <section class="reveal bg-bg py-32">
+    <div class="mx-auto max-w-[1200px] px-6">
+      <div class="mx-auto max-w-3xl text-center">
+        <p class="pullquote">
+          "SHPE-BostonU is dedicated to its community. Who is our community? Our community is YOU."
+        </p>
+      </div>
+
+      <div class="mx-auto mt-20 max-w-3xl grid grid-cols-1 gap-0 divide-y divide-rule/30 md:grid-cols-3 md:divide-x md:divide-y-0">
+        {communityCards.map((card) => (
+          <div class="flex flex-col gap-2 px-0 py-8 text-center md:px-10 md:py-0">
+            <span class="eyebrow text-accent">{card.label}</span>
+            <p class="mt-1 text-sm leading-relaxed text-ink-muted">{card.clarifier}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ Pillars strip -->
+  <section class="reveal border-t border-rule/20 bg-surface py-28">
+    <div class="mx-auto max-w-[1200px] px-6">
+      <SectionHeading
+        eyebrow="WHAT WE DO"
+        title="Five kinds of gatherings."
+      />
+
+      <!-- Desktop: 5-col row. Mobile: stacked with horizontal rules -->
+      <div class="mt-16 grid grid-cols-1 divide-y divide-rule/20 md:grid-cols-5 md:divide-x md:divide-y-0">
+        {pillars.map((pillar) => (
+          <div class="flex flex-col gap-3 py-8 md:px-6 md:py-0 md:first:pl-0 md:last:pr-0">
+            <span class="eyebrow text-accent">{pillar.label}</span>
+            <p class="text-sm leading-relaxed text-ink-muted">{pillar.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ Recent moments -->
+  <section class="reveal py-28">
+    <div class="mx-auto max-w-[1200px] px-6">
+      <SectionHeading
+        eyebrow="FROM THE FAMILIA"
+        title="Recent moments."
+      />
+
+      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {recentEvents.map((event) => (
+          <EventCard event={event} />
+        ))}
+      </div>
+
+      <div class="mt-10 flex justify-end">
+        <a href="/events" class="eyebrow text-accent hover:underline underline-offset-4 transition-opacity hover:opacity-80">
+          See all events →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ Sponsor strip -->
+  <section class="reveal border-t border-rule/20 bg-surface py-20">
+    <div class="mx-auto max-w-[1200px] px-6">
+      <p class="eyebrow mb-8 text-center">Supported By</p>
+      <SponsorGrid sponsors={featuredSponsors} />
+      <div class="mt-8 flex justify-end">
+        <a href="/sponsors" class="eyebrow text-accent hover:underline underline-offset-4 transition-opacity hover:opacity-80">
+          Our sponsors →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑥ Join CTA band -->
+  <section class="reveal grain bg-deep text-cream py-24">
+    <div class="relative z-10 mx-auto max-w-[1200px] px-6 text-center">
+      <h2 class="display text-5xl text-cream md:text-6xl lg:text-7xl">
+        Become part of the familia.
+      </h2>
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-cream/80">
+        Whether you're a first-year student or a senior with one semester left, there's always room at our table.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/join"
+          class="inline-flex items-center rounded-full bg-accent px-8 py-3.5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Join SHPE
+        </a>
+        <a
+          href={siteData.donateUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+          class="inline-flex items-center rounded-full border border-cream/50 px-8 py-3.5 text-sm font-medium text-cream transition hover:bg-cream hover:text-deep"
+        >
+          Donate
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

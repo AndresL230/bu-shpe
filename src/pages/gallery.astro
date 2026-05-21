@@ -1,0 +1,98 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import Gallery from "@/components/Gallery.astro";
+
+import eventsData from "@/data/events.json";
+import volunteeringData from "@/data/volunteering.json";
+import conferencesData from "@/data/conferences.json";
+import siteData from "@/data/site.json";
+
+const allPhotos = [
+  ...eventsData.map((e) => ({ src: e.photo, alt: e.title, group: "Events" })),
+  ...volunteeringData.flatMap((v) =>
+    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering" }))
+  ),
+  ...conferencesData.flatMap((c) =>
+    c.photos.map((src) => ({
+      src,
+      alt: `${c.region ?? "Conference"} ${c.year} — ${c.city}`,
+      group: "Conferences",
+    }))
+  ),
+];
+
+const cat = Astro.url.searchParams.get("cat");
+const photos = cat ? allPhotos.filter((p) => p.group === cat) : allPhotos;
+const filters = ["All", "Events", "Volunteering", "Conferences"];
+---
+
+<Base title="Gallery" transparentNav={false}>
+
+  <!-- ① Compact Hero -->
+  <Hero
+    size="compact"
+    image="/assets/events/leadershpe-live-2023.jpg"
+    imageAlt="BU SHPE members at LeaderSHPE Live 2023"
+    eyebrow="GALLERY"
+    headline="Moments from the familia."
+  />
+
+  <!-- ② Filter + Gallery -->
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+    <SectionHeading eyebrow="ARCHIVE" title="The whole familia." />
+
+    <!-- Filter chips -->
+    <nav aria-label="Filter gallery by category" class="mt-8 flex flex-wrap gap-3">
+      {filters.map((label) => {
+        const value = label === "All" ? null : label;
+        const isActive = value === cat;
+        const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
+        return (
+          <a
+            href={href}
+            class:list={[
+              "eyebrow inline-flex items-center rounded-full border px-4 py-2 transition",
+              isActive
+                ? "border-ink bg-ink text-cream"
+                : "border-rule/60 text-ink/80 hover:border-accent hover:text-accent",
+            ]}
+            aria-current={isActive ? "true" : undefined}
+          >
+            {label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <!-- Gallery grid or empty state -->
+    {photos.length > 0 ? (
+      <div class="mt-12">
+        <Gallery photos={photos} />
+      </div>
+    ) : (
+      <div class="mt-12 flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-rule/30 bg-surface py-20 text-center">
+        <p class="pullquote mx-auto max-w-md">
+          No photos in this category yet. Check back soon.
+        </p>
+      </div>
+    )}
+  </section>
+
+  <!-- ③ Submit photos CTA -->
+  <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
+    <p class="pullquote italic">Have photos from a SHPE event?</p>
+    <p class="mt-6 text-lg text-ink-muted leading-relaxed">
+      Send them to{" "}
+      <a
+        href={`mailto:${siteData.contactEmail}?subject=Gallery%20Submission`}
+        class="text-accent underline underline-offset-4 transition-opacity hover:opacity-80"
+      >
+        {siteData.contactEmail}
+      </a>
+      {" "}and we'll add your shots to the archive.
+    </p>
+  </section>
+
+</Base>

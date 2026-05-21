@@ -1,0 +1,149 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import SponsorGrid from "@/components/SponsorGrid.astro";
+import type { Sponsor } from "@/types";
+
+import sponsorsData from "@/data/sponsors.json";
+import siteData from "@/data/site.json";
+
+// Tier-aware grouping logic.
+// If any sponsor has a truthy `tier` field, we group by tier; otherwise flat grid.
+const tierOrder = ["Platinum", "Gold", "Silver", "Partner"] as const;
+type Tier = (typeof tierOrder)[number];
+
+const sponsors = sponsorsData as Sponsor[];
+const hasTiers = sponsors.some((s) => s.tier);
+
+const tierGroups: { tier: Tier; sponsors: Sponsor[] }[] = hasTiers
+  ? tierOrder
+      .map((tier) => ({
+        tier,
+        sponsors: sponsors.filter((s) => s.tier === tier),
+      }))
+      .filter((group) => group.sponsors.length > 0)
+  : [];
+---
+
+<Base title="Sponsors" description="Companies and institutions that invest in BU SHPE and the Hispanic engineering familia at Boston University." transparentNav={false}>
+
+  <!-- ① Compact Hero -->
+  <Hero
+    size="compact"
+    image="/assets/events/capital-one-workshop.jpg"
+    imageAlt="BU SHPE Money Matters workshop with Capital One"
+    eyebrow="SPONSORS"
+    headline="Companies that invest in the SHPE familia."
+  />
+
+  <!-- ② Thank-you copy -->
+  <section class="mx-auto max-w-3xl px-6 py-24 reveal">
+    <p class="text-lg leading-relaxed text-ink-muted">
+      BU SHPE is grateful to the companies and individuals who choose to invest in Hispanic engineers. Our sponsors don't just write checks — they send representatives to our workshops, open their doors for company visits, and show up at the National Convention to meet our students where they are. We also want to acknowledge the&nbsp;<strong class="font-medium text-ink">BU College of Engineering</strong> and the&nbsp;<strong class="font-medium text-ink">Student Activities Office</strong>, whose continued chapter-level support makes so much of what we do possible. This work belongs to all of you as much as it belongs to us.
+    </p>
+  </section>
+
+  <!-- ③ Sponsor grid -->
+  <section class="mx-auto max-w-[1200px] px-6 py-12 reveal">
+    <SectionHeading
+      eyebrow="CURRENT SPONSORS"
+      title="Thank you to our partners."
+    />
+
+    {hasTiers ? (
+      <div class="mt-12 flex flex-col gap-16">
+        {tierGroups.map(({ tier, sponsors: tierSponsors }, i) => (
+          <div class:list={[i > 0 && "mt-12"]}>
+            <p class="eyebrow text-accent mb-6">{tier}</p>
+            <SponsorGrid sponsors={tierSponsors} />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="mt-12">
+        <SponsorGrid sponsors={sponsors} />
+      </div>
+    )}
+  </section>
+
+  <!-- ④ Become a sponsor -->
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+
+      <!-- Left: heading + lede -->
+      <SectionHeading
+        eyebrow="PARTNERSHIP"
+        title="Sponsor BU SHPE."
+        lede="Reach Hispanic engineers, designers, scientists, and STEM students at one of the nation's top engineering schools."
+      />
+
+      <!-- Right: what sponsors get + CTAs -->
+      <div>
+        <ul class="flex flex-col gap-5">
+          <li class="flex gap-3 items-baseline">
+            <span class="eyebrow text-accent shrink-0">—</span>
+            <span class="text-base leading-relaxed text-ink-muted">
+              Recruiting access at chapter events and the National Convention
+            </span>
+          </li>
+          <li class="flex gap-3 items-baseline">
+            <span class="eyebrow text-accent shrink-0">—</span>
+            <span class="text-base leading-relaxed text-ink-muted">
+              Branded company-led workshops, panels, and visits
+            </span>
+          </li>
+          <li class="flex gap-3 items-baseline">
+            <span class="eyebrow text-accent shrink-0">—</span>
+            <span class="text-base leading-relaxed text-ink-muted">
+              Logo placement on this site and event materials
+            </span>
+          </li>
+          <li class="flex gap-3 items-baseline">
+            <span class="eyebrow text-accent shrink-0">—</span>
+            <span class="text-base leading-relaxed text-ink-muted">
+              Direct introductions to engineering students and the BU College of Engineering
+            </span>
+          </li>
+          <li class="flex gap-3 items-baseline">
+            <span class="eyebrow text-accent shrink-0">—</span>
+            <span class="text-base leading-relaxed text-ink-muted">
+              Mention in chapter communications and on Instagram (<span class="font-medium text-ink">@shpe.bostonu</span>)
+            </span>
+          </li>
+        </ul>
+
+        <div class="mt-10 flex flex-col gap-4 items-start">
+          <a
+            href={siteData.sponsorshipPacketUrl}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center rounded-full bg-accent px-7 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+          >
+            Download the Sponsorship Packet (2023–2024)
+          </a>
+          <a
+            href={`mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry`}
+            class="inline-flex items-center rounded-full border border-rule/40 px-7 py-3 text-sm font-medium text-ink transition hover:border-ink hover:bg-surface"
+          >
+            Email us about sponsoring
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ⑤ Donate alternative -->
+  <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
+    <p class="text-base leading-relaxed text-ink-muted">
+      Prefer to give directly? Donate via the BU Trusted giving page&nbsp;<a
+        href={siteData.donateUrl}
+        target="_blank"
+        rel="noopener"
+        class="text-accent font-medium hover:underline underline-offset-4 transition-opacity hover:opacity-80"
+      >→</a>
+    </p>
+  </section>
+
+</Base>

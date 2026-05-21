@@ -1,0 +1,101 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import BoardCard from "@/components/BoardCard.astro";
+import type { BoardMember } from "@/types";
+import boardData from "@/data/board.json";
+import siteData from "@/data/site.json";
+
+const allMembers = boardData as BoardMember[];
+const officers = allMembers.filter((m) => m.role !== "Faculty Advisor");
+const advisor = allMembers.find((m) => m.role === "Faculty Advisor")!;
+
+const allOfficersTBD = officers.every((m) => m.name === "TBD");
+---
+
+<Base
+  title="E-Board"
+  description="Meet the student leaders and faculty advisor running SHPE-BostonU."
+  transparentNav={false}
+>
+  <!-- 1. Compact Hero -->
+  <Hero
+    size="compact"
+    image="/assets/events/indoor-field-day.jpg"
+    imageAlt="BU SHPE members at the 2023 Indoor Field Day"
+    eyebrow="E-BOARD"
+    headline="Meet the team running SHPE-BostonU."
+    subtitle="A board of student leaders and one faculty advisor — elected each year, committed to familia, service, education, and resilience."
+  />
+
+  <!-- 2. Roster grid -->
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+    <SectionHeading
+      eyebrow="OFFICERS"
+      title="Executive Board"
+      lede="The elected students leading SHPE-BostonU this year."
+    />
+
+    {allOfficersTBD && (
+      <div class="mt-12 rounded-2xl bg-cream px-8 py-10 max-w-2xl">
+        <p class="eyebrow text-accent">ROSTER UPDATING</p>
+        <p class="display text-2xl mt-3 text-ink">
+          We're refreshing the board for the upcoming year.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-ink-muted">
+          Check back in September, or reach out at{" "}
+          <a
+            href={`mailto:${siteData.contactEmail}`}
+            class="underline underline-offset-2 hover:text-accent transition-colors"
+          >
+            {siteData.contactEmail}
+          </a>{" "}
+          if you'd like to learn more about applying.
+        </p>
+      </div>
+    )}
+
+    <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {officers.map((member) => (
+        <BoardCard member={member} />
+      ))}
+    </div>
+
+    <!-- Advisor divider -->
+    <div class="border-t border-rule/30 my-20"></div>
+
+    <SectionHeading eyebrow="ADVISOR" title="Faculty Advisor" />
+
+    <div class="mt-12 max-w-md mx-auto">
+      <BoardCard member={advisor} />
+    </div>
+  </section>
+
+  <!-- 3. Recruitment CTA -->
+  <section class="reveal border-t border-rule/20 py-24">
+    <div class="mx-auto max-w-[1200px] px-6 text-center">
+      <p class="pullquote italic text-ink-muted text-2xl md:text-3xl max-w-xl mx-auto">
+        "Interested in joining the board?"
+      </p>
+      <p class="mt-6 text-base leading-relaxed text-ink-muted max-w-lg mx-auto">
+        We hold elections each spring. Email{" "}
+        <a
+          href={`mailto:${siteData.contactEmail}`}
+          class="underline underline-offset-2 hover:text-accent transition-colors"
+        >
+          {siteData.contactEmail}
+        </a>{" "}
+        or come to an event to learn more about running for a position.
+      </p>
+      <div class="mt-10">
+        <a
+          href="/join"
+          class="inline-flex items-center rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Get on the mailing list
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
