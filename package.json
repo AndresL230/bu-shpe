@@ -1,0 +1,36 @@
+{
+  "name": "bu-shpe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndresL230/bu-shpe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AndresL230/bu-shpe/issues"
+  },
+  "homepage": "https://github.com/AndresL230/bu-shpe#readme",
+  "dependencies": {
+    "@tailwindcss/vite": "4.3.0",
+    "astro": "5.18.1",
+    "tailwindcss": "4.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "5.9.3"
+  }
+}
