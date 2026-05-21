@@ -16,8 +16,6 @@ const recentEvents = events.slice(0, 3);
 const sponsors = sponsorsRaw as Sponsor[];
 const featuredSponsors = sponsors.slice(0, 4);
 
-const coreValues = ["Familia", "Service", "Education", "Resilience"];
-
 const pillars = [
   {
     label: "Professional",
@@ -63,23 +61,30 @@ const communityCards = [
     <div class="mx-auto flex min-h-[88dvh] max-w-[1200px] flex-col justify-between px-6 pb-12 pt-24 md:pb-16 md:pt-32">
 
       <!-- Masthead row -->
-      <header class="flex flex-col gap-6">
+      <header class="flex items-center justify-between gap-6">
         <span class="block h-[3px] w-12 bg-accent"></span>
-        <img
-          src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
-          alt="SHPE Boston University"
-          width="3266" height="647"
-          class="h-12 w-auto md:h-16"
-        />
         <p class="eyebrow text-cream/70">
           Region 4 · Chapter Issue · 2025–2026
         </p>
       </header>
 
-      <!-- Centerpiece -->
-      <div class="mt-12 grid grid-cols-1 gap-12 md:grid-cols-[1.55fr_1fr] md:items-end">
+      <!-- Centerpiece — minimalist swirl left, headline right -->
+      <div class="mt-12 grid grid-cols-1 gap-12 md:grid-cols-[1fr_1.7fr] md:items-center md:gap-16">
+        <!-- Left: minimalist swirl mark (clipped from DKBG logo) -->
+        <div class="md:border-r md:border-cream/15 md:pr-10 flex md:justify-end">
+          <span class="block h-44 w-44 overflow-hidden md:h-56 md:w-56" aria-hidden="true">
+            <img
+              src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+              alt=""
+              width="3266" height="647"
+              class="block h-44 max-w-none md:h-56"
+            />
+          </span>
+        </div>
+
+        <!-- Right: headline + mission + CTAs -->
         <div>
-          <h1 class="display text-cream text-[clamp(3rem,8.5vw,7.5rem)]">
+          <h1 class="display text-cream text-[clamp(3rem,7.5vw,6.5rem)]">
             ¡Bienvenidos<br/>a la <em class="italic text-accent">Familia</em>!
           </h1>
           <p class="mt-8 max-w-xl text-lg leading-relaxed text-cream/85 md:text-xl">
@@ -96,19 +101,6 @@ const communityCards = [
             >Upcoming Events →</a>
           </div>
         </div>
-
-        <!-- Core values stack — editorial right-hand column -->
-        <aside aria-label="Core values" class="md:border-l md:border-cream/20 md:pl-10">
-          <p class="eyebrow text-cream/70">Four values</p>
-          <ol class="mt-6 flex flex-col gap-3">
-            {coreValues.map((v, i) => (
-              <li class="flex items-baseline gap-4">
-                <span class="font-cond text-sm text-cream/60 tabular-nums">0{i + 1}</span>
-                <span class="display text-3xl text-cream md:text-4xl">{v}</span>
-              </li>
-            ))}
-          </ol>
-        </aside>
       </div>
 
       <!-- Bottom rule -->

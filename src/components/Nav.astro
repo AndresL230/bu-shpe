@@ -29,11 +29,17 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-4">
     <a
       href="/"
-      class="flex items-baseline gap-2 group-data-[transparent=true]/nav:text-cream"
+      class="flex items-center"
       aria-label={`${siteData.name} home`}
     >
-      <span class="display text-2xl leading-none text-ink group-data-[transparent=true]/nav:text-cream">
-        SHPE<span class="text-accent">·</span>BostonU
+      <!-- Full chapter logo on a navy chip so the white wordmark + BU mark stay readable -->
+      <span class="inline-flex items-center rounded-md bg-deep px-3 py-2">
+        <img
+          src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+          alt={siteData.name}
+          width="3266" height="647"
+          class="block h-5 w-auto md:h-6"
+        />
       </span>
     </a>
 
