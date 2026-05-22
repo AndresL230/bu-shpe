@@ -88,7 +88,7 @@ export interface CalendarEvent {
 
 **`src/components/UpcomingCalendar.astro`** (new) — UI
 
-- Props: `events: CalendarEvent[]`, `limit?: number` (default 6).
+- Props: `events: CalendarEvent[]`. (Slicing happens in `getUpcomingEvents`; the component renders whatever it's handed.)
 - Empty-list state: editorial pull-quote — *"Nothing scheduled right now — check back soon."*
 - Per-row layout, with `border-t border-rule/30` divider above each row except the first:
 
