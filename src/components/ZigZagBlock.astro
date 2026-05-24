@@ -1,0 +1,81 @@
+---
+import OrangeTick from "@/components/OrangeTick.astro";
+import Icon from "@/components/Icon.astro";
+
+interface Props {
+  image: string;
+  imageAlt: string;
+  eyebrow?: string;
+  heading: string;
+  body: string;
+  bullets?: string[];
+  cta?: { label: string; href: string };
+  quote?: { label: string; text: string };
+  reverse?: boolean;
+  split?: "60-40" | "40-60";
+}
+
+const {
+  image,
+  imageAlt,
+  eyebrow,
+  heading,
+  body,
+  bullets,
+  cta,
+  quote,
+  reverse = false,
+  split = "60-40",
+} = Astro.props;
+
+const imageSpan = split === "60-40" ? "md:col-span-6" : "md:col-span-4";
+const textSpan  = split === "60-40" ? "md:col-span-4" : "md:col-span-6";
+
+const imageOrder = reverse ? "md:order-2" : "md:order-1";
+const textOrder  = reverse ? "md:order-1" : "md:order-2";
+
+const photoClasses = "aspect-[16/9] w-full overflow-hidden border border-outline-soft";
+---
+<div class="grid grid-cols-1 md:grid-cols-10 gap-8 md:gap-12 items-center">
+  <div class={`${imageSpan} ${imageOrder}`}>
+    <div class={photoClasses}>
+      <img src={image} alt={imageAlt} class="w-full h-full object-cover" loading="lazy" />
+    </div>
+  </div>
+
+  <div class={`${textSpan} ${textOrder}`}>
+    {eyebrow && (
+      <div class="mb-4">
+        <OrangeTick />
+        <span class="eyebrow">{eyebrow}</span>
+      </div>
+    )}
+
+    <h3 class="display text-4xl md:text-5xl text-ink mb-4">{heading}</h3>
+    <p class="text-ink-muted mb-8">{body}</p>
+
+    {quote ? (
+      <div class="border-l-4 border-accent bg-surface-soft pl-6 pr-5 py-5">
+        <div class="eyebrow mb-2">{quote.label}</div>
+        <p class="pullquote text-ink">{quote.text}</p>
+      </div>
+    ) : cta ? (
+      <a
+        href={cta.href}
+        class="inline-flex items-center gap-2 bg-deep text-cream font-cond uppercase tracking-widest font-bold px-6 py-3 rounded-md hover:bg-ink transition-colors"
+      >
+        <span>{cta.label}</span>
+        <Icon name="arrow-forward" class="w-4 h-4" />
+      </a>
+    ) : bullets && bullets.length > 0 ? (
+      <ul class="space-y-3">
+        {bullets.map((b) => (
+          <li class="flex items-start gap-3 font-cond uppercase tracking-widest text-sm text-ink">
+            <span class="mt-2 inline-block w-2 h-2 bg-ink shrink-0" aria-hidden="true"></span>
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
+    ) : null}
+  </div>
+</div>

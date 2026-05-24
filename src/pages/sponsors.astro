@@ -3,6 +3,7 @@ import Base from "@/layouts/Base.astro";
 import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
+import Icon from "@/components/Icon.astro";
 import type { Sponsor } from "@/types";
 
 import sponsorsData from "@/data/sponsors.json";
@@ -33,19 +34,18 @@ const tierGroups: { tier: Tier; sponsors: Sponsor[] }[] = hasTiers
     eyebrow="SPONSORS"
     headline="Companies that invest in the SHPE familia."
     headlineAccent="invest"
-    size="compact"
     meta="SPONSORS / PARTNERS + PACKET"
   />
 
   <!-- ② Thank-you copy -->
-  <section class="mx-auto max-w-3xl px-6 py-24 reveal">
+  <section class="mx-auto max-w-5xl px-6 py-24 reveal">
     <p class="text-lg leading-relaxed text-ink-muted">
       BU SHPE is grateful to the companies and individuals who choose to invest in Hispanic engineers. Our sponsors don't just write checks — they send representatives to our workshops, open their doors for company visits, and show up at the National Convention to meet our students where they are. We also want to acknowledge the&nbsp;<strong class="font-medium text-ink">BU College of Engineering</strong> and the&nbsp;<strong class="font-medium text-ink">Student Activities Office</strong>, whose continued chapter-level support makes so much of what we do possible. This work belongs to all of you as much as it belongs to us.
     </p>
   </section>
 
   <!-- ③ Sponsor grid -->
-  <section class="mx-auto max-w-[1200px] px-6 py-12 reveal">
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
     <SectionHeading
       eyebrow="CURRENT SPONSORS"
       title="Thank you to our partners."
@@ -118,15 +118,17 @@ const tierGroups: { tier: Tier; sponsors: Sponsor[] }[] = hasTiers
             href={siteData.sponsorshipPacketUrl}
             target="_blank"
             rel="noopener"
-            class="inline-flex items-center rounded-full bg-accent px-7 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+            class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
           >
             Download the Sponsorship Packet (2023–2024)
+            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </a>
           <a
             href={`mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry`}
-            class="inline-flex items-center rounded-full border border-rule/40 px-7 py-3 text-sm font-medium text-ink transition hover:border-ink hover:bg-surface"
+            class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
           >
-            Email us about sponsoring
+            <span class="border-b border-current pb-0.5">Email us about sponsoring</span>
+            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </a>
         </div>
       </div>
@@ -137,13 +139,19 @@ const tierGroups: { tier: Tier; sponsors: Sponsor[] }[] = hasTiers
   <!-- ⑤ Donate alternative -->
   <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
     <p class="text-sm leading-relaxed text-ink-muted">
-      Prefer to give directly? Donate via the BU Trusted giving page&nbsp;<a
+      Prefer to give directly?
+    </p>
+    <div class="mt-4 flex justify-center">
+      <a
         href={siteData.donateUrl}
         target="_blank"
         rel="noopener"
-        class="text-accent font-medium hover:underline underline-offset-4 transition-opacity hover:opacity-80"
-      >→</a>
-    </p>
+        class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
+      >
+        <span class="border-b border-current pb-0.5">Donate via the BU Trusted giving page</span>
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+      </a>
+    </div>
   </section>
 
 </Base>

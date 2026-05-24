@@ -1,0 +1,10 @@
+---
+// Wrapper that opts a subtree into the scroll-reveal observer.
+// The IntersectionObserver lives once in Base.astro and toggles
+// `is-revealed` on any element with the `data-reveal` attribute.
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+<div data-reveal class={className}><slot /></div>

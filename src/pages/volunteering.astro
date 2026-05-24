@@ -2,6 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
+import Icon from "@/components/Icon.astro";
 
 import volunteeringData from "@/data/volunteering.json";
 import siteData from "@/data/site.json";
@@ -15,7 +16,6 @@ import siteData from "@/data/site.json";
     headline="Service is part of the SHPE familia."
     headlineAccent="Service"
     subtitle="We show up for Greater Boston — at museums, food banks, and on the street with meals."
-    size="tall"
     meta="VOLUNTEERING / GREATER BOSTON"
   />
 
@@ -27,7 +27,7 @@ import siteData from "@/data/site.json";
   </section>
 
   <!-- ③ Program list -->
-  <section class="mx-auto max-w-[1200px] px-6 py-12 reveal">
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
     {volunteeringData.map((program, index) => (
       <article class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center py-20 border-t border-rule/20 first:border-t-0">
 
@@ -99,24 +99,27 @@ import siteData from "@/data/site.json";
   </section>
 
   <!-- ④ Get involved CTA -->
-  <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
-    <div class="flex justify-center">
-      <SectionHeading
-        align="center"
-        eyebrow="GET INVOLVED"
-        title="Have a partner in mind?"
-      />
-    </div>
-    <p class="mt-8 text-lg leading-relaxed text-ink-muted">
-      Tell us where you'd like to serve next.
-    </p>
-    <div class="mt-10">
-      <a
-        href={`mailto:${siteData.contactEmail}?subject=Volunteer%20Idea`}
-        class="inline-flex items-center rounded-full bg-accent text-white px-6 py-3 font-sans text-sm font-medium transition hover:-translate-y-0.5 hover:shadow-lg"
-      >
-        Send us your idea →
-      </a>
+  <section class="grain bg-cream text-ink">
+    <div class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
+      <div class="flex justify-center">
+        <SectionHeading
+          align="center"
+          eyebrow="GET INVOLVED"
+          title="Have a partner in mind?"
+        />
+      </div>
+      <p class="mt-8 text-lg leading-relaxed text-ink-muted">
+        Tell us where you'd like to serve next.
+      </p>
+      <div class="mt-10">
+        <a
+          href={`mailto:${siteData.contactEmail}?subject=Volunteer%20Idea`}
+          class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
+        >
+          Send us your idea
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
     </div>
   </section>
 

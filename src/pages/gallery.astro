@@ -35,7 +35,6 @@ const filters = ["All", "Events", "Volunteering", "Conferences"];
     eyebrow="GALLERY"
     headline="Moments from the familia."
     headlineAccent="familia"
-    size="compact"
     meta="GALLERY / EVENTS · VOLUNTEERING · CONFERENCES"
   />
 
@@ -53,10 +52,10 @@ const filters = ["All", "Events", "Volunteering", "Conferences"];
           <a
             href={href}
             class:list={[
-              "eyebrow inline-flex items-center rounded-full border px-4 py-2 transition",
+              "inline-flex items-center rounded-full px-5 py-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
               isActive
-                ? "border-ink bg-ink text-cream"
-                : "border-rule/60 text-ink/80 hover:border-accent hover:text-accent",
+                ? "bg-ink text-cream"
+                : "border border-rule/60 text-ink-muted hover:border-ink hover:text-ink",
             ]}
             aria-current={isActive ? "true" : undefined}
           >
@@ -87,7 +86,7 @@ const filters = ["All", "Events", "Volunteering", "Conferences"];
       Send them to{" "}
       <a
         href={`mailto:${siteData.contactEmail}?subject=Gallery%20Submission`}
-        class="text-accent underline underline-offset-4 transition-opacity hover:opacity-80"
+        class="text-accent underline underline-offset-4 hover:text-accent/80 transition-colors"
       >
         {siteData.contactEmail}
       </a>

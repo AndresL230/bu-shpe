@@ -1,102 +1,79 @@
 ---
 import Base from "@/layouts/Base.astro";
-import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
+import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
 
-const missionItems = [
-  "Professional development events geared toward industry jobs and graduate school",
-  "Study nights to promote academic success",
-  "Volunteering with the Greater Boston area",
-  "Social events that foster the sense of familia",
-  "Cultural events that educate ourselves and our community about Latin American topics",
-  "Attending the SHPE National Convention and Regional Leadership Development Conferences",
-];
-
-const joinReasons = [
-  "Access to cutting-edge programs — webinars, workshops, lectures, publications",
-  "Turbocharge your career — the largest gathering of Hispanics in STEM with onsite interviews",
-  "Build a resume that wows — SHPE membership signals to employers",
-  "Grow your network — local, regional, national connections",
-  "Sharpen your leadership skills",
-  "Pay it forward as a mentor — through the MentorSHPE program",
-  "Be exposed to the world's top companies — exclusive access",
-  "Give back to the community",
-  "Benefit from strength in numbers — an established support system",
-  "Enjoy a familia for life",
+// PLACEHOLDER — chapter stats. Update with real numbers when known.
+const chapterStats = [
+  { value: "50+", label: "Active members" },
+  { value: "12",  label: "National conventions attended" },
+  { value: "1,000+", label: "Volunteer hours since 2020" },
 ];
 
 const eventCategories = [
   {
     label: "Professional",
-    description: "Resume reviews, company visits, recruiter sessions",
+    description: "Resume reviews, company visits, recruiter sessions.",
+    photo: "/assets/events/capital-one-workshop.jpg",
+    filterCat: "Professional",
   },
   {
     label: "Cultural",
-    description: "Cafecitos and conversations on Latin American topics",
+    description: "Cafecitos and conversations on Latin American topics.",
+    photo: "/assets/events/navidad-en-familia.jpg",
+    filterCat: "Cultural",
   },
   {
     label: "Social",
-    description: "Familia-bonding events, game nights, field days",
+    description: "Familia-bonding events, game nights, field days.",
+    photo: "/assets/events/indoor-field-day.jpg",
+    filterCat: "Social",
   },
   {
     label: "Study Nights",
-    description: "Peer tutoring across STEM courses",
+    description: "Peer tutoring across STEM courses.",
+    photo: "/assets/events/resume-review-ge.png",
+    filterCat: "Study Night",
   },
   {
     label: "Volunteering",
-    description: "Service across Greater Boston",
+    description: "Service across Greater Boston.",
+    photo: "/assets/volunteering/museum-of-science-1.jpeg",
+    filterCat: "Volunteering",
   },
 ];
 ---
 
 <Base title="About">
 
-  <!-- ① Tall Hero -->
-  <PageHero
-    eyebrow="WHO WE ARE"
-    headline="A familia of Hispanic engineers at Boston University."
-    headlineAccent="Hispanic engineers"
-    subtitle="We are STEM students, future researchers, mentors, allies — and a chapter of the largest network of Hispanic professionals in STEM."
-    size="tall"
-    meta="ABOUT / SHPE-BOSTONU"
-    metaRight="Familia · Service · Education · Resilience"
-  />
+  <!-- ① Hero — navy with EST. 1974 watermark -->
+  <header class="relative w-full bg-deep py-24 md:py-32 px-6 overflow-hidden">
+    <div class="max-w-[1200px] mx-auto relative z-10">
+      <span class="eyebrow text-cream/70 mb-4 block">ABOUT</span>
+      <h1 class="display text-5xl md:text-6xl lg:text-7xl text-cream max-w-3xl leading-tight">
+        A <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em> of engineers.
+      </h1>
+      <p class="mt-8 text-cream/80 max-w-xl text-lg">
+        Since 1974, BU SHPE has built a home in STEM for Hispanic students at Boston University — engineers, designers, scientists, mentors, allies.
+      </p>
+    </div>
 
-  <!-- ② Mission section — asymmetric two-column -->
-  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
-    <div class="grid grid-cols-1 gap-12 items-start md:grid-cols-[1fr_1.4fr]">
+    <!-- Decorative 1974 watermark -->
+    <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
+      <span class="display text-[200px] lg:text-[280px] leading-none text-cream translate-y-1/4 inline-block">1974</span>
+    </div>
+  </header>
 
-      <!-- Left: heading -->
-      <div>
-        <SectionHeading
-          eyebrow="OUR MISSION"
-          title="Empowering the Hispanic community through STEM."
-        />
-      </div>
-
-      <!-- Right: prose + ordered list -->
-      <div class="prose-block">
-        <p class="text-lg leading-relaxed text-ink-muted max-w-2xl">
-          At BU, SHPE's mission lives through the people we bring together and the work we do across six fronts. Every event, every study night, every trip to a national convention is a direct expression of our commitment to the Hispanic community in STEM.
-        </p>
-
-        <ol class="mt-10 flex flex-col gap-6 list-none p-0 m-0">
-          {missionItems.map((item, i) => (
-            <li class="flex gap-5 items-baseline">
-              <span
-                class="display shrink-0 text-4xl leading-none text-accent tabular-nums"
-                aria-hidden="true"
-              >
-                {String(i + 1)}
-              </span>
-              <span class="text-sm leading-relaxed text-ink-muted">{item}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-
+  <!-- ② Mission pull-quote -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24 md:py-32">
+    <div class="max-w-4xl">
+      <p class="eyebrow text-ink-muted mb-8">OUR MISSION</p>
+      <blockquote class="font-serif italic text-3xl md:text-5xl lg:text-6xl leading-[1.15] text-ink">
+        <span class="text-accent text-5xl md:text-7xl leading-none align-top mr-1">&ldquo;</span>We empower the Hispanic community through STEM &mdash; by <em class="not-italic font-sans font-medium text-accent">gathering</em>, <em class="not-italic font-sans font-medium text-accent">mentoring</em>, and showing up for each other and for the next generation of engineers.<span class="text-accent text-5xl md:text-7xl leading-none align-bottom ml-1">&rdquo;</span>
+      </blockquote>
+      <p class="mt-10 font-cond uppercase tracking-[0.18em] text-sm text-ink-muted">&mdash; BU SHPE Executive Board</p>
     </div>
   </section>
 
@@ -111,42 +88,60 @@ const eventCategories = [
     </div>
   </section>
 
-  <!-- ④ Why join section -->
-  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
-    <SectionHeading
-      eyebrow="WHY JOIN"
-      title="Ten reasons to become a SHPE member."
-    />
+  <!-- ④ Chapter by the numbers — stats strip -->
+  <section class="reveal mx-auto max-w-[1200px] px-6 py-24 md:py-32">
+    <div class="max-w-3xl mb-16">
+      <SectionHeading
+        eyebrow="BY THE NUMBERS"
+        title="What 50 years of familia adds up to."
+      />
+    </div>
 
-    <div class="mt-16 grid grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2">
-      {joinReasons.map((reason, i) => (
-        <div class="flex gap-5 items-baseline">
-          <span
-            class="display shrink-0 text-5xl leading-none text-accent/30 tabular-nums w-12 text-right"
-            aria-hidden="true"
-          >
-            {String(i + 1).padStart(2, "0")}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0 border-t border-rule/40 pt-12 md:pt-16">
+      {chapterStats.map((stat, i) => (
+        <div
+          class:list={[
+            "flex flex-col gap-3",
+            i > 0 && "md:border-l md:border-rule/40 md:pl-12",
+          ]}
+        >
+          <span class="display text-6xl md:text-7xl lg:text-8xl leading-none text-accent tabular-nums">
+            {stat.value}
           </span>
-          <span class="text-sm leading-relaxed text-ink-muted">{reason}</span>
+          <span class="eyebrow text-ink-muted max-w-[14ch]">{stat.label}</span>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- ⑤ Event categories — five columns -->
-  <section class="reveal border-t border-rule/20 bg-surface py-24">
+  <!-- ⑤ What we do — photo cards -->
+  <section class="reveal border-t border-rule/20 bg-surface py-24 md:py-32">
     <div class="mx-auto max-w-[1200px] px-6">
       <SectionHeading
         eyebrow="WHAT WE DO"
         title="Five kinds of gatherings."
       />
 
-      <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-5">
+      <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
         {eventCategories.map((cat) => (
-          <div class="flex flex-col gap-3">
-            <span class="eyebrow text-accent">{cat.label}</span>
-            <p class="text-sm leading-relaxed text-ink-muted">{cat.description}</p>
-          </div>
+          <a
+            href={`/events/all?cat=${encodeURIComponent(cat.filterCat)}`}
+            class="group relative block aspect-[3/4] overflow-hidden bg-surface-soft rounded-md"
+          >
+            <img
+              src={cat.photo}
+              alt={cat.label}
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent"></div>
+            <div class="absolute inset-x-0 bottom-0 p-5">
+              <span class="block font-cond uppercase tracking-[0.14em] text-xs font-bold text-cream/80 mb-2">
+                {cat.label}
+              </span>
+              <p class="text-sm leading-snug text-cream">{cat.description}</p>
+            </div>
+          </a>
         ))}
       </div>
     </div>
@@ -167,9 +162,9 @@ const eventCategories = [
           href={siteData.constitutionUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1 text-accent font-medium text-sm hover:underline underline-offset-4 transition-opacity hover:opacity-80 mt-1"
+          class="text-accent underline underline-offset-4 hover:text-accent/80 transition-colors"
         >
-          Download the chapter constitution (PDF) →
+          Download the chapter constitution (PDF)
         </a>
       </div>
 
@@ -182,7 +177,7 @@ const eventCategories = [
         </p>
         <a
           href={`mailto:${siteData.facultyAdvisorEmail}`}
-          class="inline-flex items-center gap-1 text-link font-medium text-sm hover:underline underline-offset-4 transition-opacity hover:opacity-80 mt-1"
+          class="text-accent underline underline-offset-4 hover:text-accent/80 transition-colors"
         >
           {siteData.facultyAdvisorEmail}
         </a>
@@ -192,28 +187,30 @@ const eventCategories = [
   </section>
 
   <!-- ⑦ Join CTA band -->
-  <section class="reveal grain bg-deep text-cream py-24">
+  <section class="reveal grain bg-cream text-ink py-24">
     <div class="relative z-10 mx-auto max-w-[1200px] px-6 text-center">
-      <h2 class="display text-5xl text-cream md:text-6xl lg:text-7xl">
+      <h2 class="display text-5xl text-ink md:text-6xl lg:text-7xl">
         Become part of the familia.
       </h2>
-      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-cream/80">
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-muted">
         Whether you're a first-year student or a senior with one semester left, there's always a seat at our table.
       </p>
       <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
         <a
           href="/join"
-          class="inline-flex items-center rounded-full bg-accent px-8 py-3.5 font-sans text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+          class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
         >
           Join SHPE
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </a>
         <a
           href={siteData.donateUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center rounded-full border border-cream/50 px-8 py-3.5 font-sans text-sm font-medium text-cream transition hover:bg-cream hover:text-deep"
+          class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
         >
-          Donate
+          <span class="border-b border-current pb-0.5">Donate</span>
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </a>
       </div>
     </div>

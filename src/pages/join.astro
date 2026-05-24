@@ -4,6 +4,7 @@ import PageHero from "@/components/PageHero.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 import MailingListForm from "@/components/MailingListForm.astro";
+import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
 
@@ -34,7 +35,6 @@ const steps = [
     headline="Find your familia."
     headlineAccent="familia"
     subtitle="There's no membership fee. There's no application. Just say hi."
-    size="tall"
     meta="JOIN / MAILING LIST + SOCIALS"
     metaRight="@shpe.bostonu"
   />
@@ -103,17 +103,18 @@ const steps = [
 
   <!-- ⑤ Contact card -->
   <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
-    <div class="grain max-w-2xl mx-auto rounded-lg bg-deep p-12 text-cream">
-      <p class="eyebrow text-cream/70">CONTACT</p>
-      <h2 class="display mt-4 text-3xl text-cream">Have a question?</h2>
-      <p class="mt-4 text-base leading-relaxed text-cream/90">Email us anytime.</p>
+    <div class="grain max-w-2xl mx-auto rounded-lg bg-cream p-12 text-ink">
+      <p class="eyebrow text-ink-muted">CONTACT</p>
+      <h2 class="display mt-4 text-3xl text-ink">Have a question?</h2>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">Email us anytime.</p>
       <a
         href={`mailto:${siteData.contactEmail}`}
-        class="mt-6 inline-flex items-center rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+        class="group mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
       >
         {siteData.contactEmail}
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </a>
-      <p class="mt-6 text-sm text-cream/70">
+      <p class="mt-6 text-sm text-ink-muted">
         Faculty Advisor:{" "}
         <a
           href={`mailto:${siteData.facultyAdvisorEmail}`}
@@ -133,11 +134,12 @@ const steps = [
       </p>
       <a
         href={siteData.donateUrl}
-        class="mt-8 inline-flex items-center rounded-full border border-accent px-6 py-3 text-sm font-medium text-accent transition hover:bg-accent hover:text-white"
+        class="group mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
         target="_blank"
         rel="noopener"
       >
         Donate via BU Trusted
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </a>
     </div>
   </section>

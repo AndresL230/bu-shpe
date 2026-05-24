@@ -1,0 +1,41 @@
+---
+import Icon from "@/components/Icon.astro";
+
+interface Props {
+  eyebrow?: string;
+  heading: string;        // may contain inline HTML for the italic accent
+  body: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+}
+
+const { eyebrow, heading, body, primaryCta, secondaryCta } = Astro.props;
+---
+<section class="bg-cream py-24 px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    {eyebrow && <div class="eyebrow text-ink-muted mb-4">{eyebrow}</div>}
+
+    <h2 class="display text-5xl md:text-6xl text-ink mb-6" set:html={heading} />
+
+    <p class="text-ink-muted max-w-2xl mx-auto mb-10">{body}</p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a
+        href={primaryCta.href}
+        class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
+      >
+        {primaryCta.label}
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+      </a>
+      {secondaryCta && (
+        <a
+          href={secondaryCta.href}
+          class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
+        >
+          <span class="border-b border-current pb-0.5">{secondaryCta.label}</span>
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      )}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+// Tiny inline SVG sprite. Stroke uses currentColor so the icon
+// inherits the surrounding text color.
+interface Props {
+  name: "arrow-forward" | "trending-flat" | "person-add";
+  class?: string;
+}
+const { name, class: className = "w-5 h-5" } = Astro.props;
+---
+<svg
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  aria-hidden="true"
+>
+  {name === "arrow-forward" && <path d="M5 12h14M13 5l7 7-7 7" />}
+  {name === "trending-flat" && <path d="M3 12h17M16 8l4 4-4 4" />}
+  {name === "person-add" && (
+    <>
+      <circle cx="9" cy="8" r="4" />
+      <path d="M3 21v-2a6 6 0 0 1 12 0v2" />
+      <path d="M19 8v6M22 11h-6" />
+    </>
+  )}
+</svg>

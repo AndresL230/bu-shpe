@@ -8,6 +8,7 @@ export interface SiteMeta {
   contactEmail: string;
   facultyAdvisorEmail: string;
   region: string;
+  currentBoardTerm?: string;
   calendarEmbedUrl: string;
   donateUrl: string;
   sponsorshipPacketUrl: string;
@@ -39,6 +40,7 @@ export interface EventItem {
   category: EventCategory;
   description: string;
   photo: string;  // path under /assets/events/
+  featured?: boolean;
 }
 
 export interface Sponsor {

@@ -1,5 +1,6 @@
 ---
 import siteData from "@/data/site.json";
+import Icon from "@/components/Icon.astro";
 
 const links = [
   { href: "/about",         label: "About" },
@@ -17,44 +18,17 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
   class="fixed inset-x-0 top-0 z-40 bg-deep border-b border-cream/10"
   id="site-nav"
 >
-  <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-4">
-    <a
-      href="/"
-      class="flex items-center"
-      aria-label={`${siteData.name} home`}
-    >
-      <!-- Full chapter logo — navy nav is the dark backdrop the DKBG logo was designed for -->
+  <!-- Mobile + tablet (<lg): hamburger -->
+  <div class="lg:hidden flex items-center justify-between gap-6 px-6 py-4">
+    <a href="/" class="flex items-center" aria-label={`${siteData.name} home`}>
       <img
         src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
         alt={siteData.name}
         width="3266" height="647"
-        class="block h-7 w-auto md:h-8"
+        class="block h-7 w-auto"
       />
     </a>
-
-    <nav aria-label="Primary" class="hidden md:block">
-      <ul class="flex items-center gap-8">
-        {links.map(({ href, label }) => (
-          <li>
-            <a
-              href={href}
-              class:list={[
-                "font-cond text-base font-bold uppercase tracking-[0.06em] transition-colors hover:text-accent",
-                currentPath === href ? "text-accent" : "text-cream"
-              ]}
-            >{label}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
-    <a
-      href="/join"
-      class="hidden md:inline-flex items-center rounded-full bg-accent px-6 py-2.5 font-cond text-base font-bold uppercase tracking-[0.05em] text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-    >Join SHPE</a>
-
-    <!-- Mobile menu (native <details>) -->
-    <details class="md:hidden relative">
+    <details class="relative">
       <summary
         class="grid h-11 w-11 cursor-pointer place-items-center rounded-md border border-cream/40 text-cream list-none [&::-webkit-details-marker]:hidden"
         aria-label="Open menu"
@@ -63,9 +37,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           <path d="M4 7h16M4 12h16M4 17h16"/>
         </svg>
       </summary>
-      <div
-        class="fixed inset-0 top-[72px] z-30 grid place-items-center bg-bg/98 backdrop-blur"
-      >
+      <div class="fixed inset-0 top-[72px] z-30 grid place-items-center bg-bg/98 backdrop-blur">
         <nav aria-label="Mobile" class="px-8 text-center">
           <ul class="flex flex-col gap-6">
             {links.map(({ href, label }) => (
@@ -76,15 +48,169 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
             <li>
               <a
                 href="/join"
-                class="mt-4 inline-flex items-center rounded-full bg-accent px-6 py-3 font-sans text-base font-medium text-white"
-              >Join SHPE</a>
+                class="group mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-sans text-base font-semibold text-white"
+              >
+                Join SHPE
+                <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+              </a>
             </li>
           </ul>
         </nav>
       </div>
     </details>
   </div>
+
+  <!-- lg+: 2-column grid (logo + Join), with nav centered in the viewport -->
+  <div class="relative hidden lg:grid lg:grid-cols-2 lg:items-center py-4">
+    <div class="flex items-center justify-center px-6 md:px-12 lg:px-16 xl:px-24">
+      <div class="max-w-[672px] w-full">
+        <a href="/" class="inline-flex items-center" aria-label={`${siteData.name} home`}>
+          <img
+            src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+            alt={siteData.name}
+            width="3266" height="647"
+            class="block h-8 w-auto"
+          />
+        </a>
+      </div>
+    </div>
+    <nav
+      aria-label="Primary"
+      class="pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center"
+    >
+      <ul class="pointer-events-auto flex items-center gap-7 xl:gap-10">
+        {links.map(({ href, label }) => {
+          const hasSubmenu = href === "/events";
+          return (
+            <li class:list={[hasSubmenu && "has-subnav relative"]}>
+              <a
+                href={href}
+                aria-current={currentPath === href ? "page" : undefined}
+                aria-haspopup={hasSubmenu ? "true" : undefined}
+                class:list={[
+                  "nav-link lowercase font-sans text-base font-medium tracking-normal transition-colors",
+                  currentPath === href ? "text-cream" : "text-cream/85 hover:text-cream"
+                ]}
+              >{label}</a>
+              {hasSubmenu && (
+                <div class="dropdown-wrap">
+                  <div class="dropdown">
+                    <a href="/events/all" class="dropdown-link">all events <span aria-hidden="true">→</span></a>
+                    <a href="/events/all?cat=Professional" class="dropdown-link">workshops <span aria-hidden="true">→</span></a>
+                    <a href="/events/all?cat=Conference" class="dropdown-link">info sessions <span aria-hidden="true">→</span></a>
+                    <a href="/events/all?cat=Social" class="dropdown-link">socials <span aria-hidden="true">→</span></a>
+                  </div>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+    <div class="flex items-center justify-end px-6 md:px-12 lg:px-16 xl:px-24">
+      <a
+        href="/join"
+        class="group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-sans text-base font-semibold text-white shadow-sm transition hover:-translate-y-px hover:shadow-md whitespace-nowrap"
+      >
+        Join SHPE
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+      </a>
+    </div>
+  </div>
 </header>
+
+<style>
+  .nav-link {
+    position: relative;
+    padding-bottom: 4px;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+
+  /* ---------- Dropdown card (left-aligned, notched, flush with navbar bottom) ---------- */
+  /* The wrapper is absolutely positioned at the parent <li>'s bottom edge
+     and uses padding-top as an invisible hover-bridge that fills the
+     navbar's bottom padding zone. The visible card sits below the bridge,
+     so its top edge lands at the navbar's bottom border. */
+  .dropdown-wrap {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding-top: 22px;
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+  }
+  .has-subnav:hover .dropdown-wrap,
+  .has-subnav:focus-within .dropdown-wrap {
+    opacity: 1;
+    visibility: visible;
+  }
+  .dropdown {
+    position: relative;
+    min-width: 180px;
+    padding: 8px 0;
+    background: #14336B;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 8px 8px;
+  }
+  .dropdown::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 20px;
+    width: 12px;
+    height: 12px;
+    background: #14336B;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+  }
+  .dropdown-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px 12px 20px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .dropdown-link:hover {
+    color: #fff;
+  }
+  .dropdown-link::after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 6px;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+  }
+  .dropdown-link:hover::after {
+    transform: scaleX(1);
+  }
+</style>
 
 <!-- Push content below fixed nav -->
 <div class="h-[72px]" aria-hidden="true"></div>

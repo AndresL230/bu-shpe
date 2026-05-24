@@ -16,8 +16,6 @@ interface Props {
   meta?: string;
   /** Bottom-row right-side text (uppercase tracked). */
   metaRight?: string;
-  /** Hero scale. tall = ~72dvh, compact = ~52dvh. */
-  size?: "compact" | "tall";
 }
 
 const {
@@ -28,10 +26,7 @@ const {
   ctas = [],
   meta,
   metaRight,
-  size = "tall",
 } = Astro.props;
-
-const sizeClass = size === "tall" ? "min-h-[72dvh]" : "min-h-[52dvh]";
 
 const parts = headlineAccent && headline.includes(headlineAccent)
   ? (() => {
@@ -44,23 +39,23 @@ const parts = headlineAccent && headline.includes(headlineAccent)
     })()
   : null;
 ---
-<section class:list={["grain relative isolate bg-cream", sizeClass]}>
-  <div class="mx-auto flex h-full max-w-[1200px] flex-col justify-between px-6 pb-12 pt-16 md:pb-16 md:pt-24">
+<section class="grain relative isolate bg-deep py-24 md:py-32 px-6">
+  <div class="mx-auto max-w-[1200px]">
 
     <header class="flex flex-col gap-4">
       <span class="block h-[3px] w-12 bg-accent"></span>
-      <p class="eyebrow text-ink-muted">{eyebrow}</p>
+      <p class="eyebrow text-cream/70">{eyebrow}</p>
     </header>
 
-    <div class="mt-12 max-w-4xl">
-      <h1 class="display text-ink text-[clamp(2.5rem,7vw,6rem)]">
+    <div class="mt-8 max-w-3xl">
+      <h1 class="display text-cream text-5xl md:text-6xl lg:text-7xl leading-tight">
         {parts
           ? <Fragment>{parts.before}<em class="font-serif italic font-normal lowercase tracking-normal text-accent">{parts.accent}</em>{parts.after}</Fragment>
           : headline
         }
       </h1>
       {subtitle && (
-        <p class="mt-8 max-w-2xl text-lg leading-relaxed text-ink-muted md:text-xl">
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-cream/80">
           {subtitle}
         </p>
       )}
@@ -72,7 +67,7 @@ const parts = headlineAccent && headline.includes(headlineAccent)
               class:list={[
                 "inline-flex items-center rounded-full px-8 py-3.5 font-sans text-sm font-medium transition",
                 cta.variant === "outline"
-                  ? "border border-ink/30 text-ink hover:border-ink hover:bg-ink hover:text-cream"
+                  ? "border border-cream/30 text-cream hover:border-cream hover:bg-cream hover:text-ink"
                   : "bg-accent text-white hover:-translate-y-0.5 hover:shadow-lg",
               ]}
             >{cta.label}</a>
@@ -82,10 +77,10 @@ const parts = headlineAccent && headline.includes(headlineAccent)
     </div>
 
     {(meta || metaRight) && (
-      <footer class="mt-16 flex flex-col items-start justify-between gap-3 border-t border-ink/15 pt-6 text-xs text-ink-muted md:flex-row md:items-center">
-        {meta && <p class="eyebrow text-ink-muted/80">{meta}</p>}
+      <footer class="mt-10 flex flex-col items-start justify-between gap-3 border-t border-cream/30 pt-6 text-xs text-cream/70 md:flex-row md:items-center">
+        {meta && <p class="eyebrow text-cream/70">{meta}</p>}
         {metaRight && (
-          <p class="font-cond uppercase tracking-[0.18em] text-ink-muted/70">
+          <p class="font-cond uppercase tracking-[0.18em] text-cream/70">
             {metaRight}
           </p>
         )}

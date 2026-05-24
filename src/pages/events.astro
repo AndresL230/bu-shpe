@@ -1,129 +1,206 @@
 ---
 import Base from "@/layouts/Base.astro";
-import PageHero from "@/components/PageHero.astro";
-import SectionHeading from "@/components/SectionHeading.astro";
-import EventCard from "@/components/EventCard.astro";
-import MailingListForm from "@/components/MailingListForm.astro";
+import OrangeTick from "@/components/OrangeTick.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
 import eventsRaw from "@/data/events.json";
 
-import type { EventItem, EventCategory } from "@/types";
+import type { EventItem } from "@/types";
 
-// All possible filter chips (in display order)
-const ALL_CHIPS: { label: string; value: string }[] = [
-  { label: "All",          value: ""            },
-  { label: "Professional", value: "Professional" },
-  { label: "Cultural",     value: "Cultural"     },
-  { label: "Social",       value: "Social"       },
-  { label: "Conference",   value: "Conference"   },
-  { label: "Study Night",  value: "Study Night"  },
-  { label: "Volunteering", value: "Volunteering" },
+const events = eventsRaw as EventItem[];
+
+const today = new Date().toISOString().slice(0, 7); // yyyy-mm
+const currentYear = new Date().getFullYear();
+
+const upcoming = events
+  .filter((e) => e.date >= today)
+  .sort((a, b) => a.date.localeCompare(b.date));
+
+const past = events
+  .filter((e) => e.date < today)
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+const monthNames = [
+  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
 ];
 
-// Read active category from URL
-const activeCat = Astro.url.searchParams.get("cat") ?? "";
-
-// Sort all events descending by date, then filter
-const allEvents = [...(eventsRaw as EventItem[])].sort((a, b) =>
-  b.date.localeCompare(a.date)
-);
-const filteredEvents = activeCat
-  ? allEvents.filter((e) => e.category === (activeCat as EventCategory))
-  : allEvents;
+function dateParts(iso: string): { primary: string; secondary: string } {
+  const [y, m] = iso.split("-");
+  const monthIdx = parseInt(m, 10) - 1;
+  const month = monthNames[monthIdx] ?? "—";
+  // Always show month abbreviation on top, year below — matches the past style.
+  return { primary: month, secondary: y };
+}
 ---
 
 <Base title="Events">
 
-  <!-- ① Compact Hero -->
-  <PageHero
-    eyebrow="EVENTS"
-    headline="What's coming up at SHPE-BostonU."
-    headlineAccent="coming up"
-    subtitle="Professional, cultural, social, and academic gatherings — all in one calendar."
-    size="compact"
-    meta="EVENTS / CALENDAR + ARCHIVE"
-  />
-
-  <!-- ② Upcoming — Google Calendar embed -->
-  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
-    <SectionHeading eyebrow="UPCOMING" title="On our calendar." />
-
-    <div class="mt-10 overflow-hidden rounded-lg bg-surface shadow-[var(--shadow-card)]">
-      <iframe
-        src={siteData.calendarEmbedUrl}
-        width="100%"
-        height="600"
-        title="SHPE-BostonU events calendar"
-        loading="lazy"
-        style="border:0"
-      ></iframe>
+  <!-- ① Hero -->
+  <section class="bg-deep py-24 md:py-32 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <OrangeTick />
+      <p class="eyebrow text-cream/70 mb-4">CALENDAR {currentYear}</p>
+      <h1 class="display text-5xl md:text-6xl text-cream leading-none">
+        Events &amp; <em class="font-serif italic font-normal lowercase tracking-normal text-accent">opportunities</em>.
+      </h1>
+      <p class="max-w-2xl mt-8 text-cream/80 text-lg">
+        From professional development workshops to community building socials, discover how BU SHPE empowers Hispanic STEM students to reach their full potential.
+      </p>
     </div>
+  </section>
 
-    <div class="mt-4 flex justify-end">
+  <!-- ② Editorial timeline -->
+  <section class="max-w-[1200px] mx-auto px-6 py-24 md:py-32">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-16 border-b border-outline-soft pb-6">
+      <div>
+        <p class="eyebrow text-ink-muted mb-2">This season</p>
+        <h2 class="display text-3xl md:text-4xl text-ink">What's coming up.</h2>
+      </div>
       <a
         href={siteData.calendarEmbedUrl}
         target="_blank"
         rel="noopener"
-        class="eyebrow text-accent hover:underline underline-offset-4 transition-opacity hover:opacity-80"
+        class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors self-start md:self-auto"
       >
-        Open the full calendar →
+        <span class="border-b border-current pb-0.5">Subscribe to chapter calendar</span>
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </a>
     </div>
-  </section>
 
-  <!-- ③ Past events archive -->
-  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
-    <SectionHeading eyebrow="ARCHIVE" title="Recent events." />
-
-    <!-- Category filter chips -->
-    <nav aria-label="Filter events by category" class="mt-10 flex flex-wrap gap-3">
-      {ALL_CHIPS.map(({ label, value }) => {
-        const isActive = value === activeCat;
-        const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
-        return (
-          <a
-            href={href}
-            class:list={[
-              "eyebrow inline-flex items-center rounded-full border px-4 py-2 transition",
-              isActive
-                ? "border-ink bg-ink text-cream"
-                : "border-rule/60 text-ink/80 hover:border-accent hover:text-accent",
-            ]}
-            aria-current={isActive ? "true" : undefined}
-          >
-            {label}
-          </a>
-        );
-      })}
-    </nav>
-
-    <!-- Event grid or empty state -->
-    {filteredEvents.length > 0 ? (
-      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {filteredEvents.map((event) => (
-          <EventCard event={event} />
-        ))}
-      </div>
+    {(upcoming.length === 0 && past.length === 0) ? (
+      <p class="text-ink-muted italic text-center py-16">No events match this filter.</p>
     ) : (
-      <div class="mt-12 flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-rule/30 bg-surface py-20 text-center">
-        <p class="pullquote mx-auto max-w-md">
-          Nothing in this category yet. Check back soon.
-        </p>
-      </div>
+      <ol class="timeline relative list-none p-0 m-0">
+        {upcoming.map((event, i) => {
+          const { primary, secondary } = dateParts(event.date);
+          const isLeft = i % 2 === 0;
+          const prevIsLeft = i > 0 ? (i - 1) % 2 === 0 : null;
+          // Only overlap when previous entry is on the opposite side (no collision).
+          const shouldOverlap = prevIsLeft !== null && prevIsLeft !== isLeft;
+          return (
+            <li class:list={[
+              "timeline-row group relative grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] gap-x-6 md:gap-x-16 py-12 md:py-16",
+              shouldOverlap && "md:-mt-[220px] lg:-mt-[280px]"
+            ]}>
+              <div class="col-start-1 md:col-start-2 md:row-start-1 flex flex-col items-center gap-1 relative z-10 bg-bg px-3 self-start md:self-center">
+                <span class="display text-4xl md:text-5xl text-accent leading-none tabular-nums transition-transform duration-300 group-hover:scale-110">{primary}</span>
+                <span class="eyebrow text-ink-muted">{secondary}</span>
+              </div>
+              <article class:list={[
+                "col-start-2 flex flex-col max-w-xl",
+                isLeft
+                  ? "md:col-start-1 md:row-start-1 md:text-left md:justify-self-start"
+                  : "md:col-start-3 md:row-start-1 md:text-right md:justify-self-end",
+              ]}>
+                <span class="eyebrow text-accent block mb-2">{event.category}</span>
+                <h3 class="display text-2xl md:text-3xl text-ink mb-3 leading-tight transition-colors duration-300 group-hover:text-accent">{event.title}</h3>
+                {event.photo && (
+                  <div class="w-full aspect-[4/3] mb-3 rounded-lg overflow-hidden bg-surface-soft">
+                    <img
+                      src={event.photo}
+                      alt={event.title}
+                      class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <p class="text-base text-ink-muted leading-relaxed">{event.description}</p>
+              </article>
+            </li>
+          );
+        })}
+
+        {past.length > 0 && (
+          <li class="timeline-row relative grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] py-8">
+            <div class="col-start-1 md:col-start-2 md:row-start-1 relative z-10 bg-bg px-4">
+              <span class="eyebrow text-ink-muted whitespace-nowrap">— PAST —</span>
+            </div>
+          </li>
+        )}
+
+        {past.slice(0, 3).map((event, i) => {
+          const { primary, secondary } = dateParts(event.date);
+          const isLeft = (upcoming.length + i) % 2 === 0;
+          const prevIsLeft = i > 0 ? (upcoming.length + i - 1) % 2 === 0 : null;
+          // Only overlap when previous entry is on the opposite side (no collision).
+          // First past entry sits cleanly after the PAST divider (no overlap).
+          const shouldOverlap = prevIsLeft !== null && prevIsLeft !== isLeft;
+          return (
+            <li class:list={[
+              "timeline-row group relative grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] gap-x-6 md:gap-x-16 py-12 md:py-16",
+              shouldOverlap && "md:-mt-[220px] lg:-mt-[280px]"
+            ]}>
+              <div class="col-start-1 md:col-start-2 md:row-start-1 flex flex-col items-center gap-1 relative z-10 bg-bg px-3 self-start md:self-center">
+                <span class="display text-4xl md:text-5xl text-ink leading-none tabular-nums transition-transform duration-300 group-hover:scale-110">{primary}</span>
+                <span class="eyebrow text-ink-muted">{secondary}</span>
+              </div>
+              <article class:list={[
+                "col-start-2 flex flex-col max-w-xl",
+                isLeft
+                  ? "md:col-start-1 md:row-start-1 md:text-left md:justify-self-start"
+                  : "md:col-start-3 md:row-start-1 md:text-right md:justify-self-end",
+              ]}>
+                <span class="eyebrow text-ink-muted block mb-2">{event.category}</span>
+                <h3 class="display text-2xl md:text-3xl text-ink mb-3 leading-tight transition-colors duration-300 group-hover:text-accent">{event.title}</h3>
+                {event.photo && (
+                  <div class="w-full aspect-[4/3] mb-3 rounded-lg overflow-hidden bg-surface-soft">
+                    <img
+                      src={event.photo}
+                      alt={event.title}
+                      class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <p class="text-base text-ink-muted leading-relaxed">{event.description}</p>
+              </article>
+            </li>
+          );
+        })}
+
+        <li class="timeline-row relative grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] py-10">
+          <div class="col-start-2 md:col-start-2 md:row-start-1 flex justify-center md:col-span-1">
+            <a
+              href="/events/all"
+              class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md relative z-10"
+            >
+              See all events
+              <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
+        </li>
+      </ol>
     )}
   </section>
 
-  <!-- ④ Subscribe nudge -->
-  <section class="reveal mx-auto max-w-[1200px] px-6 py-24">
-    <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-      <SectionHeading
-        eyebrow="STAY IN THE LOOP"
-        title="Get event invites in your inbox."
-        lede="Subscribe to our mailing list — one email per major event, no spam."
-      />
-      <MailingListForm />
-    </div>
-  </section>
+  <style>
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(1.5rem - 1px);
+      width: 1px;
+      background: var(--color-rule);
+      opacity: 0.4;
+    }
+    @media (min-width: 768px) {
+      .timeline::before {
+        left: 50%;
+        transform: translateX(-0.5px);
+      }
+    }
+  </style>
+
+  <!-- ⑦ CTA / mailing-list nudge -->
+  <CtaBand
+    heading="Don't miss a beat."
+    body="Get a heads-up about workshops, mixers, and conference travel. We email maybe twice a month."
+    primaryCta={{ label: "Join the mailing list", href: "/join" }}
+    secondaryCta={{ label: "Follow on Instagram", href: siteData.socials.instagram }}
+  />
 
 </Base>
