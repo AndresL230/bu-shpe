@@ -1,0 +1,6 @@
+[
+  { "industry": "Aerospace & Defense", "companies": [ { "name": "Boeing" }, { "name": "Raytheon" }, { "name": "NASA" }, { "name": "JPL" }, { "name": "Lockheed Martin" } ] },
+  { "industry": "Technology", "companies": [ { "name": "Google" }, { "name": "Microsoft" }, { "name": "Amazon" }, { "name": "Akamai" }, { "name": "Tesla" } ] },
+  { "industry": "Energy", "companies": [ { "name": "General Electric" }, { "name": "Eversource" }, { "name": "Schlumberger" }, { "name": "NextEra Energy" } ] },
+  { "industry": "Biotech & Health", "companies": [ { "name": "Vertex" }, { "name": "Moderna" }, { "name": "Genentech" }, { "name": "Pfizer" } ] }
+]

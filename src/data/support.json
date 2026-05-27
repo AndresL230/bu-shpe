@@ -1,0 +1,58 @@
+{
+  "stats": [
+    { "value": "7+", "label": "Corporate & institutional partners" },
+    { "value": "100+", "label": "Students supported each year" },
+    { "value": "20+", "label": "Events per year" }
+  ],
+  "tiers": [
+    {
+      "name": "Platinum",
+      "benefits": [
+        "Premier logo placement on the website and all event materials",
+        "Priority recruiting access at chapter events and the SHPE National Convention",
+        "Up to two branded company-led workshops, panels, or site visits",
+        "Direct introductions to engineering students and the BU College of Engineering",
+        "Dedicated feature on Instagram (@shpe.bostonu) and a mention in every newsletter"
+      ]
+    },
+    {
+      "name": "Gold",
+      "benefits": [
+        "Prominent logo placement on the website and event materials",
+        "Recruiting access at chapter events and the SHPE National Convention",
+        "One branded company-led workshop, panel, or site visit",
+        "Introductions to engineering students",
+        "Instagram feature and recurring newsletter mentions"
+      ]
+    },
+    {
+      "name": "Silver",
+      "benefits": [
+        "Logo placement on the website and event materials",
+        "Recruiting access at chapter events",
+        "Shared feature on Instagram (@shpe.bostonu)",
+        "Mention in the chapter newsletter"
+      ]
+    },
+    {
+      "name": "Bronze",
+      "benefits": [
+        "Logo placement on the website",
+        "Recruiting access at chapter events",
+        "Mention in the chapter newsletter"
+      ]
+    }
+  ],
+  "donationFunds": [
+    "SHPE National Convention travel and registration",
+    "Professional development workshops and materials",
+    "Networking and social events",
+    "Chapter operations and supplies"
+  ],
+  "givingImpact": [
+    { "amount": "$25", "outcome": "Covers supplies for a resume workshop" },
+    { "amount": "$50", "outcome": "Funds a student's convention registration" },
+    { "amount": "$100", "outcome": "Sponsors a company visit trip" },
+    { "amount": "$200", "outcome": "Funds a full semester of professional development events" }
+  ]
+}

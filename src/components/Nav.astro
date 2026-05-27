@@ -2,14 +2,45 @@
 import siteData from "@/data/site.json";
 import Icon from "@/components/Icon.astro";
 
-const links = [
-  { href: "/about",         label: "About" },
+type SubLink = { href: string; label: string };
+type NavLink = { href: string; label: string; submenu?: SubLink[] };
+
+const links: NavLink[] = [
+  {
+    href: "/about",
+    label: "About",
+    submenu: [
+      { href: "/about",               label: "all of about" },
+      { href: "/about#mission",        label: "mission" },
+      { href: "/about#history",        label: "history" },
+      { href: "/about#advisor",        label: "faculty advisor" },
+      { href: "/about#constitution",   label: "constitution" },
+    ],
+  },
   { href: "/board",         label: "E-Board" },
-  { href: "/events",        label: "Events" },
+  {
+    href: "/events",
+    label: "Events",
+    submenu: [
+      { href: "/events/all",                    label: "all events" },
+      { href: "/events/all?cat=Professional",   label: "workshops" },
+      { href: "/events/all?cat=Conference",     label: "info sessions" },
+      { href: "/events/all?cat=Social",         label: "socials" },
+    ],
+  },
   { href: "/conferences",   label: "Conferences" },
   { href: "/volunteering",  label: "Volunteering" },
-  { href: "/gallery",       label: "Gallery" },
-  { href: "/sponsors",      label: "Sponsors" },
+  {
+    href: "/gallery",
+    label: "Gallery",
+    submenu: [
+      { href: "/gallery",                    label: "all photos" },
+      { href: "/gallery?cat=Events",         label: "events" },
+      { href: "/gallery?cat=Volunteering",   label: "volunteering" },
+      { href: "/gallery?cat=Conferences",    label: "conferences" },
+    ],
+  },
+  { href: "/support",       label: "Support" },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
@@ -79,8 +110,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
       class="pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center"
     >
       <ul class="pointer-events-auto flex items-center gap-7 xl:gap-10">
-        {links.map(({ href, label }) => {
-          const hasSubmenu = href === "/events";
+        {links.map(({ href, label, submenu }) => {
+          const hasSubmenu = !!submenu;
           return (
             <li class:list={[hasSubmenu && "has-subnav relative"]}>
               <a
@@ -92,13 +123,12 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
                   currentPath === href ? "text-cream" : "text-cream/85 hover:text-cream"
                 ]}
               >{label}</a>
-              {hasSubmenu && (
+              {submenu && (
                 <div class="dropdown-wrap">
                   <div class="dropdown">
-                    <a href="/events/all" class="dropdown-link">all events <span aria-hidden="true">→</span></a>
-                    <a href="/events/all?cat=Professional" class="dropdown-link">workshops <span aria-hidden="true">→</span></a>
-                    <a href="/events/all?cat=Conference" class="dropdown-link">info sessions <span aria-hidden="true">→</span></a>
-                    <a href="/events/all?cat=Social" class="dropdown-link">socials <span aria-hidden="true">→</span></a>
+                    {submenu.map((item) => (
+                      <a href={item.href} class="dropdown-link">{item.label} <span aria-hidden="true">→</span></a>
+                    ))}
                   </div>
                 </div>
               )}

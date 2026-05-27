@@ -47,7 +47,7 @@ export interface Sponsor {
   name: string;
   logo: string;   // path under /assets/sponsors/
   url?: string;
-  tier?: "Platinum" | "Gold" | "Silver" | "Partner";
+  tier?: "Platinum" | "Gold" | "Silver" | "Bronze";
 }
 
 export interface Conference {
@@ -62,4 +62,24 @@ export interface VolunteeringProgram {
   name: string;
   description: string;
   photos: string[]; // paths under /assets/volunteering/
+}
+
+export interface SupportStat {
+  value: string;
+  label: string;
+}
+
+export interface SponsorTier {
+  name: "Platinum" | "Gold" | "Silver" | "Bronze";
+  benefits: string[];
+}
+
+export interface GivingImpact {
+  amount: string;
+  outcome: string;
+}
+
+export interface EmployerGroup {
+  industry: string;
+  companies: { name: string; logo?: string }[];
 }

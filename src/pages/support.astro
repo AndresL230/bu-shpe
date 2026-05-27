@@ -11,7 +11,7 @@ import siteData from "@/data/site.json";
 
 // Tier-aware grouping logic.
 // If any sponsor has a truthy `tier` field, we group by tier; otherwise flat grid.
-const tierOrder = ["Platinum", "Gold", "Silver", "Partner"] as const;
+const tierOrder = ["Platinum", "Gold", "Silver", "Bronze"] as const;
 type Tier = (typeof tierOrder)[number];
 
 const sponsors = sponsorsData as Sponsor[];
