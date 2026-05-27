@@ -5,8 +5,6 @@ import supportData from "@/data/support.json";
 import sponsorsData from "@/data/sponsors.json";
 
 const sponsors = sponsorsData as Sponsor[];
-const institutional = sponsors.filter((s) => s.name.startsWith("BU "));
-const corporate = sponsors.filter((s) => !s.name.startsWith("BU "));
 
 const valuePitches = [
   "Access to Hispanic STEM talent at a top engineering school",
@@ -60,19 +58,9 @@ const partnerBenefits = supportData.partnerBenefits as string[];
 <!-- Current partners -->
 <section class="reveal border-t border-outline-soft/50">
   <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
-    <p class="eyebrow text-accent">CURRENT PARTNERS</p>
-    <h2 class="display mb-12 mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
+    <h2 class="display mb-12 text-3xl leading-[1.05] text-ink md:text-4xl">
       Thank you to our partners.
     </h2>
-    <div class="space-y-12">
-      <div>
-        <p class="eyebrow mb-4 text-ink-muted">Institutional</p>
-        <SponsorGrid sponsors={institutional} />
-      </div>
-      <div>
-        <p class="eyebrow mb-4 text-ink-muted">Corporate</p>
-        <SponsorGrid sponsors={corporate} />
-      </div>
-    </div>
+    <SponsorGrid sponsors={sponsors} />
   </div>
 </section>
