@@ -1,72 +1,50 @@
 ---
-import Icon from "@/components/Icon.astro";
 import type { GivingImpact } from "@/types";
 import supportData from "@/data/support.json";
-import siteData from "@/data/site.json";
 
 const donationFunds = (supportData as { donationFunds: string[]; givingImpact: GivingImpact[] }).donationFunds;
 const givingImpact = (supportData as { donationFunds: string[]; givingImpact: GivingImpact[] }).givingImpact;
 ---
 
-<section
-  id="individual"
-  class="scroll-mt-[88px] py-24 reveal"
->
-  <div class="max-w-[1200px] mx-auto px-6">
-
-    <!-- What your gift funds -->
-    <div class="max-w-3xl">
-      <p class="text-base text-ink-muted leading-relaxed mb-8">
-        Your generosity removes barriers and opens doors. Gifts from alumni, parents, and friends help BU SHPE members show up fully — at national conferences, in mentorship rooms, and on the recruiting floor.
+<!-- Where it goes — asymmetric -->
+<section class="reveal py-20 md:py-28">
+  <div class="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-6 md:grid-cols-12 md:gap-16">
+    <div class="md:col-span-5">
+      <p class="eyebrow text-accent">WHERE IT GOES</p>
+      <h2 class="display mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
+        Every gift, straight to the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">students</em>.
+      </h2>
+      <p class="mt-6 leading-relaxed text-ink-muted">
+        Your generosity removes barriers and opens doors — helping members show up fully at conferences, in mentorship rooms, and on the recruiting floor.
       </p>
-      <ul class="space-y-3" aria-label="What your gift funds">
-        {donationFunds.map((fund) => (
-          <li class="flex items-start gap-3">
-            <span class="eyebrow text-accent mt-0.5 select-none" aria-hidden="true">—</span>
-            <span class="text-ink-muted leading-relaxed">{fund}</span>
-          </li>
-        ))}
-      </ul>
     </div>
+    <ul class="flex flex-col divide-y divide-rule/25 md:col-span-7 md:pt-1">
+      {donationFunds.map((fund) => (
+        <li class="flex items-baseline gap-5 py-5 first:pt-0">
+          <span class="text-accent" aria-hidden="true">—</span>
+          <span class="text-lg leading-snug text-ink md:text-xl">{fund}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
 
-    <!-- Impact cards -->
-    <div class="mt-20">
-      <div class="mb-10">
-        <p class="eyebrow text-accent mb-2">YOUR IMPACT</p>
-        <h3 class="display text-3xl text-ink">What your gift makes possible.</h3>
-      </div>
-
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {givingImpact.map((item: GivingImpact) => (
-          <div class="bg-surface rounded-[var(--radius-card)] border border-rule/40 p-6 shadow-[var(--shadow-card)]">
-            <p class="display text-4xl text-accent leading-none mb-3">{item.amount}</p>
-            <p class="text-sm text-ink-muted leading-relaxed">{item.outcome}</p>
-          </div>
-        ))}
-      </div>
+<!-- Impact — soft band for rhythm -->
+<section class="reveal border-y border-outline-soft/50 bg-surface-soft">
+  <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+    <div class="max-w-2xl">
+      <p class="eyebrow text-accent">YOUR IMPACT</p>
+      <h2 class="display mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
+        What your gift makes possible.
+      </h2>
     </div>
-
-    <!-- CTAs -->
-    <div class="mt-16 flex flex-wrap gap-4">
-      <a
-        href={siteData.donateUrl}
-        target="_blank"
-        rel="noopener"
-        class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
-      >
-        Donate via BU Trusted
-        <Icon name="arrow-forward" class="h-4 w-4 transition group-hover:translate-x-0.5" />
-      </a>
-
-      <button
-        type="button"
-        data-open-modal="individual"
-        class="group inline-flex items-center gap-2 rounded-full border border-ink/20 px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-ink transition hover:-translate-y-px hover:border-ink"
-      >
-        Get in Touch
-        <Icon name="person-add" class="h-4 w-4 transition group-hover:scale-110" />
-      </button>
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {givingImpact.map((item) => (
+        <div class="rounded-[var(--radius-card)] border border-rule/30 bg-surface p-6">
+          <p class="display mb-3 text-4xl leading-none text-accent">{item.amount}</p>
+          <p class="text-sm leading-relaxed text-ink-muted">{item.outcome}</p>
+        </div>
+      ))}
     </div>
-
   </div>
 </section>

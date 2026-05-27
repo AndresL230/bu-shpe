@@ -2,6 +2,8 @@
 import Base from "@/layouts/Base.astro";
 import SupportHero from "@/components/SupportHero.astro";
 import EmployersSection from "@/components/EmployersSection.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import siteData from "@/data/site.json";
 ---
 
 <Base
@@ -11,11 +13,11 @@ import EmployersSection from "@/components/EmployersSection.astro";
   <SupportHero />
   <EmployersSection />
 
-  <!-- Page-scoped smooth scroll for the hero's "Where We Work" anchor (only loads on /support) -->
-  <style is:global>
-    html { scroll-behavior: smooth; }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-    }
-  </style>
+  <CtaBand
+    eyebrow="GET IN TOUCH"
+    heading="Be part of the <em class='font-serif italic font-normal lowercase tracking-normal text-accent'>familia</em>."
+    body="Sponsors, alumni, faculty, friends — every kind of support moves this chapter forward. Tell us how you'd like to show up."
+    primaryCta={{ label: "Email the chapter", href: `mailto:${siteData.contactEmail}` }}
+    secondaryCta={{ label: "Follow on Instagram", href: siteData.socials.instagram }}
+  />
 </Base>
