@@ -10,6 +10,11 @@ const groups = employersData as EmployerGroup[];
 // 404 when no logo exists, so the inline onerror reveals the company name).
 const logoSrc = (c: { domain?: string; logo?: string }) =>
   c.logo ?? (c.domain ? `https://unavatar.io/${c.domain}?fallback=false` : "");
+
+// Secondary source: when the logo service has no match, fall back to the
+// brand's favicon (reliable for any real domain) before showing plain text.
+const faviconSrc = (domain?: string) =>
+  domain ? `https://www.google.com/s2/favicons?sz=128&domain=${domain}` : "";
 ---
 
 <section
@@ -31,11 +36,11 @@ const logoSrc = (c: { domain?: string; logo?: string }) =>
             <div class="group flex aspect-[4/3] items-center justify-center bg-surface p-6 text-center transition-colors hover:bg-cream/30">
               <img
                 src={logoSrc(company)}
+                data-fallback={faviconSrc(company.domain)}
                 alt={company.name}
                 loading="lazy"
                 referrerpolicy="no-referrer"
-                class="max-h-16 w-auto max-w-[72%] object-contain transition-transform duration-300 group-hover:scale-105"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                class="employer-logo max-h-16 w-auto max-w-[72%] object-contain transition-transform duration-300 group-hover:scale-105"
               />
               <span
                 class="display text-base tracking-wide text-ink"
@@ -48,3 +53,24 @@ const logoSrc = (c: { domain?: string; logo?: string }) =>
     ))}
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    function fallback(img) {
+      var fb = img.getAttribute("data-fallback");
+      if (fb) {
+        img.removeAttribute("data-fallback");
+        img.src = fb;
+      } else {
+        img.style.display = "none";
+        var label = img.nextElementSibling;
+        if (label) label.style.display = "block";
+      }
+    }
+    document.querySelectorAll("img.employer-logo").forEach(function (img) {
+      img.addEventListener("error", function () { fallback(img); });
+      // catch images that already failed before this script ran
+      if (img.complete && img.naturalWidth === 0) fallback(img);
+    });
+  })();
+</script>
