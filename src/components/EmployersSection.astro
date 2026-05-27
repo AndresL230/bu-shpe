@@ -1,0 +1,35 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import employersData from "@/data/employers.json";
+import type { EmployerGroup } from "@/types";
+
+const groups = employersData as EmployerGroup[];
+---
+
+<section
+  id="employers"
+  class="scroll-mt-[88px] bg-surface-soft border-y border-rule reveal"
+>
+  <div class="max-w-[1200px] mx-auto px-6 py-24">
+    <SectionHeading
+      eyebrow="OUR MEMBERS"
+      title="Where SHPE Takes Us"
+      lede="BU SHPE members and alumni have gone on to work at companies shaping the future of engineering, technology, and science."
+    />
+
+    {groups.map((group) => (
+      <div class="mt-14">
+        <p class="eyebrow text-ink-muted mb-6">{group.industry}</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-rule/20">
+          {group.companies.map((company) => (
+            <div class="bg-surface-soft hover:bg-surface flex items-center justify-center py-8 px-4 text-center transition-colors duration-300 group">
+              <span class="display text-sm sm:text-base tracking-wide text-ink-muted group-hover:text-ink transition-colors duration-300">
+                {company.name}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,76 @@
+---
+import PageHero from "@/components/PageHero.astro";
+import StatsStrip from "@/components/StatsStrip.astro";
+import Icon from "@/components/Icon.astro";
+import supportData from "@/data/support.json";
+
+interface AnchorCard {
+  number: string;
+  label: string;
+  title: string;
+  descriptor: string;
+  href: string;
+  accentClass: string;
+}
+
+const cards: AnchorCard[] = [
+  {
+    number: "01",
+    label: "PARTNER",
+    title: "Corporate Partners",
+    descriptor: "Sponsor the chapter and recruit top Hispanic STEM talent.",
+    href: "#corporate",
+    accentClass: "text-accent",
+  },
+  {
+    number: "02",
+    label: "GIVE",
+    title: "Individual Supporters",
+    descriptor: "Give back and help fund a student's professional journey.",
+    href: "#individual",
+    accentClass: "text-ink",
+  },
+  {
+    number: "03",
+    label: "EXPLORE",
+    title: "Where We Work",
+    descriptor: "See the companies our members and alumni call home.",
+    href: "#employers",
+    accentClass: "text-rule",
+  },
+];
+---
+
+<PageHero
+  eyebrow="SUPPORT"
+  headline="The People Behind the Mission"
+  headlineAccent="Mission"
+  subtitle="BU SHPE exists because people show up — with funding, mentorship, open doors, and belief in what this community can become. Our supporters are the companies, alumni, faculty, and friends who invest in Hispanic engineers, alongside the BU College of Engineering and the Student Activities Office."
+/>
+
+<StatsStrip stats={supportData.stats} />
+
+<section class="max-w-[1200px] mx-auto px-6 py-24 reveal">
+  <p class="eyebrow text-ink-muted mb-10">GET INVOLVED</p>
+  <div class="grid gap-6 md:grid-cols-3">
+    {cards.map((card) => (
+      <a
+        href={card.href}
+        class="group block bg-surface rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-8 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 transition"
+      >
+        <p class:list={["eyebrow text-xs mb-6", card.accentClass]}>
+          {card.number}&nbsp;/&nbsp;{card.label}
+        </p>
+        <h2 class="display text-2xl text-ink leading-tight mb-3">
+          {card.title}
+        </h2>
+        <p class="text-ink-muted text-sm leading-relaxed mb-8">
+          {card.descriptor}
+        </p>
+        <span class="inline-flex items-center gap-2 text-sm font-medium text-ink group-hover:gap-3 transition-all">
+          <Icon name="arrow-forward" class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </span>
+      </a>
+    ))}
+  </div>
+</section>
