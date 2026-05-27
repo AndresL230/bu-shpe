@@ -40,7 +40,16 @@ const links: NavLink[] = [
       { href: "/gallery?cat=Conferences",    label: "conferences" },
     ],
   },
-  { href: "/support",       label: "Support" },
+  {
+    href: "/support",
+    label: "Support",
+    submenu: [
+      { href: "/support",            label: "all of support" },
+      { href: "/support#corporate",  label: "corporate partners" },
+      { href: "/support#individual", label: "individual giving" },
+      { href: "/support#employers",  label: "where we work" },
+    ],
+  },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";

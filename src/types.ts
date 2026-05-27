@@ -69,11 +69,6 @@ export interface SupportStat {
   label: string;
 }
 
-export interface SponsorTier {
-  name: "Platinum" | "Gold" | "Silver" | "Bronze";
-  benefits: string[];
-}
-
 export interface GivingImpact {
   amount: string;
   outcome: string;

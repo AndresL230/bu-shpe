@@ -2,7 +2,7 @@
 import SectionHeading from "@/components/SectionHeading.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
 import Icon from "@/components/Icon.astro";
-import type { Sponsor, SponsorTier } from "@/types";
+import type { Sponsor } from "@/types";
 import supportData from "@/data/support.json";
 import sponsorsData from "@/data/sponsors.json";
 import siteData from "@/data/site.json";
@@ -10,13 +10,14 @@ import siteData from "@/data/site.json";
 const sponsors = sponsorsData as Sponsor[];
 const institutional = sponsors.filter((s) => s.name.startsWith("BU "));
 const corporate = sponsors.filter((s) => !s.name.startsWith("BU "));
-const tiers = supportData.tiers as SponsorTier[];
 
 const valuePitches = [
   "Access to Hispanic STEM talent at a top engineering school",
   "Visibility at chapter events and the SHPE National Convention",
   "A direct recruiting pipeline to motivated, organized students",
 ];
+
+const partnerBenefits = supportData.partnerBenefits as string[];
 ---
 
 <section
@@ -41,54 +42,19 @@ const valuePitches = [
       ))}
     </ul>
 
-    <!-- 2. Sponsorship tiers -->
+    <!-- 2. What partners get -->
     <div class="mt-20">
-      <p class="eyebrow text-accent">SPONSORSHIP TIERS</p>
-      <h3 class="display text-3xl mt-2 text-ink">Choose your level of partnership.</h3>
+      <p class="eyebrow text-accent">WHAT PARTNERS GET</p>
+      <h3 class="display text-3xl mt-2 text-ink">What your partnership includes.</h3>
 
-      <div class="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        {tiers.map((tier, i) => (
-          <div
-            class:list={[
-              "rounded-[var(--radius-card)] p-6 flex flex-col gap-5",
-              i === 0
-                ? "bg-deep"
-                : "bg-surface border border-rule/40 shadow-[var(--shadow-card)]",
-            ]}
-          >
-            <p
-              class:list={[
-                "display text-2xl",
-                i === 0 ? "text-cream" : "text-ink",
-              ]}
-            >
-              {tier.name}
-            </p>
-            <ul class="flex flex-col gap-3">
-              {tier.benefits.map((benefit) => (
-                <li class="flex items-start gap-2.5">
-                  <span
-                    class:list={[
-                      "mt-0.5 shrink-0 text-accent text-xs font-bold leading-none",
-                    ]}
-                    aria-hidden="true"
-                  >
-                    ✓
-                  </span>
-                  <span
-                    class:list={[
-                      "text-sm leading-relaxed",
-                      i === 0 ? "text-cream/80" : "text-ink-muted",
-                    ]}
-                  >
-                    {benefit}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <ul class="mt-10 grid gap-x-12 gap-y-4 sm:grid-cols-2 max-w-4xl">
+        {partnerBenefits.map((benefit) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-1 shrink-0 text-accent text-xs font-bold leading-none" aria-hidden="true">✓</span>
+            <span class="text-base text-ink-muted leading-relaxed">{benefit}</span>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
 
     <!-- 3. Current partners -->
