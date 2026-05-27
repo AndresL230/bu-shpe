@@ -23,9 +23,10 @@ const allPhotos = [
   ),
 ];
 
-const cat = Astro.url.searchParams.get("cat");
-const photos = cat ? allPhotos.filter((p) => p.group === cat) : allPhotos;
 const filters = ["All", "Events", "Volunteering", "Conferences"];
+
+const chipBase = "inline-flex items-center rounded-full px-5 py-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] transition-colors";
+const chipInactive = "border border-rule/60 text-ink-muted hover:border-ink hover:text-ink";
 ---
 
 <Base title="Gallery">
@@ -39,25 +40,20 @@ const filters = ["All", "Events", "Volunteering", "Conferences"];
   />
 
   <!-- ② Filter + Gallery -->
-  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+  <section id="gallery-filter-root" class="mx-auto max-w-[1200px] px-6 py-24 reveal">
     <SectionHeading eyebrow="ARCHIVE" title="The whole familia." />
 
     <!-- Filter chips -->
     <nav aria-label="Filter gallery by category" class="mt-8 flex flex-wrap gap-3">
       {filters.map((label) => {
-        const value = label === "All" ? null : label;
-        const isActive = value === cat;
+        const value = label === "All" ? "" : label;
         const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
         return (
           <a
+            data-chip
+            data-chip-value={value}
             href={href}
-            class:list={[
-              "inline-flex items-center rounded-full px-5 py-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
-              isActive
-                ? "bg-ink text-cream"
-                : "border border-rule/60 text-ink-muted hover:border-ink hover:text-ink",
-            ]}
-            aria-current={isActive ? "true" : undefined}
+            class:list={[chipBase, chipInactive]}
           >
             {label}
           </a>
@@ -65,19 +61,83 @@ const filters = ["All", "Events", "Volunteering", "Conferences"];
       })}
     </nav>
 
-    <!-- Gallery grid or empty state -->
-    {photos.length > 0 ? (
-      <div class="mt-12">
-        <Gallery photos={photos} />
-      </div>
-    ) : (
-      <div class="mt-12 flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-rule/30 bg-surface py-20 text-center">
-        <p class="pullquote mx-auto max-w-md">
-          No photos in this category yet. Check back soon.
-        </p>
-      </div>
-    )}
+    <!-- Empty state (JS toggles visibility) -->
+    <div
+      data-empty-state
+      hidden
+      class="mt-12 flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-rule/30 bg-surface py-20 text-center"
+    >
+      <p class="pullquote mx-auto max-w-md">
+        No photos in this category yet. Check back soon.
+      </p>
+    </div>
+
+    <!-- Gallery grid (all photos; JS filters by category) -->
+    <div class="mt-12">
+      <Gallery photos={allPhotos} />
+    </div>
   </section>
+
+  <script is:inline>
+    (function () {
+      var root = document.getElementById("gallery-filter-root");
+      if (!root) return;
+
+      var chips = root.querySelectorAll("[data-chip]");
+      var items = root.querySelectorAll("[data-gallery-index]");
+      var emptyState = root.querySelector("[data-empty-state]");
+
+      var inactiveClasses = ["border", "border-rule/60", "text-ink-muted", "hover:border-ink", "hover:text-ink"];
+      var activeClasses = ["bg-ink", "text-cream"];
+
+      function setActive(value) {
+        chips.forEach(function (chip) {
+          var chipValue = chip.getAttribute("data-chip-value") || "";
+          if (chipValue === value) {
+            inactiveClasses.forEach(function (c) { chip.classList.remove(c); });
+            activeClasses.forEach(function (c) { chip.classList.add(c); });
+            chip.setAttribute("aria-current", "true");
+          } else {
+            activeClasses.forEach(function (c) { chip.classList.remove(c); });
+            inactiveClasses.forEach(function (c) { chip.classList.add(c); });
+            chip.removeAttribute("aria-current");
+          }
+        });
+      }
+
+      function applyFilter(cat) {
+        cat = cat || "";
+        setActive(cat);
+        var anyVisible = false;
+        items.forEach(function (el) {
+          var matches = !cat || el.getAttribute("data-category") === cat;
+          el.hidden = !matches;
+          if (matches) anyVisible = true;
+        });
+        if (emptyState) emptyState.hidden = anyVisible;
+      }
+
+      var params = new URLSearchParams(location.search);
+      applyFilter(params.get("cat"));
+
+      chips.forEach(function (chip) {
+        chip.addEventListener("click", function (e) {
+          e.preventDefault();
+          var value = chip.getAttribute("data-chip-value") || "";
+          var url = value
+            ? location.pathname + "?cat=" + encodeURIComponent(value)
+            : location.pathname;
+          history.pushState({}, "", url);
+          applyFilter(value);
+        });
+      });
+
+      window.addEventListener("popstate", function () {
+        var p = new URLSearchParams(location.search);
+        applyFilter(p.get("cat"));
+      });
+    })();
+  </script>
 
   <!-- ③ Submit photos CTA -->
   <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
