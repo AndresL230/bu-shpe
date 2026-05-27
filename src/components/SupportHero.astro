@@ -1,70 +1,14 @@
 ---
 import PageHero from "@/components/PageHero.astro";
 import StatsStrip from "@/components/StatsStrip.astro";
-import Icon from "@/components/Icon.astro";
 import supportData from "@/data/support.json";
-
-interface PathCard {
-  number: string;
-  title: string;
-  descriptor: string;
-  href: string;
-  cta: string;
-}
-
-const paths: PathCard[] = [
-  {
-    number: "01",
-    title: "Corporate Partners",
-    descriptor:
-      "Sponsor the chapter and recruit top Hispanic STEM talent — at our events and the SHPE National Convention.",
-    href: "/support/corporate",
-    cta: "Explore partnership",
-  },
-  {
-    number: "02",
-    title: "Individual Giving",
-    descriptor:
-      "Alumni, parents, and friends: fund the trips, workshops, and experiences that move students forward.",
-    href: "/support/individual",
-    cta: "Support a student",
-  },
-];
 ---
 
 <PageHero
   eyebrow="SUPPORT"
   headline="The People Behind the Mission"
   headlineAccent="Mission"
-  subtitle="BU SHPE exists because people show up — with funding, mentorship, open doors, and belief in what this community can become. Our supporters are the companies, alumni, faculty, and friends who invest in Hispanic engineers, alongside the BU College of Engineering and the Student Activities Office."
+  subtitle="Every workshop, trip, and open door starts with someone choosing to invest in Hispanic engineers."
 />
 
 <StatsStrip stats={supportData.stats} />
-
-<section class="reveal py-20 md:py-28">
-  <div class="mx-auto max-w-[1200px] px-6">
-    <div class="max-w-2xl">
-      <p class="eyebrow text-accent">WAYS TO SUPPORT</p>
-      <h2 class="display mt-4 text-3xl md:text-4xl leading-[1.05] text-ink">
-        Two ways to invest in the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em>.
-      </h2>
-    </div>
-
-    <div class="mt-12 grid gap-6 md:grid-cols-2">
-      {paths.map((p) => (
-        <a
-          href={p.href}
-          class="group flex flex-col rounded-[var(--radius-card)] border border-rule/30 bg-surface p-8 md:p-10 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
-        >
-          <span class="font-cond text-sm tracking-widest text-accent tabular-nums">{p.number}</span>
-          <h3 class="display mt-4 text-3xl md:text-4xl leading-none text-ink">{p.title}</h3>
-          <p class="mt-4 leading-relaxed text-ink-muted">{p.descriptor}</p>
-          <span class="mt-8 inline-flex items-center gap-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-ink">
-            {p.cta}
-            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </span>
-        </a>
-      ))}
-    </div>
-  </div>
-</section>

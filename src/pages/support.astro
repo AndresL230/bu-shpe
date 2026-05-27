@@ -3,7 +3,32 @@ import Base from "@/layouts/Base.astro";
 import SupportHero from "@/components/SupportHero.astro";
 import EmployersSection from "@/components/EmployersSection.astro";
 import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
 import siteData from "@/data/site.json";
+
+interface PathRow {
+  number: string;
+  title: string;
+  descriptor: string;
+  href: string;
+}
+
+const paths: PathRow[] = [
+  {
+    number: "01",
+    title: "Corporate Partners",
+    descriptor:
+      "Sponsor the chapter and recruit top Hispanic STEM talent at our events and the SHPE National Convention.",
+    href: "/support/corporate",
+  },
+  {
+    number: "02",
+    title: "Individual Giving",
+    descriptor:
+      "Alumni, parents, and friends: fund the trips, workshops, and experiences that move students forward.",
+    href: "/support/individual",
+  },
+];
 ---
 
 <Base
@@ -11,6 +36,51 @@ import siteData from "@/data/site.json";
   description="The companies, alumni, faculty, and friends who invest in Hispanic engineers at Boston University — and where SHPE takes its members."
 >
   <SupportHero />
+
+  <!-- Framing statement — asymmetric, airy -->
+  <section class="reveal py-20 md:py-28">
+    <div class="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-6 md:grid-cols-12 md:gap-16">
+      <div class="md:col-span-5">
+        <p class="eyebrow text-accent">WHY IT MATTERS</p>
+        <h2 class="display mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
+          Support is how a chapter <em class="font-serif italic font-normal lowercase tracking-normal text-accent">thrives</em>.
+        </h2>
+      </div>
+      <div class="md:col-span-7 md:pt-1">
+        <p class="text-lg leading-relaxed text-ink-muted md:text-xl">
+          BU SHPE exists because people show up — with funding, mentorship, open doors, and belief in what this community can become. Sponsors, alumni, faculty, and friends turn a student organization into a launchpad for Hispanic engineers, alongside the BU College of Engineering and the Student Activities Office.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ways to support — directory index -->
+  <section class="reveal border-t border-outline-soft/50">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+      <p class="eyebrow text-accent">WAYS TO SUPPORT</p>
+      <h2 class="display mb-12 mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
+        Two ways to invest in the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em>.
+      </h2>
+      <div class="divide-y divide-outline-soft/50 border-y border-outline-soft/50">
+        {paths.map((p) => (
+          <a
+            href={p.href}
+            class="group grid grid-cols-1 items-baseline gap-3 py-8 md:grid-cols-12 md:gap-8 md:py-10"
+          >
+            <span class="font-cond text-sm tracking-widest text-accent tabular-nums md:col-span-1">{p.number}</span>
+            <h3 class="display text-3xl leading-none text-ink transition-colors group-hover:text-accent md:col-span-4 md:text-4xl">
+              {p.title}
+            </h3>
+            <p class="leading-relaxed text-ink-muted md:col-span-6">{p.descriptor}</p>
+            <span class="hidden md:col-span-1 md:flex md:justify-end">
+              <Icon name="arrow-forward" class="h-6 w-6 text-ink transition-transform group-hover:translate-x-1" />
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <EmployersSection />
 
   <CtaBand
