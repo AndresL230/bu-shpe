@@ -1,5 +1,4 @@
 ---
-import SectionHeading from "@/components/SectionHeading.astro";
 import Icon from "@/components/Icon.astro";
 import type { GivingImpact } from "@/types";
 import supportData from "@/data/support.json";
@@ -15,15 +14,8 @@ const givingImpact = (supportData as { donationFunds: string[]; givingImpact: Gi
 >
   <div class="max-w-[1200px] mx-auto px-6">
 
-    <!-- Header -->
-    <SectionHeading
-      eyebrow="INDIVIDUAL GIVING"
-      title="Support a Student."
-      lede="Every gift goes directly to the students — funding the trips, workshops, and experiences that turn engineering students into engineers."
-    />
-
     <!-- What your gift funds -->
-    <div class="mt-16 max-w-3xl">
+    <div class="max-w-3xl">
       <p class="text-base text-ink-muted leading-relaxed mb-8">
         Your generosity removes barriers and opens doors. Gifts from alumni, parents, and friends help BU SHPE members show up fully — at national conferences, in mentorship rooms, and on the recruiting floor.
       </p>

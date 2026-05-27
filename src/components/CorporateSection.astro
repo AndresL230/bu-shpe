@@ -1,5 +1,4 @@
 ---
-import SectionHeading from "@/components/SectionHeading.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
 import Icon from "@/components/Icon.astro";
 import type { Sponsor } from "@/types";
@@ -26,14 +25,8 @@ const partnerBenefits = supportData.partnerBenefits as string[];
 >
   <div class="max-w-[1200px] mx-auto px-6">
 
-    <!-- 1. Header + pitch -->
-    <SectionHeading
-      eyebrow="CORPORATE PARTNERS"
-      title="Partner with BU SHPE."
-      lede="Connect your team to Hispanic engineers, scientists, and technologists at one of the nation's top engineering schools — before they reach the job market."
-    />
-
-    <ul class="mt-10 flex flex-col gap-4 max-w-2xl">
+    <!-- 1. Why partner -->
+    <ul class="flex flex-col gap-4 max-w-2xl">
       {valuePitches.map((pitch) => (
         <li class="flex items-start gap-3">
           <span class="eyebrow text-accent mt-0.5 shrink-0">—</span>

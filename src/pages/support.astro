@@ -1,15 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import SupportHero from "@/components/SupportHero.astro";
-import CorporateSection from "@/components/CorporateSection.astro";
-import IndividualSection from "@/components/IndividualSection.astro";
 import EmployersSection from "@/components/EmployersSection.astro";
-import ContactModal from "@/components/ContactModal.astro";
-
-// Shared input styling (matches MailingListForm.astro).
-const fieldClass =
-  "w-full rounded-lg border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none";
-const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
 ---
 
 <Base
@@ -17,92 +9,9 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
   description="The companies, alumni, faculty, and friends who invest in Hispanic engineers at Boston University — and where SHPE takes its members."
 >
   <SupportHero />
-  <CorporateSection />
-  <IndividualSection />
   <EmployersSection />
 
-  <!-- Corporate contact modal (opened by [data-open-modal="corporate"]) -->
-  <ContactModal id="corporate" title="Become a Partner">
-    <label class={labelClass}>
-      <span>Company name</span>
-      <input type="text" name="Company Name" required class={fieldClass} placeholder="Acme Engineering" />
-    </label>
-    <label class={labelClass}>
-      <span>Contact name</span>
-      <input type="text" name="Contact Name" required class={fieldClass} placeholder="Jordan Rivera" />
-    </label>
-    <label class={labelClass}>
-      <span>Email</span>
-      <input type="email" name="Email" required class={fieldClass} placeholder="you@company.com" />
-    </label>
-    <label class={labelClass}>
-      <span>Your role</span>
-      <select name="Role" class={fieldClass}>
-        <option value="Recruiter">Recruiter</option>
-        <option value="Engineering Manager">Engineering Manager</option>
-        <option value="Diversity & Inclusion Lead">Diversity &amp; Inclusion Lead</option>
-        <option value="Other">Other</option>
-      </select>
-    </label>
-    <fieldset class="flex flex-col gap-2.5">
-      <legend class="mb-1 text-sm font-medium text-ink">I'm interested in</legend>
-      {[
-        "Sponsorship Tier Info",
-        "Host a Workshop",
-        "Attend an Event",
-        "Convention Recruiting",
-        "General Inquiry",
-      ].map((opt) => (
-        <label class="flex items-center gap-2.5 text-sm font-normal text-ink-muted">
-          <input type="checkbox" name="Interest" value={opt} class="h-4 w-4 accent-accent" />
-          {opt}
-        </label>
-      ))}
-    </fieldset>
-    <label class={labelClass}>
-      <span>Message <span class="font-normal text-ink-muted">(optional)</span></span>
-      <textarea name="Message" rows="3" class={fieldClass} placeholder="Tell us what you're hoping to do with BU SHPE."></textarea>
-    </label>
-  </ContactModal>
-
-  <!-- Individual contact modal (opened by [data-open-modal="individual"]) -->
-  <ContactModal id="individual" title="Get in Touch">
-    <label class={labelClass}>
-      <span>Name</span>
-      <input type="text" name="Name" required class={fieldClass} placeholder="Your name" />
-    </label>
-    <label class={labelClass}>
-      <span>Email</span>
-      <input type="email" name="Email" required class={fieldClass} placeholder="you@email.com" />
-    </label>
-    <label class={labelClass}>
-      <span>Connection to BU</span>
-      <select name="Connection to BU" class={fieldClass}>
-        <option value="Alum">Alum</option>
-        <option value="Parent">Parent</option>
-        <option value="Faculty">Faculty</option>
-        <option value="Friend of SHPE">Friend of SHPE</option>
-        <option value="Other">Other</option>
-      </select>
-    </label>
-    <label class={labelClass}>
-      <span>Message <span class="font-normal text-ink-muted">(optional)</span></span>
-      <textarea name="Message" rows="3" class={fieldClass} placeholder="Anything you'd like us to know."></textarea>
-    </label>
-  </ContactModal>
-
-  <!-- Global trigger: any [data-open-modal="x"] opens #modal-x -->
-  <script is:inline>
-    document.querySelectorAll("[data-open-modal]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-open-modal");
-        const dlg = document.getElementById("modal-" + id);
-        if (dlg && typeof dlg.showModal === "function") dlg.showModal();
-      });
-    });
-  </script>
-
-  <!-- Page-scoped smooth scroll for the hero anchor cards (only loads on /support) -->
+  <!-- Page-scoped smooth scroll for the hero's "Where We Work" anchor (only loads on /support) -->
   <style is:global>
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) {
