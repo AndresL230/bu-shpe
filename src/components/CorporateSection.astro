@@ -5,6 +5,7 @@ import supportData from "@/data/support.json";
 import sponsorsData from "@/data/sponsors.json";
 
 const sponsors = sponsorsData as Sponsor[];
+const corporate = sponsors.filter((s) => !s.name.startsWith("BU "));
 
 const valuePitches = [
   {
@@ -70,9 +71,14 @@ const partnerBenefits = supportData.partnerBenefits as string[];
 <!-- Current partners -->
 <section class="reveal border-t border-outline-soft/50">
   <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
-    <h2 class="display mb-12 text-3xl leading-[1.05] text-ink md:text-4xl">
+    <h2 class="display text-3xl leading-[1.05] text-ink md:text-4xl">
       Thank you to our partners.
     </h2>
-    <SponsorGrid sponsors={sponsors} />
+    <p class="mt-4 max-w-2xl leading-relaxed text-ink-muted">
+      With continued support from the BU College of Engineering and the Student Activities Office.
+    </p>
+    <div class="mt-12">
+      <SponsorGrid sponsors={corporate} />
+    </div>
   </div>
 </section>
