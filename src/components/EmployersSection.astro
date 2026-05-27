@@ -28,17 +28,17 @@ const logoSrc = (c: { domain?: string; logo?: string }) =>
         <p class="eyebrow text-ink-muted mb-6">{group.industry}</p>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-rule/20">
           {group.companies.map((company) => (
-            <div class="group flex aspect-[5/3] items-center justify-center bg-surface px-6 py-8 text-center">
+            <div class="group flex aspect-[4/3] items-center justify-center bg-surface p-6 text-center transition-colors hover:bg-cream/30">
               <img
                 src={logoSrc(company)}
                 alt={company.name}
                 loading="lazy"
                 referrerpolicy="no-referrer"
-                class="max-h-10 w-auto max-w-[78%] object-contain opacity-70 grayscale transition duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+                class="max-h-16 w-auto max-w-[72%] object-contain transition-transform duration-300 group-hover:scale-105"
                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
               />
               <span
-                class="display text-sm sm:text-base tracking-wide text-ink-muted transition-colors duration-300 group-hover:text-ink"
+                class="display text-base tracking-wide text-ink"
                 style="display:none"
               >{company.name}</span>
             </div>
