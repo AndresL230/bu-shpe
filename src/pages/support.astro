@@ -1,157 +1,112 @@
 ---
 import Base from "@/layouts/Base.astro";
-import PageHero from "@/components/PageHero.astro";
-import SectionHeading from "@/components/SectionHeading.astro";
-import SponsorGrid from "@/components/SponsorGrid.astro";
-import Icon from "@/components/Icon.astro";
-import type { Sponsor } from "@/types";
+import SupportHero from "@/components/SupportHero.astro";
+import CorporateSection from "@/components/CorporateSection.astro";
+import IndividualSection from "@/components/IndividualSection.astro";
+import EmployersSection from "@/components/EmployersSection.astro";
+import ContactModal from "@/components/ContactModal.astro";
 
-import sponsorsData from "@/data/sponsors.json";
-import siteData from "@/data/site.json";
-
-// Tier-aware grouping logic.
-// If any sponsor has a truthy `tier` field, we group by tier; otherwise flat grid.
-const tierOrder = ["Platinum", "Gold", "Silver", "Bronze"] as const;
-type Tier = (typeof tierOrder)[number];
-
-const sponsors = sponsorsData as Sponsor[];
-const hasTiers = sponsors.some((s) => s.tier);
-
-const tierGroups: { tier: Tier; sponsors: Sponsor[] }[] = hasTiers
-  ? tierOrder
-      .map((tier) => ({
-        tier,
-        sponsors: sponsors.filter((s) => s.tier === tier),
-      }))
-      .filter((group) => group.sponsors.length > 0)
-  : [];
+// Shared input styling (matches MailingListForm.astro).
+const fieldClass =
+  "w-full rounded-lg border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none";
+const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
 ---
 
-<Base title="Sponsors" description="Companies and institutions that invest in BU SHPE and the Hispanic engineering familia at Boston University.">
+<Base
+  title="Support"
+  description="The companies, alumni, faculty, and friends who invest in Hispanic engineers at Boston University — and where SHPE takes its members."
+>
+  <SupportHero />
+  <CorporateSection />
+  <IndividualSection />
+  <EmployersSection />
 
-  <!-- ① Compact Hero -->
-  <PageHero
-    eyebrow="SPONSORS"
-    headline="Companies that invest in the SHPE familia."
-    headlineAccent="invest"
-    meta="SPONSORS / PARTNERS + PACKET"
-  />
+  <!-- Corporate contact modal (opened by [data-open-modal="corporate"]) -->
+  <ContactModal id="corporate" title="Become a Partner">
+    <label class={labelClass}>
+      <span>Company name</span>
+      <input type="text" name="Company Name" required class={fieldClass} placeholder="Acme Engineering" />
+    </label>
+    <label class={labelClass}>
+      <span>Contact name</span>
+      <input type="text" name="Contact Name" required class={fieldClass} placeholder="Jordan Rivera" />
+    </label>
+    <label class={labelClass}>
+      <span>Email</span>
+      <input type="email" name="Email" required class={fieldClass} placeholder="you@company.com" />
+    </label>
+    <label class={labelClass}>
+      <span>Your role</span>
+      <select name="Role" class={fieldClass}>
+        <option value="Recruiter">Recruiter</option>
+        <option value="Engineering Manager">Engineering Manager</option>
+        <option value="Diversity & Inclusion Lead">Diversity &amp; Inclusion Lead</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+    <fieldset class="flex flex-col gap-2.5">
+      <legend class="mb-1 text-sm font-medium text-ink">I'm interested in</legend>
+      {[
+        "Sponsorship Tier Info",
+        "Host a Workshop",
+        "Attend an Event",
+        "Convention Recruiting",
+        "General Inquiry",
+      ].map((opt) => (
+        <label class="flex items-center gap-2.5 text-sm font-normal text-ink-muted">
+          <input type="checkbox" name="Interest" value={opt} class="h-4 w-4 accent-accent" />
+          {opt}
+        </label>
+      ))}
+    </fieldset>
+    <label class={labelClass}>
+      <span>Message <span class="font-normal text-ink-muted">(optional)</span></span>
+      <textarea name="Message" rows="3" class={fieldClass} placeholder="Tell us what you're hoping to do with BU SHPE."></textarea>
+    </label>
+  </ContactModal>
 
-  <!-- ② Thank-you copy -->
-  <section class="mx-auto max-w-5xl px-6 py-24 reveal">
-    <p class="text-lg leading-relaxed text-ink-muted">
-      BU SHPE is grateful to the companies and individuals who choose to invest in Hispanic engineers. Our sponsors don't just write checks — they send representatives to our workshops, open their doors for company visits, and show up at the National Convention to meet our students where they are. We also want to acknowledge the&nbsp;<strong class="font-medium text-ink">BU College of Engineering</strong> and the&nbsp;<strong class="font-medium text-ink">Student Activities Office</strong>, whose continued chapter-level support makes so much of what we do possible. This work belongs to all of you as much as it belongs to us.
-    </p>
-  </section>
+  <!-- Individual contact modal (opened by [data-open-modal="individual"]) -->
+  <ContactModal id="individual" title="Get in Touch">
+    <label class={labelClass}>
+      <span>Name</span>
+      <input type="text" name="Name" required class={fieldClass} placeholder="Your name" />
+    </label>
+    <label class={labelClass}>
+      <span>Email</span>
+      <input type="email" name="Email" required class={fieldClass} placeholder="you@email.com" />
+    </label>
+    <label class={labelClass}>
+      <span>Connection to BU</span>
+      <select name="Connection to BU" class={fieldClass}>
+        <option value="Alum">Alum</option>
+        <option value="Parent">Parent</option>
+        <option value="Faculty">Faculty</option>
+        <option value="Friend of SHPE">Friend of SHPE</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+    <label class={labelClass}>
+      <span>Message <span class="font-normal text-ink-muted">(optional)</span></span>
+      <textarea name="Message" rows="3" class={fieldClass} placeholder="Anything you'd like us to know."></textarea>
+    </label>
+  </ContactModal>
 
-  <!-- ③ Sponsor grid -->
-  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
-    <SectionHeading
-      eyebrow="CURRENT SPONSORS"
-      title="Thank you to our partners."
-    />
+  <!-- Global trigger: any [data-open-modal="x"] opens #modal-x -->
+  <script is:inline>
+    document.querySelectorAll("[data-open-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-open-modal");
+        const dlg = document.getElementById("modal-" + id);
+        if (dlg && typeof dlg.showModal === "function") dlg.showModal();
+      });
+    });
+  </script>
 
-    {hasTiers ? (
-      <div class="mt-12 flex flex-col gap-16">
-        {tierGroups.map(({ tier, sponsors: tierSponsors }, i) => (
-          <div class:list={[i > 0 && "mt-12"]}>
-            <p class="eyebrow text-accent mb-6">{tier}</p>
-            <SponsorGrid sponsors={tierSponsors} />
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div class="mt-12">
-        <SponsorGrid sponsors={sponsors} />
-      </div>
-    )}
-  </section>
-
-  <!-- ④ Become a sponsor -->
-  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-
-      <!-- Left: heading + lede -->
-      <SectionHeading
-        eyebrow="PARTNERSHIP"
-        title="Sponsor BU SHPE."
-        lede="Reach Hispanic engineers, designers, scientists, and STEM students at one of the nation's top engineering schools."
-      />
-
-      <!-- Right: what sponsors get + CTAs -->
-      <div>
-        <ul class="flex flex-col gap-5">
-          <li class="flex gap-3 items-baseline">
-            <span class="eyebrow text-accent shrink-0">—</span>
-            <span class="text-sm leading-relaxed text-ink-muted">
-              Recruiting access at chapter events and the National Convention
-            </span>
-          </li>
-          <li class="flex gap-3 items-baseline">
-            <span class="eyebrow text-accent shrink-0">—</span>
-            <span class="text-sm leading-relaxed text-ink-muted">
-              Branded company-led workshops, panels, and visits
-            </span>
-          </li>
-          <li class="flex gap-3 items-baseline">
-            <span class="eyebrow text-accent shrink-0">—</span>
-            <span class="text-sm leading-relaxed text-ink-muted">
-              Logo placement on this site and event materials
-            </span>
-          </li>
-          <li class="flex gap-3 items-baseline">
-            <span class="eyebrow text-accent shrink-0">—</span>
-            <span class="text-sm leading-relaxed text-ink-muted">
-              Direct introductions to engineering students and the BU College of Engineering
-            </span>
-          </li>
-          <li class="flex gap-3 items-baseline">
-            <span class="eyebrow text-accent shrink-0">—</span>
-            <span class="text-sm leading-relaxed text-ink-muted">
-              Mention in chapter communications and on Instagram (<span class="font-medium text-ink">@shpe.bostonu</span>)
-            </span>
-          </li>
-        </ul>
-
-        <div class="mt-10 flex flex-col gap-4 items-start">
-          <a
-            href={siteData.sponsorshipPacketUrl}
-            target="_blank"
-            rel="noopener"
-            class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
-          >
-            Download the Sponsorship Packet (2023–2024)
-            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </a>
-          <a
-            href={`mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry`}
-            class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
-          >
-            <span class="border-b border-current pb-0.5">Email us about sponsoring</span>
-            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ⑤ Donate alternative -->
-  <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
-    <p class="text-sm leading-relaxed text-ink-muted">
-      Prefer to give directly?
-    </p>
-    <div class="mt-4 flex justify-center">
-      <a
-        href={siteData.donateUrl}
-        target="_blank"
-        rel="noopener"
-        class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
-      >
-        <span class="border-b border-current pb-0.5">Donate via the BU Trusted giving page</span>
-        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-      </a>
-    </div>
-  </section>
-
+  <!-- Page-scoped smooth scroll for the hero anchor cards (only loads on /support) -->
+  <style is:global>
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
 </Base>
