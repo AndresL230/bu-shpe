@@ -15,13 +15,13 @@ const givingImpact = (supportData as { donationFunds: string[]; givingImpact: Gi
         Every gift, straight to the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">students</em>.
       </h2>
       <p class="mt-6 leading-relaxed text-ink-muted">
-        Your generosity removes barriers and opens doors — helping members show up fully at conferences, in mentorship rooms, and on the recruiting floor.
+        Your generosity removes barriers and opens doors, helping members show up fully at conferences, in mentorship rooms, and on the recruiting floor.
       </p>
     </div>
     <ul class="flex flex-col divide-y divide-rule/25 md:col-span-7 md:pt-1">
-      {donationFunds.map((fund) => (
+      {donationFunds.map((fund, i) => (
         <li class="flex items-baseline gap-5 py-5 first:pt-0">
-          <span class="text-accent" aria-hidden="true">—</span>
+          <span class="font-cond text-sm tracking-widest text-accent tabular-nums">0{i + 1}</span>
           <span class="text-lg leading-snug text-ink md:text-xl">{fund}</span>
         </li>
       ))}

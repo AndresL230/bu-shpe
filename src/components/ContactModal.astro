@@ -12,7 +12,7 @@ interface Props {
 // mailto:shpe@bu.edu fallback. Swap the prop (or this default) to go live.
 const { id, title, formspreeId = "PLACEHOLDER" } = Astro.props;
 
-const mailtoHref = `mailto:shpe@bu.edu?subject=${encodeURIComponent("BU SHPE Support — " + title)}`;
+const mailtoHref = `mailto:shpe@bu.edu?subject=${encodeURIComponent("BU SHPE Support: " + title)}`;
 ---
 
 <dialog
@@ -42,7 +42,7 @@ const mailtoHref = `mailto:shpe@bu.edu?subject=${encodeURIComponent("BU SHPE Sup
       >{title}</h2>
 
       <form id={`form-${id}`} novalidate class="mt-6 flex flex-col gap-4">
-        <input type="hidden" name="_subject" value={`BU SHPE Support — ${title}`} />
+        <input type="hidden" name="_subject" value={`BU SHPE Support: ${title}`} />
         <input type="hidden" name="form" value={id} />
 
         <!-- Parent page injects fields here -->

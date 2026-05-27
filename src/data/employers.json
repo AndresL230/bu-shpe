@@ -2,11 +2,11 @@
   {
     "industry": "Aerospace & Defense",
     "companies": [
-      { "name": "Boeing", "domain": "boeing.com" },
+      { "name": "Boeing", "domain": "boeing.com", "logo": "/assets/employers/boeing.svg" },
       { "name": "Raytheon", "domain": "rtx.com" },
       { "name": "NASA", "domain": "nasa.gov" },
       { "name": "JPL", "domain": "jpl.nasa.gov" },
-      { "name": "Lockheed Martin", "domain": "lockheedmartin.com" }
+      { "name": "Lockheed Martin", "domain": "lockheedmartin.com", "logo": "/assets/employers/lockheed-martin.svg" }
     ]
   },
   {
@@ -23,9 +23,9 @@
     "industry": "Energy",
     "companies": [
       { "name": "General Electric", "domain": "ge.com", "logo": "/assets/sponsors/general-electric.png" },
-      { "name": "Eversource", "domain": "eversource.com" },
+      { "name": "Eversource", "domain": "eversource.com", "logo": "/assets/employers/eversource.png" },
       { "name": "Schlumberger", "domain": "slb.com" },
-      { "name": "NextEra Energy", "domain": "nexteraenergy.com" }
+      { "name": "NextEra Energy", "domain": "nexteraenergy.com", "logo": "/assets/employers/nextera-energy.svg" }
     ]
   },
   {

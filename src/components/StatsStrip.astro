@@ -2,16 +2,20 @@
 interface Props {
   stats: { value: string; label: string }[];
   background?: "soft" | "white";
+  compact?: boolean;
 }
 
-const { stats, background = "soft" } = Astro.props;
+const { stats, background = "soft", compact = false } = Astro.props;
 const bgClass = background === "soft" ? "bg-surface-soft" : "bg-surface";
+const padClass = compact ? "py-8" : "py-12";
+const valueClass = compact ? "text-4xl md:text-5xl" : "text-6xl md:text-7xl";
+const gapClass = compact ? "gap-8 md:gap-16" : "gap-12 md:gap-24";
 ---
-<section class={`border-y border-rule py-12 px-6 ${bgClass}`}>
-  <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24">
+<section class={`border-y border-rule px-6 ${padClass} ${bgClass}`}>
+  <div class={`max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 ${gapClass}`}>
     {stats.map((stat) => (
       <div class="flex flex-col items-start">
-        <span class="display text-6xl md:text-7xl text-ink leading-none">{stat.value}</span>
+        <span class={`display ${valueClass} text-ink leading-none`}>{stat.value}</span>
         <span class="eyebrow mt-2 text-ink-muted">{stat.label}</span>
       </div>
     ))}
