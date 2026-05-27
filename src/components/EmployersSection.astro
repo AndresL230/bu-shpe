@@ -4,6 +4,11 @@ import employersData from "@/data/employers.json";
 import type { EmployerGroup } from "@/types";
 
 const groups = employersData as EmployerGroup[];
+
+// Logos are pulled from a logo CDN by company domain. If a logo fails to
+// resolve, the inline onerror handler reveals the company name as a fallback.
+const logoSrc = (domain?: string) =>
+  domain ? `https://logo.clearbit.com/${domain}?size=128` : "";
 ---
 
 <section
@@ -22,10 +27,19 @@ const groups = employersData as EmployerGroup[];
         <p class="eyebrow text-ink-muted mb-6">{group.industry}</p>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-rule/20">
           {group.companies.map((company) => (
-            <div class="bg-surface-soft hover:bg-surface flex items-center justify-center py-8 px-4 text-center transition-colors duration-300 group">
-              <span class="display text-sm sm:text-base tracking-wide text-ink-muted group-hover:text-ink transition-colors duration-300">
-                {company.name}
-              </span>
+            <div class="group flex aspect-[5/3] items-center justify-center bg-surface px-6 py-8 text-center">
+              <img
+                src={logoSrc(company.domain)}
+                alt={company.name}
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                class="max-h-10 w-auto max-w-[78%] object-contain opacity-70 grayscale transition duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              />
+              <span
+                class="display text-sm sm:text-base tracking-wide text-ink-muted transition-colors duration-300 group-hover:text-ink"
+                style="display:none"
+              >{company.name}</span>
             </div>
           ))}
         </div>

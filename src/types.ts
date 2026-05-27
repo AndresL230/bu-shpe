@@ -76,5 +76,5 @@ export interface GivingImpact {
 
 export interface EmployerGroup {
   industry: string;
-  companies: { name: string; logo?: string }[];
+  companies: { name: string; domain?: string; logo?: string }[];
 }

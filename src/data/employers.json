@@ -1,6 +1,40 @@
 [
-  { "industry": "Aerospace & Defense", "companies": [ { "name": "Boeing" }, { "name": "Raytheon" }, { "name": "NASA" }, { "name": "JPL" }, { "name": "Lockheed Martin" } ] },
-  { "industry": "Technology", "companies": [ { "name": "Google" }, { "name": "Microsoft" }, { "name": "Amazon" }, { "name": "Akamai" }, { "name": "Tesla" } ] },
-  { "industry": "Energy", "companies": [ { "name": "General Electric" }, { "name": "Eversource" }, { "name": "Schlumberger" }, { "name": "NextEra Energy" } ] },
-  { "industry": "Biotech & Health", "companies": [ { "name": "Vertex" }, { "name": "Moderna" }, { "name": "Genentech" }, { "name": "Pfizer" } ] }
+  {
+    "industry": "Aerospace & Defense",
+    "companies": [
+      { "name": "Boeing", "domain": "boeing.com" },
+      { "name": "Raytheon", "domain": "raytheon.com" },
+      { "name": "NASA", "domain": "nasa.gov" },
+      { "name": "JPL", "domain": "jpl.nasa.gov" },
+      { "name": "Lockheed Martin", "domain": "lockheedmartin.com" }
+    ]
+  },
+  {
+    "industry": "Technology",
+    "companies": [
+      { "name": "Google", "domain": "google.com" },
+      { "name": "Microsoft", "domain": "microsoft.com" },
+      { "name": "Amazon", "domain": "amazon.com" },
+      { "name": "Akamai", "domain": "akamai.com" },
+      { "name": "Tesla", "domain": "tesla.com" }
+    ]
+  },
+  {
+    "industry": "Energy",
+    "companies": [
+      { "name": "General Electric", "domain": "ge.com" },
+      { "name": "Eversource", "domain": "eversource.com" },
+      { "name": "Schlumberger", "domain": "slb.com" },
+      { "name": "NextEra Energy", "domain": "nexteraenergy.com" }
+    ]
+  },
+  {
+    "industry": "Biotech & Health",
+    "companies": [
+      { "name": "Vertex", "domain": "vrtx.com" },
+      { "name": "Moderna", "domain": "modernatx.com" },
+      { "name": "Genentech", "domain": "gene.com" },
+      { "name": "Pfizer", "domain": "pfizer.com" }
+    ]
+  }
 ]
