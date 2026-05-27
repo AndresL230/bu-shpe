@@ -7,9 +7,18 @@ import sponsorsData from "@/data/sponsors.json";
 const sponsors = sponsorsData as Sponsor[];
 
 const valuePitches = [
-  "Access to Hispanic STEM talent at a top engineering school",
-  "Visibility at chapter events and the SHPE National Convention",
-  "A direct recruiting pipeline to motivated, organized students",
+  {
+    title: "Access to Hispanic STEM talent at a top engineering school",
+    description: "Our members study mechanical, electrical, biomedical, and computer engineering at one of the nation's top programs.",
+  },
+  {
+    title: "Visibility at chapter events and the SHPE National Convention",
+    description: "Put your brand in front of students at workshops, panels, career fairs, and the largest Hispanic STEM conference in the country.",
+  },
+  {
+    title: "A direct recruiting pipeline to motivated, organized students",
+    description: "Skip the resume pile. Meet motivated, organized students who are ready to work.",
+  },
 ];
 
 const partnerBenefits = supportData.partnerBenefits as string[];
@@ -26,9 +35,12 @@ const partnerBenefits = supportData.partnerBenefits as string[];
     </div>
     <ul class="flex flex-col divide-y divide-rule/25 md:col-span-7 md:pt-1">
       {valuePitches.map((pitch, i) => (
-        <li class="flex items-baseline gap-5 py-5 first:pt-0">
-          <span class="font-cond text-sm tracking-widest text-accent tabular-nums">0{i + 1}</span>
-          <span class="text-lg leading-snug text-ink md:text-xl">{pitch}</span>
+        <li class="grid grid-cols-[auto_1fr] gap-x-5 gap-y-1 py-8 first:pt-0">
+          <span class="font-cond text-base tracking-widest text-accent tabular-nums">0{i + 1}</span>
+          <div>
+            <h3 class="display text-2xl leading-tight text-ink">{pitch.title}</h3>
+            <p class="mt-2 leading-relaxed text-ink-muted">{pitch.description}</p>
+          </div>
         </li>
       ))}
     </ul>
