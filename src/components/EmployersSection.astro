@@ -5,10 +5,11 @@ import type { EmployerGroup } from "@/types";
 
 const groups = employersData as EmployerGroup[];
 
-// Logos are pulled from a logo CDN by company domain. If a logo fails to
-// resolve, the inline onerror handler reveals the company name as a fallback.
-const logoSrc = (domain?: string) =>
-  domain ? `https://logo.clearbit.com/${domain}?size=128` : "";
+// Prefer an in-repo logo file when we have one; otherwise pull the brand's
+// real logo from a token-free logo service by domain (fallback=false makes it
+// 404 when no logo exists, so the inline onerror reveals the company name).
+const logoSrc = (c: { domain?: string; logo?: string }) =>
+  c.logo ?? (c.domain ? `https://unavatar.io/${c.domain}?fallback=false` : "");
 ---
 
 <section
@@ -29,7 +30,7 @@ const logoSrc = (domain?: string) =>
           {group.companies.map((company) => (
             <div class="group flex aspect-[5/3] items-center justify-center bg-surface px-6 py-8 text-center">
               <img
-                src={logoSrc(company.domain)}
+                src={logoSrc(company)}
                 alt={company.name}
                 loading="lazy"
                 referrerpolicy="no-referrer"

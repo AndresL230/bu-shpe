@@ -3,7 +3,7 @@
     "industry": "Aerospace & Defense",
     "companies": [
       { "name": "Boeing", "domain": "boeing.com" },
-      { "name": "Raytheon", "domain": "raytheon.com" },
+      { "name": "Raytheon", "domain": "rtx.com" },
       { "name": "NASA", "domain": "nasa.gov" },
       { "name": "JPL", "domain": "jpl.nasa.gov" },
       { "name": "Lockheed Martin", "domain": "lockheedmartin.com" }
@@ -15,14 +15,14 @@
       { "name": "Google", "domain": "google.com" },
       { "name": "Microsoft", "domain": "microsoft.com" },
       { "name": "Amazon", "domain": "amazon.com" },
-      { "name": "Akamai", "domain": "akamai.com" },
+      { "name": "Akamai", "domain": "akamai.com", "logo": "/assets/sponsors/akamai.png" },
       { "name": "Tesla", "domain": "tesla.com" }
     ]
   },
   {
     "industry": "Energy",
     "companies": [
-      { "name": "General Electric", "domain": "ge.com" },
+      { "name": "General Electric", "domain": "ge.com", "logo": "/assets/sponsors/general-electric.png" },
       { "name": "Eversource", "domain": "eversource.com" },
       { "name": "Schlumberger", "domain": "slb.com" },
       { "name": "NextEra Energy", "domain": "nexteraenergy.com" }
@@ -31,7 +31,7 @@
   {
     "industry": "Biotech & Health",
     "companies": [
-      { "name": "Vertex", "domain": "vrtx.com" },
+      { "name": "Vertex", "domain": "vrtx.com", "logo": "/assets/sponsors/vertex.png" },
       { "name": "Moderna", "domain": "modernatx.com" },
       { "name": "Genentech", "domain": "gene.com" },
       { "name": "Pfizer", "domain": "pfizer.com" }
