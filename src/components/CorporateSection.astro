@@ -51,16 +51,16 @@ const partnerBenefits = supportData.partnerBenefits as string[];
 <section class="reveal border-t border-outline-soft/50">
   <div class="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-6 py-20 md:grid-cols-12 md:gap-16 md:py-28">
     <div class="md:col-span-4">
-      <p class="eyebrow text-accent">WHAT PARTNERS GET</p>
+      <p class="eyebrow text-accent">PARTNERSHIP BENEFITS</p>
       <h2 class="display mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
-        Everything your partnership includes.
+        What you get.
       </h2>
     </div>
-    <ul class="grid gap-x-10 gap-y-5 md:col-span-8 md:pt-1 sm:grid-cols-2">
+    <ul class="flex flex-col gap-3 md:col-span-8 md:pt-1">
       {partnerBenefits.map((b) => (
-        <li class="flex items-start gap-3">
-          <span class="mt-1.5 shrink-0 text-xs font-bold leading-none text-accent" aria-hidden="true">✓</span>
-          <span class="leading-relaxed text-ink-muted">{b}</span>
+        <li class="flex items-center gap-4 rounded-[var(--radius-card)] border border-rule/30 bg-surface p-5">
+          <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent/10 text-base font-bold text-accent" aria-hidden="true">✓</span>
+          <span class="text-base leading-snug text-ink md:text-lg">{b}</span>
         </li>
       ))}
     </ul>
