@@ -47,6 +47,25 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
 
   <CorporateSection />
 
+  <!-- Closing CTA — bookends the navy hero -->
+  <section class="grain relative isolate overflow-hidden bg-deep px-6 py-20 md:py-24">
+    <div class="mx-auto flex max-w-[1200px] flex-col gap-8 md:flex-row md:items-center md:justify-between">
+      <h2 class="display max-w-2xl text-3xl leading-tight text-cream md:text-4xl lg:text-5xl">
+        Ready to invest in the next generation of Hispanic <em class="font-serif italic font-normal lowercase tracking-normal text-accent">engineers</em>?
+      </h2>
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center md:shrink-0">
+        <button type="button" data-open-modal="corporate" class="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md">
+          Become a Partner
+          <Icon name="person-add" class="h-4 w-4" />
+        </button>
+        <a href={siteData.sponsorshipPacketUrl} target="_blank" rel="noopener" class="group inline-flex items-center gap-2 font-sans text-sm font-medium text-cream/90 transition-colors hover:text-cream">
+          <span class="border-b border-current pb-0.5">Download the Sponsorship Packet</span>
+          <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Corporate contact modal (opened by [data-open-modal="corporate"]) -->
   <ContactModal id="corporate" title="Become a Partner">
     <label class={labelClass}>
