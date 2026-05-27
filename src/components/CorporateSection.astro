@@ -1,0 +1,133 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import SponsorGrid from "@/components/SponsorGrid.astro";
+import Icon from "@/components/Icon.astro";
+import type { Sponsor, SponsorTier } from "@/types";
+import supportData from "@/data/support.json";
+import sponsorsData from "@/data/sponsors.json";
+import siteData from "@/data/site.json";
+
+const sponsors = sponsorsData as Sponsor[];
+const institutional = sponsors.filter((s) => s.name.startsWith("BU "));
+const corporate = sponsors.filter((s) => !s.name.startsWith("BU "));
+const tiers = supportData.tiers as SponsorTier[];
+
+const valuePitches = [
+  "Access to Hispanic STEM talent at a top engineering school",
+  "Visibility at chapter events and the SHPE National Convention",
+  "A direct recruiting pipeline to motivated, organized students",
+];
+---
+
+<section
+  id="corporate"
+  class="reveal scroll-mt-[88px] py-24"
+>
+  <div class="max-w-[1200px] mx-auto px-6">
+
+    <!-- 1. Header + pitch -->
+    <SectionHeading
+      eyebrow="CORPORATE PARTNERS"
+      title="Partner with BU SHPE."
+      lede="Connect your team to Hispanic engineers, scientists, and technologists at one of the nation's top engineering schools — before they reach the job market."
+    />
+
+    <ul class="mt-10 flex flex-col gap-4 max-w-2xl">
+      {valuePitches.map((pitch) => (
+        <li class="flex items-start gap-3">
+          <span class="eyebrow text-accent mt-0.5 shrink-0">—</span>
+          <span class="text-base text-ink-muted leading-relaxed">{pitch}</span>
+        </li>
+      ))}
+    </ul>
+
+    <!-- 2. Sponsorship tiers -->
+    <div class="mt-20">
+      <p class="eyebrow text-accent">SPONSORSHIP TIERS</p>
+      <h3 class="display text-3xl mt-2 text-ink">Choose your level of partnership.</h3>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {tiers.map((tier, i) => (
+          <div
+            class:list={[
+              "rounded-[var(--radius-card)] p-6 flex flex-col gap-5",
+              i === 0
+                ? "bg-deep"
+                : "bg-surface border border-rule/40 shadow-[var(--shadow-card)]",
+            ]}
+          >
+            <p
+              class:list={[
+                "display text-2xl",
+                i === 0 ? "text-cream" : "text-ink",
+              ]}
+            >
+              {tier.name}
+            </p>
+            <ul class="flex flex-col gap-3">
+              {tier.benefits.map((benefit) => (
+                <li class="flex items-start gap-2.5">
+                  <span
+                    class:list={[
+                      "mt-0.5 shrink-0 text-accent text-xs font-bold leading-none",
+                    ]}
+                    aria-hidden="true"
+                  >
+                    ✓
+                  </span>
+                  <span
+                    class:list={[
+                      "text-sm leading-relaxed",
+                      i === 0 ? "text-cream/80" : "text-ink-muted",
+                    ]}
+                  >
+                    {benefit}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- 3. Current partners -->
+    <div class="mt-20">
+      <p class="eyebrow text-accent">CURRENT PARTNERS</p>
+      <h3 class="display text-3xl mt-2 text-ink">Thank you to our partners.</h3>
+
+      <div class="mt-10">
+        <p class="eyebrow text-ink-muted mb-4">Institutional</p>
+        <SponsorGrid sponsors={institutional} />
+      </div>
+
+      <div class="mt-10">
+        <p class="eyebrow text-ink-muted mb-4">Corporate</p>
+        <SponsorGrid sponsors={corporate} />
+      </div>
+    </div>
+
+    <!-- 4. CTAs -->
+    <div class="mt-16 flex flex-wrap gap-4">
+      <a
+        href={siteData.sponsorshipPacketUrl}
+        target="_blank"
+        rel="noopener"
+        class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
+      >
+        Download the Sponsorship Packet
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+      </a>
+
+      <button
+        type="button"
+        data-open-modal="corporate"
+        class="group inline-flex items-center gap-2 rounded-full border border-ink/20 px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-ink transition hover:-translate-y-px hover:border-ink"
+      >
+        Become a Partner
+        <Icon name="person-add" class="w-4 h-4" />
+      </button>
+    </div>
+
+  </div>
+</section>
