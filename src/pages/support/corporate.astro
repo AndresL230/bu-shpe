@@ -23,39 +23,30 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
     subtitle="Connect your team to Hispanic engineers, scientists, and technologists at one of the nation's top engineering schools — before they reach the job market."
   />
 
-  <CorporateSection />
-
-  <!-- Closing CTA band -->
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-6 py-24 text-center">
-      <p class="eyebrow mb-4 text-ink-muted">BECOME A PARTNER</p>
-      <h2 class="display mb-6 text-4xl text-ink md:text-5xl">
-        Let's build the next generation <em class="font-serif italic font-normal lowercase tracking-normal text-accent">together</em>.
-      </h2>
-      <p class="mx-auto mb-10 max-w-2xl leading-relaxed text-ink-muted">
-        Start with the sponsorship packet, or reach out and we'll tailor a partnership to your recruiting goals.
-      </p>
-      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a
-          href={siteData.sponsorshipPacketUrl}
-          target="_blank"
-          rel="noopener"
-          class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
-        >
-          Download the Sponsorship Packet
-          <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </a>
-        <button
-          type="button"
-          data-open-modal="corporate"
-          class="group inline-flex items-center gap-2 rounded-full border border-ink/20 px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-ink transition hover:-translate-y-px hover:border-ink"
-        >
-          Become a Partner
-          <Icon name="person-add" class="h-4 w-4" />
-        </button>
-      </div>
+  <!-- Primary CTAs, surfaced up front -->
+  <section class="border-b border-outline-soft/50">
+    <div class="mx-auto flex max-w-[1200px] flex-col gap-4 px-6 py-10 sm:flex-row sm:items-center">
+      <a
+        href={siteData.sponsorshipPacketUrl}
+        target="_blank"
+        rel="noopener"
+        class="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
+      >
+        Download the Sponsorship Packet
+        <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </a>
+      <button
+        type="button"
+        data-open-modal="corporate"
+        class="group inline-flex items-center justify-center gap-2 rounded-full border border-ink/20 px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-ink transition hover:-translate-y-px hover:border-ink"
+      >
+        Become a Partner
+        <Icon name="person-add" class="h-4 w-4" />
+      </button>
     </div>
   </section>
+
+  <CorporateSection />
 
   <!-- Corporate contact modal (opened by [data-open-modal="corporate"]) -->
   <ContactModal id="corporate" title="Become a Partner">
