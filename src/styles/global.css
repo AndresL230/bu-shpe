@@ -12,6 +12,7 @@
   --color-rule:        #72A9BE;   /* SHPE pale blue — dividers, tags */
   --color-cream:       #FCF0D6;   /* footer / dark-section text */
   --color-deep:        #001F5B;   /* dark sections (alias of ink for clarity) */
+  --color-scarlet:     #CC0000;   /* BU scarlet — sparing accent, BU×SHPE */
 
   /* Fonts (loaded via <link> in Base.astro)
      SHPE's official primary face is Univers LT Std (paid). The brand brief's
@@ -27,6 +28,7 @@
   --font-display: "Barlow Condensed", "Helvetica Neue Condensed", sans-serif;
   --font-cond:    "Barlow Condensed", "Helvetica Neue Condensed", sans-serif;
   --font-serif:   "Playfair Display", "Georgia", "Times New Roman", serif;
+  --font-mono:    "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
 
   /* Editorial rhythm */
   --radius-card: 12px;
@@ -240,4 +242,33 @@ html[data-guides="on"] .guide-content::before {
   @starting-style {
     .reveal { opacity: 0; translate: 0 12px; }
   }
+}
+
+/* ---------- Dossier section-local utilities (conferences/*) ---------- */
+.mono-label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+}
+
+/* Low-contrast engineering grid — use in 1–2 spots only, never full-page */
+.blueprint {
+  background-image:
+    linear-gradient(to right, rgba(0, 31, 91, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 31, 91, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.blueprint-deep {
+  background-image:
+    linear-gradient(to right, rgba(252, 240, 214, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(252, 240, 214, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Count-up: hide nothing; JS overwrites textContent. Reduced motion = final value as authored. */
+@media (prefers-reduced-motion: reduce) {
+  [data-countup], [data-countdown] { /* JS checks this and renders final/static value */ }
 }
