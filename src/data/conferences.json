@@ -4,13 +4,25 @@
     "city": "Salt Lake City, UT",
     "region": "National Convention",
     "description": "Members received interviews and offers, attended professional-growth workshops, and deepened bonds within the BU-SHPE familia.",
-    "photos": ["/assets/conferences/national-convention-2023-slc.jpeg"]
+    "photos": ["/assets/conferences/national-convention-2023-slc.jpeg"],
+    "headcount": 0,
+    "outcomes": [
+      "TODO-confirm: interviews / offers count",
+      "TODO-confirm: standout workshop or moment"
+    ],
+    "quote": { "text": "TODO-confirm — drop in a real delegate quote from chapter records.", "attribution": "TODO-confirm — Name, Class of ’YY" }
   },
   {
     "year": 2022,
     "city": "Charlotte, NC",
     "region": "National Convention",
     "description": "Two-day career fair, technical workshops, and onsite interviews with the country's largest gathering of Hispanic STEM professionals.",
-    "photos": ["/assets/conferences/national-convention-2022-charlotte.jpg"]
+    "photos": ["/assets/conferences/national-convention-2022-charlotte.jpg"],
+    "headcount": 0,
+    "outcomes": [
+      "TODO-confirm: interviews / offers count",
+      "TODO-confirm: standout workshop or moment"
+    ],
+    "quote": { "text": "TODO-confirm — drop in a real delegate quote from chapter records.", "attribution": "TODO-confirm — Name, Class of ’YY" }
   }
 ]
