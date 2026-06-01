@@ -1,0 +1,13 @@
+---
+import competitionsData from "@/data/competitions.json";
+import type { CompetitionsData } from "@/types";
+const { record } = competitionsData as CompetitionsData;
+---
+<div class="bg-deep blueprint-deep p-8 md:p-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+  {record.map((r) => (
+    <div>
+      <span class="display block text-5xl md:text-6xl text-cream leading-none">{r.stat}</span>
+      <span class="mono-label mt-2 block text-cream/60">{r.label}</span>
+    </div>
+  ))}
+</div>
