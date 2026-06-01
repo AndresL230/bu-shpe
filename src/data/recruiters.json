@@ -1,0 +1,44 @@
+[
+  {
+    "industry": "Aerospace & Defense",
+    "companies": [
+      { "name": "TODO-confirm recruiter" },
+      { "name": "TODO-confirm recruiter" }
+    ]
+  },
+  {
+    "industry": "Energy",
+    "companies": [
+      { "name": "TODO-confirm recruiter" },
+      { "name": "TODO-confirm recruiter" }
+    ]
+  },
+  {
+    "industry": "Consulting",
+    "companies": [
+      { "name": "TODO-confirm recruiter" },
+      { "name": "TODO-confirm recruiter" }
+    ]
+  },
+  {
+    "industry": "Software",
+    "companies": [
+      { "name": "TODO-confirm recruiter" },
+      { "name": "TODO-confirm recruiter" }
+    ]
+  },
+  {
+    "industry": "Consumer Goods",
+    "companies": [
+      { "name": "TODO-confirm recruiter" },
+      { "name": "TODO-confirm recruiter" }
+    ]
+  },
+  {
+    "industry": "Automotive",
+    "companies": [
+      { "name": "TODO-confirm recruiter" },
+      { "name": "TODO-confirm recruiter" }
+    ]
+  }
+]

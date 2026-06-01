@@ -1,0 +1,15 @@
+{
+  "_sources": "Competition names verified 2026-06-01 via convention.shpe.org/programs. Formats/prizes/record are TODO-confirm against chapter participation.",
+  "tracks": [
+    { "name": "Academic Olympiad", "blurb": "FE-exam-style questions in written and Jeopardy-style rounds across math, the engineering disciplines, and SHPE history.", "format": "Team — TODO-confirm size", "prize": "TODO-confirm" },
+    { "name": "Extreme Engineering Challenge (XEC)", "blurb": "A 24-hour continuous sprint taking an innovative idea to market under deadlines, reviews, and presentations.", "format": "Team, 24-hour — TODO-confirm size", "prize": "TODO-confirm" },
+    { "name": "Engineering Science Symposium", "blurb": "Present technical research to judges in a formal symposium setting.", "format": "Individual or team — TODO-confirm", "prize": "TODO-confirm" },
+    { "name": "Hackathon / Innovators Challenge", "blurb": "Build a working prototype against a themed problem statement over the convention weekend.", "format": "Team — TODO-confirm size", "prize": "TODO-confirm" },
+    { "name": "Nissan Design Competition", "blurb": "Sponsor-run design challenge judged on engineering, creativity, and presentation.", "format": "Team — TODO-confirm", "prize": "TODO-confirm" }
+  ],
+  "record": [
+    { "stat": "TODO", "label": "Best chapter finish — TODO-confirm" },
+    { "stat": "TODO", "label": "Competitions entered — TODO-confirm" },
+    { "stat": "TODO", "label": "Members competed — TODO-confirm" }
+  ]
+}
