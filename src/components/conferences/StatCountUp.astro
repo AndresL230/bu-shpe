@@ -1,0 +1,48 @@
+---
+interface Props { value: string; label: string; accent?: boolean; }
+const { value, label, accent = false } = Astro.props;
+---
+<div>
+  <span
+    class:list={["display block text-5xl md:text-7xl leading-none", accent ? "text-accent" : "text-ink"]}
+    data-countup
+    data-value={value}
+  >{value}</span>
+  <span class="mono-label mt-2 block">{label}</span>
+</div>
+
+<script is:inline>
+  (function () {
+    const els = document.querySelectorAll("[data-countup]");
+    if (!els.length) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return; // authored final value already in the DOM
+    const parse = (s) => {
+      const m = String(s).match(/^([\d.,]+)(.*)$/);
+      if (!m) return null;
+      const num = parseFloat(m[1].replace(/,/g, ""));
+      return { num, suffix: m[2], hasComma: m[1].includes(",") };
+    };
+    const fmt = (n, hasComma) => hasComma ? Math.round(n).toLocaleString("en-US") : String(Math.round(n));
+    const animate = (el) => {
+      const p = parse(el.getAttribute("data-value"));
+      if (!p) return;
+      const dur = 1100;
+      const start = performance.now();
+      el.textContent = "0" + p.suffix;
+      const step = (now) => {
+        const t = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = fmt(p.num * eased, p.hasComma) + p.suffix;
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    els.forEach((el) => io.observe(el));
+  })();
+</script>

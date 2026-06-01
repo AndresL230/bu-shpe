@@ -1,0 +1,17 @@
+---
+import conventionData from "@/data/conventions.json";
+import type { Convention } from "@/types";
+import { formatDate } from "@/lib/conferences";
+const c = conventionData as Convention;
+const dates = [...c.keyDates].sort((a, b) => a.date.localeCompare(b.date));
+---
+<ol class="relative border-l border-outline-soft pl-6 space-y-8">
+  {dates.map((kd) => (
+    <li class="relative">
+      <span class="absolute -left-[1.65rem] top-1.5 h-2.5 w-2.5 bg-accent" aria-hidden="true"></span>
+      <p class="font-mono text-sm text-ink tracking-wide">{formatDate(kd.date)}</p>
+      <p class="display text-xl text-ink leading-tight mt-1">{kd.label}</p>
+      {kd.note && <p class="text-ink-muted text-sm mt-0.5">{kd.note}</p>}
+    </li>
+  ))}
+</ol>

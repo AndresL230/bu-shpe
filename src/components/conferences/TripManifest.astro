@@ -1,0 +1,22 @@
+---
+const rows = [
+  { k: "Departure", v: "Group flights from Boston Logan (BOS)", note: "TODO-confirm carrier/time" },
+  { k: "Lodging", v: "Convention-center hotel block", note: "TODO-confirm hotel" },
+  { k: "Ground", v: "Chapter-coordinated transfers on arrival", note: "TODO-confirm" },
+  { k: "Briefing", v: "Mandatory pre-trip logistics meeting", note: "TODO-confirm date" },
+];
+---
+<div class="border border-outline-soft">
+  <div class="bg-deep px-5 py-3 flex items-center justify-between">
+    <p class="font-mono text-cream text-sm tracking-[0.15em] uppercase">Trip Manifest</p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.15em] uppercase">BU SHPE · IND ’26</p>
+  </div>
+  <dl class="divide-y divide-outline-soft">
+    {rows.map((r) => (
+      <div class="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 sm:gap-4 px-5 py-4">
+        <dt class="mono-label">{r.k}</dt>
+        <dd class="text-ink">{r.v} <span class="text-ink-muted text-sm">· {r.note}</span></dd>
+      </div>
+    ))}
+  </dl>
+</div>
