@@ -1,0 +1,39 @@
+{
+  "_sources": "Verified 2026-06-01: shpe.org/2026-shpe (city/venue/dates/theme); AccessNewswire 2025-09 press release (12,000 attendees / 150+ companies, Philadelphia 2025). Recruiter count: no verified figure — omitted. TODO-confirm: cost numbers, key dates beyond convention, eligibility specifics.",
+  "year": 2026,
+  "name": "SHPE National Convention 2026",
+  "theme": "STEM for the BOLD",
+  "city": "Indianapolis, IN",
+  "venue": "Indiana Convention Center",
+  "startDate": "2026-10-28",
+  "endDate": "2026-10-31",
+  "countdownTarget": "2026-10-28T09:00:00-05:00",
+  "scaleStats": [
+    { "value": "12,000+", "label": "Attendees (2025)" },
+    { "value": "150+", "label": "Companies recruiting" },
+    { "value": "4", "label": "Days, Oct 28–31" }
+  ],
+  "keyDates": [
+    { "date": "2026-06-15", "label": "Chapter interest form opens", "note": "TODO-confirm date" },
+    { "date": "2026-08-01", "label": "Early registration deadline", "note": "TODO-confirm date" },
+    { "date": "2026-09-15", "label": "Travel + hotel block locked", "note": "TODO-confirm date" },
+    { "date": "2026-10-28", "label": "Convention begins — Indianapolis" }
+  ],
+  "costFunding": [
+    { "heading": "Registration", "detail": "Student registration rates and BU SHPE subsidy tiers — TODO-confirm current numbers." },
+    { "heading": "Travel & lodging", "detail": "Group flights and a convention-center hotel block; subsidy applied per registered member — TODO-confirm amounts." },
+    { "heading": "Funding sources", "detail": "Chapter fundraising, ENG/Student Activities support, and corporate sponsorship offset member cost — TODO-confirm breakdown." }
+  ],
+  "eligibility": [
+    "Active BU SHPE member in good standing",
+    "Enrolled BU undergraduate or graduate student",
+    "Completed the delegation interest form by the deadline",
+    "Attended the pre-trip logistics briefing"
+  ],
+  "faq": [
+    { "q": "Do I need to be an engineering major?", "a": "No — SHPE welcomes all STEM majors. The career fair recruits across engineering, computing, and the sciences." },
+    { "q": "What does BU SHPE cover?", "a": "The chapter subsidizes registration, group travel, and lodging for registered delegates. Exact subsidy depends on funding each year. TODO-confirm." },
+    { "q": "I've never been to a convention. Is it for me?", "a": "Especially for you. We run a prep bootcamp beforehand and travel as a group — first-timers are the reason the prep track exists." },
+    { "q": "When do I need to commit?", "a": "Watch the key-dates timeline above and the chapter mailing list. Early registration saves the most money." }
+  ]
+}
