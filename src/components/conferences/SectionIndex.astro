@@ -1,0 +1,15 @@
+---
+interface Props {
+  index: string;                       // "01"
+  label: string;                       // "TRAVEL"
+  accent?: "orange" | "scarlet";       // tick color, default orange
+}
+const { index, label, accent = "orange" } = Astro.props;
+const tick = accent === "scarlet" ? "bg-scarlet" : "bg-accent";
+---
+<div class="flex items-center gap-3">
+  <span class={`inline-block h-2.5 w-2.5 ${tick}`} aria-hidden="true"></span>
+  <span class="mono-label text-ink">{index}</span>
+  <span class="mono-label">—</span>
+  <span class="mono-label text-ink">{label}</span>
+</div>
