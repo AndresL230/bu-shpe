@@ -1,5 +1,5 @@
 {
-  "_sources": "Verified 2026-06-01: shpe.org/2026-shpe (city/venue/dates/theme); AccessNewswire 2025-09 press release (12,000 attendees / 150+ companies, Philadelphia 2025). Recruiter count: no verified figure — omitted. TODO-confirm: cost numbers, key dates beyond convention, eligibility specifics.",
+  "_sources": "Verified 2026-06: shpe.org/2026-shpe (Indianapolis / Indiana Convention Center / Oct 28–31 / 'STEM for the BOLD'). Scale: Newswire 2025-09 + finance.yahoo 2025 (12,000 attendees, 150+ companies, Philadelphia 2025). Registration tiers: SHPE 'Bulk registration' notice + GT-SHPE NC page (early-bird through ~Sept 15, regular through ~Oct 14, late through convention; 2025 student early-bird ≈ $480). 2026 dollar amounts + chapter-specific dates are projected from the standard SHPE schedule and marked confirm-on-shpe.org. BU-internal subsidy figures remain chapter records.",
   "year": 2026,
   "name": "SHPE National Convention 2026",
   "theme": "STEM for the BOLD",
@@ -14,15 +14,15 @@
     { "value": "4", "label": "Days, Oct 28–31" }
   ],
   "keyDates": [
-    { "date": "2026-06-15", "label": "Chapter interest form opens", "note": "TODO-confirm date" },
-    { "date": "2026-08-01", "label": "Early registration deadline", "note": "TODO-confirm date" },
-    { "date": "2026-09-15", "label": "Travel + hotel block locked", "note": "TODO-confirm date" },
-    { "date": "2026-10-28", "label": "Convention begins — Indianapolis" }
+    { "date": "2026-09-15", "label": "Early-bird registration deadline", "note": "Projected from SHPE's standard schedule — confirm on shpe.org" },
+    { "date": "2026-10-14", "label": "Regular registration closes", "note": "Late registration runs through the convention — confirm on shpe.org" },
+    { "date": "2026-10-28", "label": "Convention begins — Indianapolis" },
+    { "date": "2026-10-31", "label": "Convention closes" }
   ],
   "costFunding": [
-    { "heading": "Registration", "detail": "Student registration rates and BU SHPE subsidy tiers — TODO-confirm current numbers." },
-    { "heading": "Travel & lodging", "detail": "Group flights and a convention-center hotel block; subsidy applied per registered member — TODO-confirm amounts." },
-    { "heading": "Funding sources", "detail": "Chapter fundraising, ENG/Student Activities support, and corporate sponsorship offset member cost — TODO-confirm breakdown." }
+    { "heading": "Registration", "detail": "SHPE prices in tiers: early-bird (through ~mid-September), regular (through ~mid-October), then late through the convention. Student-member early-bird ran about $480 in 2025 — confirm the 2026 rate on shpe.org. Registration covers the career fair, workshops, competitions, and conference programming." },
+    { "heading": "Travel & lodging", "detail": "BU SHPE travels as a group: coordinated flights from Boston and a hotel block near the Indiana Convention Center. The chapter applies a subsidy per registered delegate — exact amounts depend on funding each year (chapter records)." },
+    { "heading": "Funding sources", "detail": "Member cost is offset by chapter fundraising, BU College of Engineering / Student Activities support, and corporate sponsorship. The specific per-member breakdown is set by the e-board each year (chapter records)." }
   ],
   "eligibility": [
     "Active BU SHPE member in good standing",
@@ -31,9 +31,10 @@
     "Attended the pre-trip logistics briefing"
   ],
   "faq": [
-    { "q": "Do I need to be an engineering major?", "a": "No — SHPE welcomes all STEM majors. The career fair recruits across engineering, computing, and the sciences." },
-    { "q": "What does BU SHPE cover?", "a": "The chapter subsidizes registration, group travel, and lodging for registered delegates. Exact subsidy depends on funding each year. TODO-confirm." },
+    { "q": "Do I need to be an engineering major?", "a": "No — SHPE welcomes all STEM majors and all class standings. The career fair recruits across engineering, computing, and the sciences." },
+    { "q": "What does registration include?", "a": "Full conference access: the STEM career fair (150+ companies recruiting onsite), technical and leadership workshops, the competitions, and specialty tracks for community-college, graduate, professional, and tech audiences." },
+    { "q": "What does BU SHPE cover?", "a": "The chapter travels as a group and subsidizes registration, flights, and lodging for registered delegates. The exact subsidy depends on funding each year — watch the mailing list for the current offer." },
     { "q": "I've never been to a convention. Is it for me?", "a": "Especially for you. We run a prep bootcamp beforehand and travel as a group — first-timers are the reason the prep track exists." },
-    { "q": "When do I need to commit?", "a": "Watch the key-dates timeline above and the chapter mailing list. Early registration saves the most money." }
+    { "q": "When do I need to commit?", "a": "Register before the early-bird deadline (about mid-September) for the best rate. Watch the key-dates timeline above and the chapter mailing list for the locked delegation calendar." }
   ]
 }

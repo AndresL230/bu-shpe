@@ -1,15 +1,16 @@
 {
-  "_sources": "Competition names verified 2026-06-01 via convention.shpe.org/programs. Formats/prizes/record are TODO-confirm against chapter participation.",
+  "_sources": "Competition slate + formats verified 2026-06 via convention.shpe.org/programs and shpe.org/events/programs/competitions, plus Penn State / UIC news (Academic Olympiad: teams of 3, written closed-book qualifier + Jeopardy-style oral, $3,000 to the winning chapter) and the Engineering Science Symposium page (oral + poster, 800-word abstract, cash prizes + $100 off registration). 'record' below = verified NATIONAL stakes (true regardless of chapter); BU's own placements/results are chapter records — fill from e-board archives.",
   "tracks": [
-    { "name": "Academic Olympiad", "blurb": "FE-exam-style questions in written and Jeopardy-style rounds across math, the engineering disciplines, and SHPE history.", "format": "Team — TODO-confirm size", "prize": "TODO-confirm" },
-    { "name": "Extreme Engineering Challenge (XEC)", "blurb": "A 24-hour continuous sprint taking an innovative idea to market under deadlines, reviews, and presentations.", "format": "Team, 24-hour — TODO-confirm size", "prize": "TODO-confirm" },
-    { "name": "Engineering Science Symposium", "blurb": "Present technical research to judges in a formal symposium setting.", "format": "Individual or team — TODO-confirm", "prize": "TODO-confirm" },
-    { "name": "Hackathon / Innovators Challenge", "blurb": "Build a working prototype against a themed problem statement over the convention weekend.", "format": "Team — TODO-confirm size", "prize": "TODO-confirm" },
-    { "name": "Nissan Design Competition", "blurb": "Sponsor-run design challenge judged on engineering, creativity, and presentation.", "format": "Team — TODO-confirm", "prize": "TODO-confirm" }
+    { "name": "Academic Olympiad", "blurb": "A two-day test of technical and SHPE knowledge: a written closed-book qualifier followed by Jeopardy-style oral rounds spanning math, the engineering disciplines, and SHPE history.", "format": "Teams of 3 · two days", "prize": "$3,000 to the winning chapter" },
+    { "name": "Extreme Engineering Challenge (XEC)", "blurb": "A non-stop 24-hour engineering sprint: teams move an idea through the full engineering process under milestone checkpoints, ending in a presentation to a board of judges.", "format": "Teams · 24-hour continuous", "prize": "Top Team + Lead Engineer awards" },
+    { "name": "Innovation Challenge: Engineering with a Purpose", "blurb": "Formerly the SHPE Hackathon — teams identify a need, build or improve a prototype, and pitch the solution, drawing on technical and business skills.", "format": "Teams · weekend build" },
+    { "name": "Engineering Science Symposium", "blurb": "A research showcase of oral and poster presentations across every engineering field. Submit an abstract; selected presenters defend their work to judges.", "format": "Individual or team · abstract required", "prize": "Cash prizes per session + $100 off registration" },
+    { "name": "Design Competition", "blurb": "Part of the Technology & Innovation Conference — a design challenge judged on engineering rigor, creativity, and presentation.", "format": "Teams" },
+    { "name": "MAES Intern Tournament", "blurb": "A student-driven lecture series where recent interns present on their internships, study-abroad, and research experiences — celebrating pre-professional growth.", "format": "Individual · lecture presentation" }
   ],
   "record": [
-    { "stat": "TODO", "label": "Best chapter finish — TODO-confirm" },
-    { "stat": "TODO", "label": "Competitions entered — TODO-confirm" },
-    { "stat": "TODO", "label": "Members competed — TODO-confirm" }
+    { "stat": "$3,000", "label": "Academic Olympiad — prize to the winning chapter" },
+    { "stat": "24 hr", "label": "Extreme Engineering Challenge — non-stop sprint" },
+    { "stat": "6", "label": "National competition tracks open to BU" }
   ]
 }

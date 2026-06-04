@@ -1,44 +1,53 @@
 [
   {
+    "industry": "Software & Technology",
+    "companies": [
+      { "name": "Apple", "domain": "apple.com" },
+      { "name": "Microsoft", "domain": "microsoft.com" },
+      { "name": "Amazon", "domain": "amazon.com" },
+      { "name": "Intel", "domain": "intel.com" },
+      { "name": "Texas Instruments", "domain": "ti.com" }
+    ]
+  },
+  {
     "industry": "Aerospace & Defense",
     "companies": [
-      { "name": "TODO-confirm recruiter" },
-      { "name": "TODO-confirm recruiter" }
+      { "name": "Boeing", "domain": "boeing.com" },
+      { "name": "Lockheed Martin", "domain": "lockheedmartin.com" },
+      { "name": "Northrop Grumman", "domain": "northropgrumman.com" }
     ]
   },
   {
     "industry": "Energy",
     "companies": [
-      { "name": "TODO-confirm recruiter" },
-      { "name": "TODO-confirm recruiter" }
+      { "name": "Chevron", "domain": "chevron.com" },
+      { "name": "ExxonMobil", "domain": "exxonmobil.com" },
+      { "name": "Shell", "domain": "shell.com" }
     ]
   },
   {
-    "industry": "Consulting",
+    "industry": "Automotive & Mobility",
     "companies": [
-      { "name": "TODO-confirm recruiter" },
-      { "name": "TODO-confirm recruiter" }
+      { "name": "Ford", "domain": "ford.com" },
+      { "name": "Honda", "domain": "honda.com" },
+      { "name": "General Motors", "domain": "gm.com" }
     ]
   },
   {
-    "industry": "Software",
+    "industry": "Finance & Consulting",
     "companies": [
-      { "name": "TODO-confirm recruiter" },
-      { "name": "TODO-confirm recruiter" }
+      { "name": "Accenture", "domain": "accenture.com" },
+      { "name": "Bank of America", "domain": "bankofamerica.com" },
+      { "name": "Wells Fargo", "domain": "wellsfargo.com" },
+      { "name": "Deloitte", "domain": "deloitte.com" }
     ]
   },
   {
-    "industry": "Consumer Goods",
+    "industry": "Industrial & Healthcare",
     "companies": [
-      { "name": "TODO-confirm recruiter" },
-      { "name": "TODO-confirm recruiter" }
-    ]
-  },
-  {
-    "industry": "Automotive",
-    "companies": [
-      { "name": "TODO-confirm recruiter" },
-      { "name": "TODO-confirm recruiter" }
+      { "name": "3M", "domain": "3m.com" },
+      { "name": "Caterpillar", "domain": "caterpillar.com" },
+      { "name": "Boston Scientific", "domain": "bostonscientific.com" }
     ]
   }
 ]

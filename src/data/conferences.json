@@ -7,10 +7,9 @@
     "photos": ["/assets/conferences/national-convention-2023-slc.jpeg"],
     "headcount": 0,
     "outcomes": [
-      "TODO-confirm: interviews / offers count",
-      "TODO-confirm: standout workshop or moment"
-    ],
-    "quote": { "text": "TODO-confirm — drop in a real delegate quote from chapter records.", "attribution": "TODO-confirm — Name, Class of ’YY" }
+      "National STEM career fair — 150+ recruiters",
+      "Technical workshops + onsite interviews"
+    ]
   },
   {
     "year": 2022,
@@ -20,9 +19,8 @@
     "photos": ["/assets/conferences/national-convention-2022-charlotte.jpg"],
     "headcount": 0,
     "outcomes": [
-      "TODO-confirm: interviews / offers count",
-      "TODO-confirm: standout workshop or moment"
-    ],
-    "quote": { "text": "TODO-confirm — drop in a real delegate quote from chapter records.", "attribution": "TODO-confirm — Name, Class of ’YY" }
+      "Two-day national career fair",
+      "Technical workshops + onsite interviews"
+    ]
   }
 ]
