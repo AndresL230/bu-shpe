@@ -4,13 +4,23 @@
     "city": "Salt Lake City, UT",
     "region": "National Convention",
     "description": "Members received interviews and offers, attended professional-growth workshops, and deepened bonds within the BU-SHPE familia.",
-    "photos": ["/assets/conferences/national-convention-2023-slc.jpeg"]
+    "photos": ["/assets/conferences/national-convention-2023-slc.jpeg"],
+    "headcount": 0,
+    "outcomes": [
+      "National STEM career fair — 150+ recruiters",
+      "Technical workshops + onsite interviews"
+    ]
   },
   {
     "year": 2022,
     "city": "Charlotte, NC",
     "region": "National Convention",
     "description": "Two-day career fair, technical workshops, and onsite interviews with the country's largest gathering of Hispanic STEM professionals.",
-    "photos": ["/assets/conferences/national-convention-2022-charlotte.jpg"]
+    "photos": ["/assets/conferences/national-convention-2022-charlotte.jpg"],
+    "headcount": 0,
+    "outcomes": [
+      "Two-day national career fair",
+      "Technical workshops + onsite interviews"
+    ]
   }
 ]

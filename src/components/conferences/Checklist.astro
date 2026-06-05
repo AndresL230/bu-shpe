@@ -1,0 +1,18 @@
+---
+interface Props { items: string[]; variant?: "check" | "loadout"; }
+const { items, variant = "check" } = Astro.props;
+---
+<ul class="space-y-3">
+  {items.map((item) => (
+    <li class="flex items-start gap-3">
+      {variant === "check" ? (
+        <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-accent text-accent" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </span>
+      ) : (
+        <span class="mt-1 h-3 w-3 shrink-0 border border-ink-muted" aria-hidden="true"></span>
+      )}
+      <span class="text-ink">{item}</span>
+    </li>
+  ))}
+</ul>

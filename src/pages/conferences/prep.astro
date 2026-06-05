@@ -1,0 +1,96 @@
+---
+import Base from "@/layouts/Base.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Reveal from "@/components/Reveal.astro";
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import RecruiterWall from "@/components/conferences/RecruiterWall.astro";
+import Checklist from "@/components/conferences/Checklist.astro";
+import siteData from "@/data/site.json";
+
+const bootcamp = [
+  "Résumé audit with corporate-partner reviewers",
+  "30-second elevator pitch, drilled",
+  "Mock interviews (behavioral + technical)",
+  "Company research + target list",
+  "LinkedIn + handshake profile polish",
+];
+const loadout = [
+  "15–20 printed résumés on quality stock",
+  "Professional or business-casual attire",
+  "Padfolio + working pen",
+  "Phone charger / power bank",
+  "Water bottle + comfortable shoes",
+  "Business cards (optional)",
+];
+const walkthrough = [
+  { t: "Before", d: "Map your target booths from the app. Hit reach companies first, while energy is high." },
+  { t: "At the booth", d: "Open with the pitch, hand over a résumé, ask one specific question, get the recruiter's name." },
+  { t: "After", d: "Note who to follow up with. Same-day thank-you beats a perfect-but-late one." },
+];
+---
+<Base title="Career Fair Prep — Conferences" description="How BU SHPE prepares its delegation for the SHPE national career fair: bootcamp, recruiters, attire, and a booth walkthrough.">
+
+  <!-- HERO -->
+  <header class="bg-deep py-20 md:py-28 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <a href="/conferences" class="inline-block"><SectionIndex index="01" label="Career Fair Prep" /></a>
+      <h1 class="display text-5xl md:text-6xl text-cream mt-5 max-w-2xl leading-[1.04]">
+        Walk in <em class="font-serif italic font-normal lowercase tracking-normal text-accent">ready</em>.
+      </h1>
+      <p class="mt-6 text-cream/80 max-w-xl text-lg">The national career fair is high-stakes and fast. We run a bootcamp so you arrive sharp — not figuring it out at the booth.</p>
+    </div>
+  </header>
+
+  <!-- BOOTCAMP CHECKLIST -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <div class="md:col-span-5">
+      <SectionIndex index="02" label="Bootcamp" />
+      <h2 class="display text-3xl md:text-4xl text-ink mt-5">The prep bootcamp.</h2>
+      <p class="mt-4 text-ink-muted max-w-md">Run in the weeks before the trip with our corporate partners — session dates are posted to members each fall.</p>
+      <a href={siteData.sponsorshipPacketUrl} class="mt-6 inline-flex items-center gap-2 font-sans font-semibold text-accent hover:text-accent-deep">
+        Download the prep guide <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <div class="md:col-span-6 md:col-start-7"><Reveal><Checklist items={bootcamp} variant="check" /></Reveal></div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- RECRUITER WALL -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+    <SectionIndex index="03" label="Who's Recruiting" />
+    <p class="mt-5 max-w-2xl text-ink-muted">{/* Companies verified as recent SHPE National Convention recruiters/sponsors (2024–2025); the exact roster changes year to year. Logos pending — add to recruiters.json. */}A snapshot of the names on the floor — 150+ companies recruit onsite each year. These are recent SHPE National recruiters across the major industries; the lineup shifts annually.</p>
+    <div class="mt-10"><Reveal><RecruiterWall /></Reveal></div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- ATTIRE + LOADOUT -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <div class="md:col-span-6">
+      <SectionIndex index="04" label="What To Bring" />
+      <h2 class="display text-3xl md:text-4xl text-ink mt-5">The loadout.</h2>
+      <p class="mt-4 text-ink-muted max-w-md">Business or business-casual attire. Pack the night before — the floor opens early.</p>
+      <div class="mt-6"><Checklist items={loadout} variant="loadout" /></div>
+    </div>
+    <div class="md:col-span-5 md:col-start-8">
+      <SectionIndex index="05" label="Day In The Fair" />
+      <div class="mt-6 space-y-6">
+        {walkthrough.map((w, i) => (
+          <div class="border-l-2 border-accent pl-5">
+            <p class="font-mono text-xs tracking-[0.12em] uppercase text-accent">{String(i + 1).padStart(2, "0")} · {w.t}</p>
+            <p class="text-ink mt-1">{w.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    heading="Prep starts before the plane."
+    body="Join the chapter to get bootcamp invites and the delegation interest form."
+    primaryCta={{ label: "Join SHPE", href: "/join" }}
+    secondaryCta={{ label: "Back to conferences", href: "/conferences" }}
+  />
+
+</Base>

@@ -55,7 +55,10 @@ export interface Conference {
   city: string;
   region?: string;
   description: string;
-  photos: string[]; // paths under /assets/conferences/
+  photos: string[];                                // paths under /assets/conferences/
+  headcount?: number;                              // TODO-confirm from chapter records
+  outcomes?: string[];                             // TODO-confirm — bullet outcomes
+  quote?: { text: string; attribution: string };  // TODO-confirm — delegate quote
 }
 
 export interface VolunteeringProgram {
@@ -77,4 +80,38 @@ export interface GivingImpact {
 export interface EmployerGroup {
   industry: string;
   companies: { name: string; domain?: string; logo?: string }[];
+}
+
+export interface KeyDate {
+  date: string;   // ISO yyyy-mm-dd
+  label: string;
+  note?: string;
+}
+
+export interface Convention {
+  year: number;
+  name: string;            // "SHPE National Convention 2026"
+  theme: string;           // "STEM for the BOLD"
+  city: string;            // "Indianapolis, IN"
+  venue: string;           // "Indiana Convention Center"
+  startDate: string;       // ISO yyyy-mm-dd
+  endDate: string;         // ISO yyyy-mm-dd
+  countdownTarget: string; // ISO datetime, e.g. "2026-10-28T09:00:00-05:00"
+  scaleStats: SupportStat[];        // reuse {value,label}
+  keyDates: KeyDate[];
+  costFunding: { heading: string; detail: string }[];
+  eligibility: string[];
+  faq: { q: string; a: string }[];
+}
+
+export interface CompetitionTrack {
+  name: string;
+  blurb: string;
+  format: string;   // team size / time commitment — TODO-confirm specifics
+  prize?: string;   // TODO-confirm
+}
+
+export interface CompetitionsData {
+  tracks: CompetitionTrack[];
+  record: { stat: string; label: string }[];  // trophy stat block — TODO-confirm
 }

@@ -1,0 +1,13 @@
+---
+import conventionData from "@/data/conventions.json";
+import type { Convention } from "@/types";
+const c = conventionData as Convention;
+const yy = String(c.year).slice(2);
+const cityShort = c.city.split(",")[0].toUpperCase();
+---
+<div class="blueprint-deep inline-block bg-deep px-6 py-5 border border-cream/20">
+  <p class="font-mono text-cream/60 text-[0.7rem] tracking-[0.2em] uppercase mb-2">Credential</p>
+  <p class="font-mono text-cream text-sm md:text-base tracking-[0.15em] uppercase">
+    BU SHPE <span class="text-accent">·</span> Delegate <span class="text-accent">·</span> {cityShort} ’{yy}
+  </p>
+</div>

@@ -12,7 +12,7 @@ User: chapter member (`andreslopez.23061@gmail.com`). Tone is editorial / magazi
 
 ```bash
 npm run check        # MUST be 0 errors before any commit
-npm run build        # MUST succeed before any commit (writes ./dist, 9 pages)
+npm run build        # MUST succeed before any commit (writes ./dist, 15 pages)
 npm run dev          # http://localhost:4321
 ```
 
@@ -27,7 +27,7 @@ src/
   styles/global.css       # @theme tokens + utility classes (.display, .eyebrow, .pullquote, .rule-accent, .grain, .photo-warm, .reveal)
   layouts/Base.astro      # html shell, meta, fonts, Nav, Footer, slot. Props: title, description, ogImage.
   components/             # Nav, Footer, PageHero, SectionHeading, BoardCard, EventCard, ConferenceCard, SponsorGrid, Gallery, SocialLinks, MailingListForm
-  pages/                  # one .astro per route (9 routes total)
+  pages/                  # one .astro per route (15 routes total)
 public/assets/            # served at /assets/*
 shpe-assets/              # raw originals archive (not served)
 docs/superpowers/plans/2026-05-21-bu-shpe-rebuild.md   # original implementation plan
@@ -53,6 +53,9 @@ Use as Tailwind classes: `bg-deep`, `text-ink-muted`, `border-rule`, etc.
 - `--font-display` → **Barlow Condensed Bold 700** (used inside `.display`)
 - `--font-cond` → **Barlow Condensed** (eyebrows + nav links)
 - `--font-serif` → **Playfair Display Italic** (accent word inside headlines ONLY)
+- `--font-mono` → **IBM Plex Mono** — section-local to `/conferences/*` (dossier treatment): data, dates, stat labels, `01 — TRAVEL` section indices, badge/table text. Surfaced via the `.mono-label` utility. Don't use elsewhere.
+
+> **Section-local note:** `--font-mono` (IBM Plex Mono) and `--color-scarlet` (`#CC0000`, BU scarlet — one sparing accent per page max), plus the `.mono-label` / `.blueprint` / `.blueprint-deep` utilities, are the "delegation dossier" treatment scoped to `/conferences` + its three spokes. They're loaded site-wide but used only there.
 
 ### Custom classes
 - `.display` — Barlow Condensed Bold 700, tight letter-spacing, line-height 1.05 — for all headlines
@@ -81,7 +84,10 @@ Use as Tailwind classes: `bg-deep`, `text-ink-muted`, `border-rule`, etc.
 | `/about` | `pages/about.astro` | PageHero + mission asymmetric 2-col + values pull-quote + 10-reasons grid + event categories + constitution/advisor footer + CTA band |
 | `/board` | `pages/board.astro` | PageHero + roster grid (officers + faculty advisor). Renders empty-state notice when all officers are `name: "TBD"`. |
 | `/events` | `pages/events.astro` | PageHero + Google Calendar embed + filterable archive (`?cat=Professional` chips, server-side filter) + mailing-list nudge |
-| `/conferences` | `pages/conferences.astro` | PageHero + intro prose + stats strip + ConferenceCard grid + CTA band |
+| `/conferences` | `pages/conferences.astro` | Dossier hub — credential badge, live countdown, count-up stats, key-dates timeline, trip manifest, cost/funding, eligibility, FAQ, spoke links, CTA |
+| `/conferences/prep` | `pages/conferences/prep.astro` | Career fair prep — bootcamp checklist, industry-tagged recruiter wall, loadout, booth walkthrough |
+| `/conferences/competitions` | `pages/conferences/competitions.astro` | Competition tracks scorecard, how-it-works, trophy record block |
+| `/conferences/delegations` | `pages/conferences/delegations.astro` | Year-by-year dossier-entry archive (extensible via conferences.json) |
 | `/volunteering` | `pages/volunteering.astro` | PageHero + pull-quote + alternating image/text program list (index parity controls left/right) + CTA |
 | `/gallery` | `pages/gallery.astro` | PageHero + filter chips + masonry Gallery with native `<dialog>` lightbox |
 | `/sponsors` | `pages/sponsors.astro` | PageHero + thank-you copy + SponsorGrid (tier-aware: groups by tier if any have one, flat otherwise) + sponsor-packet CTA + donate footnote |
@@ -135,7 +141,7 @@ If a future design wants the logo on a light background, the chapter needs to su
 ## Workflow expectations
 
 - **Run `npm run check` before any commit.** The user expects 0 errors / 0 warnings / 0 hints.
-- **Run `npm run build` before any commit.** Must produce all 9 pages cleanly.
+- **Run `npm run build` before any commit.** Must produce all 15 pages cleanly.
 - **Commit with descriptive messages** — the user reads them. Group related changes into one logical commit.
 - **Use heredoc for multi-line commit messages** to preserve formatting:
   ```bash

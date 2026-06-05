@@ -1,0 +1,53 @@
+[
+  {
+    "industry": "Software & Technology",
+    "companies": [
+      { "name": "Apple", "domain": "apple.com" },
+      { "name": "Microsoft", "domain": "microsoft.com" },
+      { "name": "Amazon", "domain": "amazon.com" },
+      { "name": "Intel", "domain": "intel.com" },
+      { "name": "Texas Instruments", "domain": "ti.com" }
+    ]
+  },
+  {
+    "industry": "Aerospace & Defense",
+    "companies": [
+      { "name": "Boeing", "domain": "boeing.com" },
+      { "name": "Lockheed Martin", "domain": "lockheedmartin.com" },
+      { "name": "Northrop Grumman", "domain": "northropgrumman.com" }
+    ]
+  },
+  {
+    "industry": "Energy",
+    "companies": [
+      { "name": "Chevron", "domain": "chevron.com" },
+      { "name": "ExxonMobil", "domain": "exxonmobil.com" },
+      { "name": "Shell", "domain": "shell.com" }
+    ]
+  },
+  {
+    "industry": "Automotive & Mobility",
+    "companies": [
+      { "name": "Ford", "domain": "ford.com" },
+      { "name": "Honda", "domain": "honda.com" },
+      { "name": "General Motors", "domain": "gm.com" }
+    ]
+  },
+  {
+    "industry": "Finance & Consulting",
+    "companies": [
+      { "name": "Accenture", "domain": "accenture.com" },
+      { "name": "Bank of America", "domain": "bankofamerica.com" },
+      { "name": "Wells Fargo", "domain": "wellsfargo.com" },
+      { "name": "Deloitte", "domain": "deloitte.com" }
+    ]
+  },
+  {
+    "industry": "Industrial & Healthcare",
+    "companies": [
+      { "name": "3M", "domain": "3m.com" },
+      { "name": "Caterpillar", "domain": "caterpillar.com" },
+      { "name": "Boston Scientific", "domain": "bostonscientific.com" }
+    ]
+  }
+]

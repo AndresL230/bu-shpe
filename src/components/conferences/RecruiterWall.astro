@@ -1,0 +1,24 @@
+---
+import recruitersData from "@/data/recruiters.json";
+import type { EmployerGroup } from "@/types";
+const groups = recruitersData as EmployerGroup[];
+---
+<div class="space-y-10">
+  {groups.map((g) => (
+    <div>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="font-mono text-xs tracking-[0.12em] uppercase text-ink bg-surface-soft border border-outline-soft px-2.5 py-1">{g.industry}</span>
+        <span class="flex-1 border-t border-outline-soft"></span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
+        {g.companies.map((co) => (
+          <div class="bg-bg aspect-[3/2] grid place-items-center p-4">
+            {co.logo
+              ? <img src={co.logo} alt={co.name} class="max-h-10 w-auto object-contain" loading="lazy" />
+              : <span class="font-mono text-sm text-ink-muted text-center">{co.name}</span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>

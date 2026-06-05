@@ -1,0 +1,69 @@
+---
+import Base from "@/layouts/Base.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Reveal from "@/components/Reveal.astro";
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import Scorecard from "@/components/conferences/Scorecard.astro";
+import TrophyStats from "@/components/conferences/TrophyStats.astro";
+
+const howto = [
+  { t: "Sign up", d: "Registration opens through the SHPE convention portal; the chapter posts deadlines on the mailing list." },
+  { t: "Team up", d: "Most tracks are team-based. We help match members into teams at a pre-convention meeting." },
+  { t: "Time commitment", d: "Ranges from a single judged session to a 24-hour continuous build (XEC). Plan around it." },
+  { t: "Prizes", d: "Cash, recognition, and recruiter visibility — the Academic Olympiad alone awards $3,000 to the winning chapter. Exact prizes vary by track and year." },
+];
+---
+<Base title="Competitions — Conferences" description="The named SHPE national competition tracks BU SHPE competes in, how to sign up, and the chapter's record.">
+
+  <!-- HERO -->
+  <header class="bg-deep py-20 md:py-28 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <a href="/conferences" class="inline-block"><SectionIndex index="02" label="Competitions" accent="scarlet" /></a>
+      <h1 class="display text-5xl md:text-6xl text-cream mt-5 max-w-2xl leading-[1.04]">
+        Compete on the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">national</em> stage.
+      </h1>
+      <p class="mt-6 text-cream/80 max-w-xl text-lg">From the Academic Olympiad to a 24-hour engineering sprint, BU competes against the strongest Hispanic STEM talent in the country.</p>
+    </div>
+  </header>
+
+  <!-- TRACKS SCORECARD -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+    <SectionIndex index="01" label="The Tracks" />
+    <p class="mt-5 max-w-2xl text-ink-muted">{/* Tracks + formats verified 2026-06 via convention.shpe.org/programs; see competitions.json _sources. */}The competition slate at the national convention. Mark the ones that fit your discipline.</p>
+    <div class="mt-10"><Reveal><Scorecard /></Reveal></div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- HOW IT WORKS -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+    <SectionIndex index="02" label="How It Works" />
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
+      {howto.map((h, i) => (
+        <div class="bg-bg p-7">
+          <p class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</p>
+          <p class="display text-2xl text-ink mt-2">{h.t}</p>
+          <p class="mt-2 text-ink-muted text-sm">{h.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- THE STAKES -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+    <SectionIndex index="03" label="The Stakes" accent="scarlet" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5 mb-8 max-w-xl">What you're competing for.</h2>
+    <Reveal><TrophyStats /></Reveal>
+    <p class="mt-4 font-mono text-xs text-ink-muted">BU's own placements live in the chapter archive — ask the e-board to add the record here.</p>
+  </section>
+
+  <CtaBand
+    heading="Think you can place?"
+    body="Join the chapter, find a team, and represent BU at nationals."
+    primaryCta={{ label: "Join SHPE", href: "/join" }}
+    secondaryCta={{ label: "Back to conferences", href: "/conferences" }}
+  />
+
+</Base>

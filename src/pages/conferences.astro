@@ -1,127 +1,144 @@
 ---
 import Base from "@/layouts/Base.astro";
-import ZigZagBlock from "@/components/ZigZagBlock.astro";
-import StatsStrip from "@/components/StatsStrip.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import Reveal from "@/components/Reveal.astro";
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import ConventionBadge from "@/components/conferences/ConventionBadge.astro";
+import Countdown from "@/components/conferences/Countdown.astro";
+import KeyDatesTimeline from "@/components/conferences/KeyDatesTimeline.astro";
+import TripManifest from "@/components/conferences/TripManifest.astro";
+import StatCountUp from "@/components/conferences/StatCountUp.astro";
 
 import siteData from "@/data/site.json";
-import conferencesData from "@/data/conferences.json";
-import type { Conference } from "@/types";
+import conventionData from "@/data/conventions.json";
+import type { Convention } from "@/types";
+import { formatDateRange } from "@/lib/conferences";
 
-const conferences = conferencesData as Conference[];
-const sortedConferences = [...conferences].sort((a, b) => b.year - a.year);
-const latest = sortedConferences[0];
-const currentYear = new Date().getFullYear();
+const c = conventionData as Convention;
+const dateRange = formatDateRange(c.startDate, c.endDate);
 ---
+<Base title="Conferences" description="BU SHPE sends a delegation to the SHPE National Convention each year. Indianapolis, Oct 28–31 2026.">
 
-<Base title="Conferences" description="BU SHPE sends a delegation to the SHPE National Convention and Region 4 leadership events each year.">
-
-  <!-- 1. Hero — navy with SHPE wordmark watermark -->
-  <header class="relative w-full bg-deep py-24 md:py-32 px-6 overflow-hidden">
-    <div class="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+  <!-- HERO -->
+  <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+    <div class="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-10 items-end">
       <div class="md:col-span-8">
-        <span class="eyebrow text-cream/70 mb-4 block">ANNUAL CONVENTION {currentYear}</span>
-        <h1 class="display text-5xl md:text-6xl text-cream max-w-3xl leading-tight">
-          SHPE <em class="font-serif italic font-normal lowercase tracking-normal text-accent">national</em> convention.
+        <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">{c.name} · {c.city}</p>
+        <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+          STEM for the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">bold</em>.
         </h1>
-        <p class="mt-8 text-cream/80 max-w-xl text-lg">
-          The largest gathering of Hispanic STEM students and professionals in the country. Join thousands of familia in a week of career opportunities, technical development, and networking.
+        <p class="mt-7 text-cream/80 max-w-xl text-lg">
+          The largest gathering of Hispanic STEM students and professionals in the country. BU SHPE travels as a delegation — career fair, competitions, and familia. {dateRange}, {c.venue}.
         </p>
+        <div class="mt-8"><ConventionBadge /></div>
       </div>
       <div class="md:col-span-4 flex md:justify-end">
-        <div class="border-l border-cream/30 pl-6 py-2">
-          <p class="eyebrow text-cream/60 mb-2">Most recent</p>
-          <p class="display text-3xl md:text-4xl text-cream leading-none">{latest.city.toUpperCase()}</p>
-          <p class="font-cond uppercase tracking-widest text-sm text-cream/70 mt-2">{latest.year}</p>
-        </div>
+        <Countdown />
       </div>
-    </div>
-
-    <!-- Decorative SHPE watermark -->
-    <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
-      <span class="display text-[180px] lg:text-[240px] leading-none text-cream translate-y-1/4 inline-block">SHPE</span>
     </div>
   </header>
 
-  <!-- 2. Stats strip -->
-  <StatsStrip
-    stats={[
-      { value: "9,000+", label: "Attendees" },
-      { value: "200+", label: "Career fair booths" },
-      { value: "100+", label: "Workshops" },
-    ]}
-  />
+  <!-- 01 — SCALE (count-up stats) -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+    <SectionIndex index="01" label="The Convention" />
+    <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-10">
+      {c.scaleStats.map((s, i) => <StatCountUp value={s.value} label={s.label} accent={i === 0} />)}
+    </div>
+    <p class="mt-8 max-w-3xl text-ink-muted">
+      {/* SOURCE: 2025 Philadelphia figures (12,000 attendees / 150+ companies), Newswire 2025-09. */}
+      A four-day national convention spanning a STEM career fair, technical competitions, leadership workshops, and a graduate-school and professional track.
+    </p>
+  </section>
 
-  <!-- 3. Editorial zig-zag blocks -->
-  <section class="py-24 md:py-32">
-    <div class="max-w-[1200px] mx-auto px-6 space-y-24 md:space-y-32">
-      <Reveal>
-        <ZigZagBlock
-          image="/assets/conferences/national-convention-2023-slc.jpeg"
-          imageAlt="SHPE National Convention 2023 in Salt Lake City"
-          heading="Travel logistics"
-          body="Coordinating travel for our delegation requires precision. BU SHPE provides subsidized flights, hotel blocks at the convention center, and ground transportation for all registered members."
-          bullets={["Group flight departures", "Hotel subsidy program", "Pre-trip logistics briefing"]}
-          split="60-40"
-        />
-      </Reveal>
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
-      <div class="border-t border-outline-soft opacity-30"></div>
-
-      <Reveal>
-        <ZigZagBlock
-          image="/assets/events/resume-review-ge.png"
-          imageAlt="Resume review with GE recruiters"
-          heading="Career fair prep"
-          body="The SHPE national career fair is a high-stakes environment. We host intensive bootcamp sessions covering résumé audits, elevator pitches, and mock interviews with our corporate partners ahead of the trip."
-          cta={{ label: "Download prep guide", href: siteData.sponsorshipPacketUrl }}
-          split="40-60"
-          reverse={true}
-        />
-      </Reveal>
-
-      <div class="border-t border-outline-soft opacity-30"></div>
-
-      <Reveal>
-        <ZigZagBlock
-          image="/assets/conferences/national-convention-2022-charlotte.jpg"
-          imageAlt="SHPE National Convention 2022 in Charlotte"
-          heading="Competitions"
-          body="Represent BU on the national stage. From extreme engineering to the hackathon, our members compete against the top engineering talent in the country for prestige and prizes."
-          quote={{ label: "Last year's record", text: "Top finishers in technical paper and design challenge categories — the strongest BU showing in our chapter's history." }}
-          split="60-40"
-        />
-      </Reveal>
+  <!-- 02 — KEY DATES -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <div class="md:col-span-4">
+      <SectionIndex index="02" label="Key Dates" />
+      <p class="mt-5 text-ink-muted max-w-sm">The road to Indianapolis. Registration deadlines follow SHPE's standard tiers — watch the mailing list for the chapter's locked travel calendar.</p>
+    </div>
+    <div class="md:col-span-7 md:col-start-6">
+      <Reveal><KeyDatesTimeline /></Reveal>
     </div>
   </section>
 
-  <!-- 4. Past delegations grid -->
-  <section class="max-w-[1200px] mx-auto px-6 py-24">
-    <p class="eyebrow text-ink-muted mb-8">Past delegations</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-      {sortedConferences.map((conf) => (
-        <article class="group">
-          <div class="aspect-[16/9] overflow-hidden border border-outline-soft mb-4">
-            <img
-              src={conf.photos[0]}
-              alt={`SHPE convention ${conf.year} in ${conf.city}`}
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <p class="eyebrow text-accent mb-1">{conf.region ?? "National Convention"} · {conf.year}</p>
-          <h3 class="display text-2xl md:text-3xl text-ink mb-2">{conf.city}</h3>
-          <p class="text-ink-muted text-sm">{conf.description}</p>
-        </article>
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- 03 — TRAVEL (trip manifest) -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <div class="md:col-span-5">
+      <SectionIndex index="03" label="Travel" />
+      <h2 class="display text-3xl md:text-4xl text-ink mt-5">Coordinated, subsidized, group travel.</h2>
+      <p class="mt-4 text-ink-muted max-w-md">We fly as a delegation. BU SHPE coordinates flights, a hotel block at the convention center, and ground transport for registered members.</p>
+    </div>
+    <div class="md:col-span-7"><Reveal><TripManifest /></Reveal></div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- 04 — COST & FUNDING -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+    <SectionIndex index="04" label="Cost & Funding" />
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+      {c.costFunding.map((cf) => (
+        <div class="bg-bg p-7">
+          <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{cf.heading}</p>
+          <p class="text-ink">{cf.detail}</p>
+        </div>
       ))}
     </div>
   </section>
 
-  <!-- 5. CTA band -->
+  <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+  <!-- 05 — ELIGIBILITY + FAQ -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <div class="md:col-span-5">
+      <SectionIndex index="05" label="Eligibility" />
+      <ul class="mt-6 space-y-3">
+        {c.eligibility.map((e) => (
+          <li class="flex gap-3 text-ink">
+            <span class="font-mono text-accent" aria-hidden="true">›</span><span>{e}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="md:col-span-6 md:col-start-7">
+      <SectionIndex index="06" label="FAQ" />
+      <div class="mt-6 divide-y divide-outline-soft border-t border-outline-soft">
+        {c.faq.map((f) => (
+          <details class="group py-4">
+            <summary class="display text-xl text-ink cursor-pointer list-none flex justify-between items-center [&::-webkit-details-marker]:hidden">
+              {f.q}<span class="font-mono text-accent transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-3 text-ink-muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SPOKES NAV -->
+  <section class="max-w-[1200px] mx-auto px-6 pb-20 md:pb-28">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+      {[
+        { href: "/conferences/prep", idx: "→", label: "Career fair prep", desc: "Bootcamp, recruiters, what to bring." },
+        { href: "/conferences/competitions", idx: "→", label: "Competitions", desc: "Tracks, sign-up, the chapter record." },
+        { href: "/conferences/delegations", idx: "→", label: "Past delegations", desc: "Year-by-year archive." },
+      ].map((s) => (
+        <a href={s.href} class="bg-bg p-7 group hover:bg-surface-soft transition-colors">
+          <p class="display text-2xl text-ink group-hover:text-accent transition-colors">{s.label} <span aria-hidden="true">→</span></p>
+          <p class="mt-2 text-ink-muted text-sm">{s.desc}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
   <CtaBand
     heading="Ready to represent BU?"
-    body="Join our delegation and take the next step in your professional journey. Registration interest forms are open for the upcoming national convention."
+    body="Join our delegation and take the next step. Interest forms open ahead of the national convention."
     primaryCta={{ label: "Register interest", href: "/join" }}
     secondaryCta={{ label: "Email leadership", href: `mailto:${siteData.contactEmail}` }}
   />

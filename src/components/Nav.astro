@@ -28,7 +28,16 @@ const links: NavLink[] = [
       { href: "/events/all?cat=Social",         label: "socials" },
     ],
   },
-  { href: "/conferences",   label: "Conferences" },
+  {
+    href: "/conferences",
+    label: "Conferences",
+    submenu: [
+      { href: "/conferences",              label: "all conferences" },
+      { href: "/conferences/prep",         label: "career fair prep" },
+      { href: "/conferences/competitions", label: "competitions" },
+      { href: "/conferences/delegations",  label: "past delegations" },
+    ],
+  },
   { href: "/volunteering",  label: "Volunteering" },
   {
     href: "/gallery",

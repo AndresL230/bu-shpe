@@ -1,0 +1,59 @@
+---
+import conventionData from "@/data/conventions.json";
+import type { Convention } from "@/types";
+import { formatDate } from "@/lib/conferences";
+const c = conventionData as Convention;
+const staticFallback = formatDate(c.startDate);
+---
+<div data-countdown data-target={c.countdownTarget} class="font-mono">
+  <p class="mono-label mb-3">Countdown to Indianapolis</p>
+  <div class="flex gap-4 md:gap-6" data-countdown-display>
+    <!-- JS fills these; reduced-motion replaces with static date -->
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="days">—</span><span class="block mono-label mt-1">days</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="hours">—</span><span class="block mono-label mt-1">hrs</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="minutes">—</span><span class="block mono-label mt-1">min</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="seconds">—</span><span class="block mono-label mt-1">sec</span></div>
+  </div>
+  <p class="mono-label mt-3" data-countdown-static hidden>{staticFallback}</p>
+</div>
+
+<script is:inline define:vars={{ staticFallback }}>
+  (function () {
+    const root = document.querySelector("[data-countdown]");
+    if (!root) return;
+    const target = new Date(root.getAttribute("data-target")).getTime();
+    const display = root.querySelector("[data-countdown-display]");
+    const staticEl = root.querySelector("[data-countdown-static]");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      if (display) display.hidden = true;
+      if (staticEl) staticEl.hidden = false;
+      return;
+    }
+    const units = {
+      days: root.querySelector('[data-unit="days"]'),
+      hours: root.querySelector('[data-unit="hours"]'),
+      minutes: root.querySelector('[data-unit="minutes"]'),
+      seconds: root.querySelector('[data-unit="seconds"]'),
+    };
+    const pad = (n) => String(n).padStart(2, "0");
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        Object.values(units).forEach((u) => u && (u.textContent = "00"));
+        clearInterval(timer);
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      if (units.days) units.days.textContent = String(d);
+      if (units.hours) units.hours.textContent = pad(h);
+      if (units.minutes) units.minutes.textContent = pad(m);
+      if (units.seconds) units.seconds.textContent = pad(s);
+    }
+    tick();
+    const timer = setInterval(tick, 1000);
+  })();
+</script>

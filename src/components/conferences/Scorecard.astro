@@ -1,0 +1,25 @@
+---
+import competitionsData from "@/data/competitions.json";
+import type { CompetitionsData } from "@/types";
+const { tracks } = competitionsData as CompetitionsData;
+---
+<div class="border border-outline-soft overflow-hidden">
+  <div class="hidden md:grid grid-cols-[1.4fr_2fr_1fr_0.8fr] bg-deep">
+    {["Track", "What it is", "Format", "Prize"].map((h) => (
+      <span class="font-mono text-xs tracking-[0.12em] uppercase text-cream px-5 py-3">{h}</span>
+    ))}
+  </div>
+  <div class="divide-y divide-outline-soft">
+    {tracks.map((t, i) => (
+      <div class="grid grid-cols-1 md:grid-cols-[1.4fr_2fr_1fr_0.8fr] gap-2 md:gap-0 px-5 py-5 hover:bg-surface-soft transition-colors">
+        <div class="flex items-baseline gap-3">
+          <span class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</span>
+          <span class="display text-xl text-ink leading-tight">{t.name}</span>
+        </div>
+        <p class="text-ink-muted text-sm md:px-5">{t.blurb}</p>
+        <p class="font-mono text-xs text-ink-muted md:px-2">{t.format}</p>
+        <p class="font-mono text-xs text-ink-muted">{t.prize ?? "—"}</p>
+      </div>
+    ))}
+  </div>
+</div>
