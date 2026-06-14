@@ -1,0 +1,169 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+
+import volunteeringData from "@/data/volunteering.json";
+import siteData from "@/data/site.json";
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Volunteering · Greater Boston</p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      <em class="font-serif italic font-normal lowercase tracking-normal text-accent">Service</em> is part of the SHPE familia.
+    </h1>
+    <p class="mt-7 text-cream/80 max-w-xl text-lg">
+      We show up for Greater Boston — at museums, food banks, and on the street with meals.
+    </p>
+  </div>
+
+  <!-- Decorative watermark -->
+  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
+    <span class="display text-[160px] lg:text-[220px] leading-none text-cream translate-y-1/4 inline-block">SVC</span>
+  </div>
+</header>
+
+<!-- 01 — PROGRAMS -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex label="Programs" accent="scarlet" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">The field log.</h2>
+  <p class="mt-4 text-ink-muted max-w-md">
+    Where the chapter has shown up — museums, food banks, and meals on the street.
+  </p>
+
+  <div class="mt-12 flex flex-col gap-px bg-outline-soft border border-outline-soft">
+    {volunteeringData.map((program, index) => (
+      <article class="bg-bg grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-10 items-stretch">
+
+        {/* Image side — md:col-span-7, alternates left/right */}
+        <div
+          class:list={[
+            "md:col-span-7",
+            index % 2 === 0 ? "md:order-1" : "md:order-2",
+          ]}
+        >
+          {program.photos.length >= 2 ? (
+            <div class="grid grid-cols-2 gap-px bg-outline-soft h-full">
+              <div class="photo-warm overflow-hidden">
+                <img
+                  src={program.photos[0]}
+                  alt={`${program.name} — photo 1`}
+                  class="w-full h-full object-cover aspect-[4/3]"
+                  loading="lazy"
+                />
+              </div>
+              <div class="photo-warm overflow-hidden">
+                <img
+                  src={program.photos[1]}
+                  alt={`${program.name} — photo 2`}
+                  class="w-full h-full object-cover aspect-[4/3]"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          ) : program.photos.length === 1 ? (
+            <div class="photo-warm overflow-hidden h-full">
+              <img
+                src={program.photos[0]}
+                alt={`${program.name}`}
+                class="w-full h-full object-cover aspect-[16/9] md:aspect-auto md:min-h-[18rem]"
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            <div class="bg-deep blueprint-deep p-12 h-full min-h-[14rem] flex flex-col justify-center">
+              <p class="pullquote text-cream text-left leading-snug">
+                "{program.description.split(".")[0]}."
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Text side — md:col-span-5, opposite order */}
+        <div
+          class:list={[
+            "md:col-span-5 flex flex-col justify-center gap-4 p-7 md:p-9",
+            index % 2 === 0 ? "md:order-2" : "md:order-1",
+          ]}
+        >
+          <p class="font-mono text-sm text-accent tracking-wide uppercase">
+            {String(index + 1).padStart(2, "0")} · Field Log
+          </p>
+          <h3 class="display text-2xl md:text-3xl text-ink">{program.name}</h3>
+          <p class="text-sm leading-relaxed text-ink-muted">{program.description}</p>
+        </div>
+
+      </article>
+    ))}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 02 — IMPACT -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <div class="md:col-span-5">
+    <SectionIndex label="Impact" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5">What showing up adds up to.</h2>
+    <p class="mt-4 text-ink-muted max-w-md">
+      Pulled straight from the field log — no rounding up.
+    </p>
+  </div>
+  <div class="md:col-span-7">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+      {[
+        { value: "16,000", label: "lbs of food sorted in one afternoon — Greater Boston Food Bank" },
+        { value: "2", label: "Rhetty-to-Go meal routes — Kenmore & Back Bay" },
+        { value: "3", label: "standing community partners across Greater Boston" },
+      ].map((stat) => (
+        <div class="bg-bg p-7">
+          <p class="display text-4xl md:text-5xl leading-none text-accent tabular-nums">{stat.value}</p>
+          <p class="mt-3 font-mono text-xs text-ink-muted uppercase tracking-[0.12em] leading-relaxed">{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 03 — GET INVOLVED -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <div class="md:col-span-5">
+    <SectionIndex label="Get Involved" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5">Have a partner in mind?</h2>
+    <p class="mt-4 text-ink-muted max-w-md">
+      Tell us where you'd like to serve next.
+    </p>
+  </div>
+  <div class="md:col-span-7">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+      {[
+        { t: "Get on the list", d: "Volunteer calls go out through the mailing list first." },
+        { t: "Show up", d: "Most outings are a single afternoon — no experience needed." },
+        { t: "Bring an idea", d: "Know an organization that could use engineers? Tell us." },
+      ].map((step, i) => (
+        <div class="bg-bg p-7">
+          <p class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</p>
+          <p class="display text-xl text-ink mt-2">{step.t}</p>
+          <p class="mt-2 text-ink-muted text-sm">{step.d}</p>
+        </div>
+      ))}
+    </div>
+    <a
+      href={`mailto:${siteData.contactEmail}?subject=Volunteer%20Idea`}
+      class="mt-8 inline-block font-mono text-sm text-ink-muted tracking-wide uppercase border-b border-outline-soft hover:text-accent hover:border-accent transition-colors pb-1"
+    >
+      Send us your idea →
+    </a>
+  </div>
+</section>
+
+<!-- CTA -->
+<CtaBand
+  heading={`Pay it <em class="font-serif italic font-normal lowercase tracking-normal text-accent">forward</em>.`}
+  body="Build community. Show up for Greater Boston. Bring an idea and we'll find a way to serve."
+  primaryCta={{ label: "Send us your idea", href: `mailto:${siteData.contactEmail}?subject=Volunteer%20Idea` }}
+  secondaryCta={{ label: "Join the chapter", href: "/join" }}
+/>

@@ -1,0 +1,78 @@
+{
+  "document": {
+    "title": "SHPE-BostonU Chapter Constitution",
+    "edition": "2020–2021 edition",
+    "articleCount": "IX"
+  },
+  "articles": [
+    {
+      "number": "I",
+      "title": "Name",
+      "summary": "Establishes the organization as the Boston University Student Chapter of the Society of Hispanic Professional Engineers — SHPE-BostonU."
+    },
+    {
+      "number": "II",
+      "title": "Aim & Purpose",
+      "summary": "Commits the chapter to SHPE's five pillars and to empowering Hispanics in STEM — while staying open to every student, regardless of background or major."
+    },
+    {
+      "number": "III",
+      "title": "Membership",
+      "summary": "Membership is equally available to all undergraduate fee-paying students, with no discrimination of any kind under Boston University policy."
+    },
+    {
+      "number": "IV",
+      "title": "Officers",
+      "summary": "Defines a nine-officer executive board, optional underclassmen and upperclassmen representatives, and a four-officer fallback structure for lean years."
+    },
+    {
+      "number": "V",
+      "title": "Officer Responsibilities",
+      "summary": "Spells out every seat's duties — from the President's national reporting to the Treasurer's sole signature on chapter funds."
+    },
+    {
+      "number": "VI–VII",
+      "title": "Elections & Voting",
+      "summary": "Annual elections arranged by the President: plurality wins, a majority of official members must be present, and every official member gets a vote."
+    },
+    {
+      "number": "VIII",
+      "title": "Meetings",
+      "summary": "Guarantees at least five general meetings each semester, with the executive board meeting weekly and special meetings at the President's call."
+    },
+    {
+      "number": "IX",
+      "title": "Amendments",
+      "summary": "The constitution amends by a two-thirds vote of members present — proposed at least one publicized meeting in advance, then ratified through BU's Student Activities Office."
+    }
+  ],
+  "officers": [
+    { "role": "President", "duty": "Executive officer — presides over meetings, appoints committees, arranges elections, and reports to SHPE national." },
+    { "role": "VP of University Affairs", "duty": "Liaison to BU — student groups, the College of Engineering, and campus partners like the Howard Thurman Center." },
+    { "role": "VP of Corporate Affairs", "duty": "Runs company networking events and alumni nights, and sends the corporate sponsorship packet each semester." },
+    { "role": "VP of Community Outreach", "duty": "Owns volunteer events, Noches de Ciencias, SHPE Jr., and the chapter's ties to SHPE national and regional." },
+    { "role": "Treasurer", "duty": "Sole signatory on chapter funds — budgets, financial records, and funding requests to BU's Allocation Board." },
+    { "role": "Secretary", "duty": "Record-keeper — minutes, the member roster, room scheduling, and the chapter calendar." },
+    { "role": "Public Relations Chair", "duty": "Directs marketing, social media, and announcements to members." },
+    { "role": "Campus Fundraising Chair", "duty": "Creates, directs, and executes the chapter's fundraisers." },
+    { "role": "Webmaster", "duty": "Keeps the website, LinkedIn, and the board's project tracker current." }
+  ],
+  "officersNote": "The board may also seat Underclassmen and Upperclassmen Representatives, who promote membership in their class years and lead the general-body committees.",
+  "process": [
+    { "label": "Elections", "detail": "Held annually by the Student Activities Office deadline. Plurality wins, and every official member casts a ballot." },
+    { "label": "Meetings", "detail": "At least five general meetings a semester — the executive board meets weekly." },
+    { "label": "Amendments", "detail": "Two-thirds of members present, proposed a meeting in advance, ratified through BU SAO." }
+  ],
+  "advisor": {
+    "name": "Enrique Gutierrez-Wing, Ph.D.",
+    "title": "Master Lecturer, Mechanical Engineering",
+    "school": "Boston University College of Engineering",
+    "bio": "Dr. Gutierrez-Wing has taught Electromechanical Design (ME 360) at BU for over a decade, earned the department's 2025 Award for Teaching Excellence, and researches vibration dynamics and active vibration control. As faculty advisor he provides academic oversight and institutional support, bridging the student experience with the goals of SHPE's national mission.",
+    "duties": [
+      "Academic oversight of chapter programming",
+      "Institutional support inside the College of Engineering",
+      "A standing bridge to SHPE's national mission"
+    ],
+    "profileUrl": "https://www.bu.edu/eng/profile/enrique-gutierrez-wing-ph-d/"
+  }
+}

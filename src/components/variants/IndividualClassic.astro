@@ -1,0 +1,90 @@
+---
+import PageHero from "@/components/PageHero.astro";
+import IndividualSection from "@/components/IndividualSection.astro";
+import ContactModal from "@/components/ContactModal.astro";
+import Icon from "@/components/Icon.astro";
+import siteData from "@/data/site.json";
+
+// Shared input styling (matches MailingListForm.astro).
+const fieldClass =
+  "w-full rounded-lg border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none";
+const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
+---
+
+<PageHero
+  eyebrow="INDIVIDUAL GIVING"
+  headline="Support a Student."
+  headlineAccent="Student"
+  subtitle="Every gift goes directly to the students, funding the trips, workshops, and experiences that turn engineering students into engineers."
+/>
+
+<IndividualSection />
+
+<!-- Closing CTA band -->
+<section class="bg-cream">
+  <div class="mx-auto max-w-4xl px-6 py-24 text-center">
+    <p class="eyebrow mb-4 text-ink-muted">GIVE BACK</p>
+    <h2 class="display mb-6 text-4xl text-ink md:text-5xl">
+      Invest in a <em class="font-serif italic font-normal lowercase tracking-normal text-accent">student</em>.
+    </h2>
+    <p class="mx-auto mb-10 max-w-2xl leading-relaxed text-ink-muted">
+      Give directly through BU's secure giving page, or reach out if you'd like to give another way.
+    </p>
+    <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <a
+        href={siteData.donateUrl}
+        target="_blank"
+        rel="noopener"
+        class="group inline-flex items-center gap-2 btn-dossier"
+      >
+        Donate via BU Trusted
+        <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </a>
+      <button
+        type="button"
+        data-open-modal="individual"
+        class="group inline-flex items-center gap-2 btn-dossier-ghost"
+      >
+        Get in Touch
+        <Icon name="person-add" class="h-4 w-4" />
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Individual contact modal (opened by [data-open-modal="individual"]) -->
+<ContactModal id="individual" title="Get in Touch">
+  <label class={labelClass}>
+    <span>Name</span>
+    <input type="text" name="Name" required class={fieldClass} placeholder="Your name" />
+  </label>
+  <label class={labelClass}>
+    <span>Email</span>
+    <input type="email" name="Email" required class={fieldClass} placeholder="you@email.com" />
+  </label>
+  <label class={labelClass}>
+    <span>Connection to BU</span>
+    <select name="Connection to BU" class={fieldClass}>
+      <option value="Alum">Alum</option>
+      <option value="Parent">Parent</option>
+      <option value="Faculty">Faculty</option>
+      <option value="Friend of SHPE">Friend of SHPE</option>
+      <option value="Other">Other</option>
+    </select>
+  </label>
+  <label class={labelClass}>
+    <span>Message <span class="font-normal text-ink-muted">(optional)</span></span>
+    <textarea name="Message" rows="3" class={fieldClass} placeholder="Anything you'd like us to know."></textarea>
+  </label>
+</ContactModal>
+
+<!-- Trigger: [data-open-modal="x"] opens #modal-x -->
+<script is:inline>
+  document.querySelectorAll("[data-open-modal]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-open-modal");
+      const dlg = document.getElementById("modal-" + id);
+      if (dlg && typeof dlg.showModal === "function") dlg.showModal();
+    });
+  });
+</script>

@@ -1,14 +1,110 @@
 [
-  { "title": "Splash 2022", "date": "2022-09", "category": "Social", "description": "Welcomed incoming engineering students at the College of Engineering's annual Splash recruiting event. The board manned the SHPE table for two days of conversations, swag, and signups — the chapter's biggest recruiting push of the year.", "photo": "/assets/events/splash-2022.jpeg" },
-  { "title": "Resume Review with GE", "date": "2022-10", "category": "Professional", "description": "Three General Electric engineers came to campus and sat one-on-one with members for an hour of resume feedback ahead of fall recruiting. Workshops like these are how members translate coursework into employer-ready signal.", "photo": "/assets/events/resume-review-ge.png" },
-  { "title": "SHPE National Convention", "date": "2022-11", "category": "Conference", "description": "Charlotte, NC. The chapter's delegation flew down for a four-day immersion in the largest gathering of Hispanic STEM professionals in the country — a two-day career fair, recruiter interviews, workshops, and the closing-night familia gala.", "photo": "/assets/events/national-convention-2022.jpg" },
-  { "title": "Mechanical Workshop with EPIC", "date": "2022-11", "category": "Professional", "description": "Toured EPIC's Boston facility for an afternoon with their engineering team. Members got a walkthrough of the lab, laser-cut their own SHPE logos as keepsakes, and stayed for Q&A with mechanical engineers about industry vs. grad school.", "photo": "/assets/events/mechanical-workshop-epic.jpg" },
-  { "title": "Navidad En Familia", "date": "2022-12", "category": "Cultural", "description": "The chapter's annual Christmas celebration — a white-elephant gift exchange, homemade traditional food from members' family recipes, and music until the building closed. The closing event of the fall semester and a chapter tradition.", "photo": "/assets/events/navidad-en-familia.jpg" },
-  { "title": "Money Matters Workshop with Capital One", "date": "2023-02", "category": "Professional", "description": "Capital One led a hands-on personal-finance and budgeting workshop covering entry-level salaries, building credit, and saving for retirement before your first job. Chick-fil-A catered and members left with company-branded notebooks.", "photo": "/assets/events/capital-one-workshop.jpg" },
-  { "title": "Boston Scientific Company Visit", "date": "2023-03", "category": "Professional", "description": "Joint visit with BU BMES to Boston Scientific's Marlborough campus. Engineers walked the group through R&D labs developing the next generation of cardiovascular devices, then sat for a panel on bio-engineering careers and recruiting timelines.", "photo": "/assets/events/boston-scientific-visit.jpg" },
-  { "title": "Indoor Field Day 2023", "date": "2023-04", "category": "Social", "description": "An afternoon of games, food, and music in the BU FitRec — relay races, cornhole brackets, and an open mic. The kind of low-stakes familia-bonding event that turns first-years into next year's officers.", "photo": "/assets/events/indoor-field-day.jpg" },
-  { "title": "LeaderSHPE Live 2023", "date": "2023-04", "category": "Conference", "description": "Region 4 leadership development conference in Dallas. Two of the chapter's officers represented BU in workshops on chapter leadership, recruiting strategy, and national initiatives, and brought best practices back to the executive board.", "photo": "/assets/events/leadershpe-live-2023.jpg" },
-  { "title": "Welcome Back Mixer 2026", "date": "2026-09", "category": "Social", "description": "PLACEHOLDER — Kick off the fall semester with the chapter on the BU plaza. Returning members reconnect, new recruits meet the board, and we run informal study-group signups while sharing food and resources for the year ahead.", "photo": "/assets/events/splash-2022.jpeg" },
-  { "title": "Fall Career Workshop", "date": "2026-10-15", "category": "Professional", "description": "PLACEHOLDER — Industry recruiters on campus for one-on-one resume reviews, mock technical interviews, and a panel on landing your first SWE or ME role. The chapter's flagship fall professional-development event ahead of the recruiting cycle.", "photo": "/assets/events/capital-one-workshop.jpg" },
-  { "title": "SHPE National Convention 2026", "date": "2026-11-04", "category": "Conference", "description": "PLACEHOLDER — Phoenix, AZ. The chapter sends a delegation to the largest gathering of Hispanic STEM professionals in the country. A week of recruiter interviews, the two-day career fair, technical workshops, and the closing-night familia gala.", "photo": "/assets/events/national-convention-2022.jpg" }
+  {
+    "title": "Splash 2022",
+    "date": "2022-09",
+    "category": "Social",
+    "location": "BU College of Engineering",
+    "description": "Welcomed incoming engineering students at the College of Engineering's annual Splash recruiting event. The board manned the SHPE table for two days of conversations, swag, and signups — the chapter's biggest recruiting push of the year.",
+    "body": "Splash is the College of Engineering's annual recruiting fair, and for SHPE it's the front door to the chapter — two days at a table meeting incoming engineering students as they map out their next four years at BU.\n\nThe board ran conversations, handed out swag, and collected signups from morning to close. Many of the members who carry the chapter each year first wrote their name down at a Splash table, which is why it remains the biggest recruiting push on the calendar.",
+    "photo": "/assets/events/splash-2022.jpeg"
+  },
+  {
+    "title": "Resume Review with GE",
+    "date": "2022-10",
+    "category": "Professional",
+    "location": "BU campus, Boston",
+    "description": "Three General Electric engineers came to campus and sat one-on-one with members for an hour of resume feedback ahead of fall recruiting. Workshops like these are how members translate coursework into employer-ready signal.",
+    "body": "Three engineers from General Electric came to campus and sat one-on-one with members for focused resume feedback, timed for the heart of fall recruiting season.\n\nMembers walked out with concrete edits — how to frame coursework as engineering experience, what recruiters scan for first, and which projects deserve the top of the page. Sessions like this one are the chapter's professional pillar at work: translating classwork into employer-ready signal.",
+    "photo": "/assets/events/resume-review-ge.png"
+  },
+  {
+    "title": "SHPE National Convention",
+    "date": "2022-11",
+    "category": "Conference",
+    "location": "Charlotte, NC",
+    "description": "Charlotte, NC. The chapter's delegation flew down for a four-day immersion in the largest gathering of Hispanic STEM professionals in the country — a two-day career fair, recruiter interviews, workshops, and the closing-night familia gala.",
+    "body": "The chapter's delegation flew to Charlotte for four days inside the largest gathering of Hispanic STEM students and professionals in the country.\n\nThe schedule ran from the two-day career fair — resumes in hand, recruiter interviews on the floor — through technical workshops and into the closing-night familia gala. For many delegates it was their first time seeing thousands of Hispanic engineers in one room, and that image is the reason the chapter sends a delegation every year.",
+    "photo": "/assets/events/national-convention-2022.jpg"
+  },
+  {
+    "title": "Mechanical Workshop with EPIC",
+    "date": "2022-11",
+    "category": "Professional",
+    "location": "EPIC, Boston, MA",
+    "description": "Toured EPIC's Boston facility for an afternoon with their engineering team. Members got a walkthrough of the lab, laser-cut their own SHPE logos as keepsakes, and stayed for Q&A with mechanical engineers about industry vs. grad school.",
+    "body": "EPIC opened its Boston facility to the chapter for an afternoon with its engineering team.\n\nMembers walked the lab floor, watched the machines run, and laser-cut their own SHPE logos to take home. The visit closed with an open Q&A with mechanical engineers on the question every junior asks: industry or grad school, and how to choose.",
+    "photo": "/assets/events/mechanical-workshop-epic.jpg"
+  },
+  {
+    "title": "Navidad En Familia",
+    "date": "2022-12",
+    "category": "Cultural",
+    "location": "BU campus, Boston",
+    "description": "The chapter's annual Christmas celebration — a white-elephant gift exchange, homemade traditional food from members' family recipes, and music until the building closed. The closing event of the fall semester and a chapter tradition.",
+    "body": "The chapter's annual Christmas celebration and the closing event of the fall semester — a white-elephant gift exchange, a table of homemade dishes cooked from members' own family recipes, and music until the building closed.\n\nNavidad en Familia is the tradition that best explains the word familia: a room full of engineers trading food from home in the last week of classes.",
+    "photo": "/assets/events/navidad-en-familia.jpg"
+  },
+  {
+    "title": "Money Matters Workshop with Capital One",
+    "date": "2023-02",
+    "category": "Professional",
+    "location": "BU campus, Boston",
+    "description": "Capital One led a hands-on personal-finance and budgeting workshop covering entry-level salaries, building credit, and saving for retirement before your first job. Chick-fil-A catered and members left with company-branded notebooks.",
+    "body": "Capital One brought a hands-on personal-finance workshop to campus, built for students about to sign their first offer letters.\n\nThe session worked through entry-level salary math, how credit actually gets built, and why retirement savings start with the first paycheck rather than the fifth year. Chick-fil-A catered, and members left with company-branded notebooks and a budgeting framework that outlasted the swag.",
+    "photo": "/assets/events/capital-one-workshop.jpg"
+  },
+  {
+    "title": "Boston Scientific Company Visit",
+    "date": "2023-03",
+    "category": "Professional",
+    "location": "Marlborough, MA",
+    "description": "Joint visit with BU BMES to Boston Scientific's Marlborough campus. Engineers walked the group through R&D labs developing the next generation of cardiovascular devices, then sat for a panel on bio-engineering careers and recruiting timelines.",
+    "body": "A joint visit with BU's Biomedical Engineering Society to Boston Scientific's Marlborough campus.\n\nEngineers walked the group through R&D labs developing the next generation of cardiovascular devices, then sat for a panel on bio-engineering careers — what they look for in new-grad hires and how recruiting timelines actually run. The trip doubled as a bridge between two of BU's engineering communities.",
+    "photo": "/assets/events/boston-scientific-visit.jpg"
+  },
+  {
+    "title": "Indoor Field Day 2023",
+    "date": "2023-04",
+    "category": "Social",
+    "location": "BU FitRec",
+    "description": "An afternoon of games, food, and music in the BU FitRec — relay races, cornhole brackets, and an open mic. The kind of low-stakes familia-bonding event that turns first-years into next year's officers.",
+    "body": "An afternoon of games, food, and music in BU FitRec — relay races, cornhole brackets, and an open mic to close out the spring.\n\nIt's the lowest-stakes event on the calendar, and that's the point: the first-years who show up to field day become next year's committee members and the officers after that. Familia bonding is recruitment by another name.",
+    "photo": "/assets/events/indoor-field-day.jpg"
+  },
+  {
+    "title": "LeaderSHPE Live 2023",
+    "date": "2023-04",
+    "category": "Conference",
+    "location": "Dallas, TX",
+    "description": "Region 4 leadership development conference in Dallas. Two of the chapter's officers represented BU in workshops on chapter leadership, recruiting strategy, and national initiatives, and brought best practices back to the executive board.",
+    "body": "Two chapter officers flew to Dallas to represent BU at Region 4's leadership development conference.\n\nThe weekend ran workshops on chapter leadership, recruiting strategy, and national initiatives, with chapters from across the region comparing what works — and the officers brought the playbook home to the executive board.",
+    "photo": "/assets/events/leadershpe-live-2023.jpg"
+  },
+  {
+    "title": "Welcome Back Mixer 2026",
+    "date": "2026-09",
+    "category": "Social",
+    "location": "BU campus, Boston",
+    "description": "Kick off the fall semester with the chapter. Returning members reconnect, new recruits meet the board, and we run informal study-group signups while sharing food and resources for the year ahead.",
+    "body": "The first gathering of the year sets the tone: returning members reconnect after summer internships, new recruits put faces to the board, and study-group signups start before the first problem sets land.\n\nNo agenda beyond food, music, and conversation. Show up, say hola, and leave on the mailing list — everything else this year starts here.",
+    "photo": "/assets/events/splash-2022.jpeg"
+  },
+  {
+    "title": "Fall Career Workshop",
+    "date": "2026-10-15",
+    "category": "Professional",
+    "location": "BU campus, Boston",
+    "description": "Industry recruiters on campus for one-on-one resume reviews, mock technical interviews, and a panel on landing your first SWE or ME role. The chapter's flagship fall professional-development event ahead of the recruiting cycle.",
+    "body": "Industry recruiters come to campus for the chapter's flagship professional event of the fall — one-on-one resume reviews, mock technical interviews, and a panel on landing a first software or mechanical engineering role.\n\nTimed ahead of the recruiting cycle so members walk into career fairs with their materials already pressure-tested. Bring a printed resume and a question for the panel.",
+    "photo": "/assets/events/capital-one-workshop.jpg"
+  },
+  {
+    "title": "SHPE National Convention 2026",
+    "date": "2026-10-28",
+    "category": "Conference",
+    "location": "Indianapolis, IN",
+    "description": "Indianapolis, IN. The chapter sends a delegation to the largest gathering of Hispanic STEM professionals in the country. Four days of recruiter interviews, the two-day career fair, technical workshops, and the closing-night familia gala.",
+    "body": "The chapter sends a delegation to Indianapolis for the largest gathering of Hispanic STEM students and professionals in the country — four days built around the two-day career fair, recruiter interviews, technical workshops, and the closing-night familia gala.\n\nDelegation interest forms open through the mailing list, and the chapter coordinates group travel and funding. If you're weighing whether to go, start at the conferences page — cost, funding, and eligibility are all documented there.",
+    "photo": "/assets/events/national-convention-2022.jpg"
+  }
 ]

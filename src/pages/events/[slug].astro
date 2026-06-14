@@ -1,0 +1,40 @@
+---
+import Base from "@/layouts/Base.astro";
+import EventDetailClassic from "@/components/variants/EventDetailClassic.astro";
+import EventDetailDossier from "@/components/variants/EventDetailDossier.astro";
+
+import eventsRaw from "@/data/events.json";
+
+import { eventSlug, formatEventDate, isUpcoming } from "@/lib/events";
+import type { EventItem } from "@/types";
+
+export async function getStaticPaths() {
+  const events = eventsRaw as EventItem[];
+  return events.map((e) => ({
+    params: { slug: eventSlug(e.title) },
+    props: { event: e },
+  }));
+}
+
+interface Props {
+  event: EventItem;
+}
+
+const { event } = Astro.props as Props;
+
+const upcoming = isUpcoming(event.date);
+const displayDate = formatEventDate(event.date, { withDay: upcoming });
+const currentYear = new Date().getFullYear();
+---
+
+<Base
+  title={event.title}
+  description={event.description}
+>
+  <div data-variant-block="classic">
+    <EventDetailClassic event={event} displayDate={displayDate} currentYear={currentYear} />
+  </div>
+  <div data-variant-block="dossier">
+    <EventDetailDossier event={event} displayDate={displayDate} upcoming={upcoming} />
+  </div>
+</Base>

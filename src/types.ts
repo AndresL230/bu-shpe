@@ -41,6 +41,8 @@ export interface EventItem {
   description: string;
   photo: string;  // path under /assets/events/
   featured?: boolean;
+  location?: string; // e.g. "Charlotte, NC" or "BU College of Engineering"
+  body?: string;     // longer editorial copy for the detail page; falls back to description
 }
 
 export interface Sponsor {
@@ -73,8 +75,8 @@ export interface SupportStat {
 }
 
 export interface GivingImpact {
-  amount: string;
-  outcome: string;
+  headline: string;
+  detail: string;
 }
 
 export interface EmployerGroup {
@@ -114,4 +116,56 @@ export interface CompetitionTrack {
 export interface CompetitionsData {
   tracks: CompetitionTrack[];
   record: { stat: string; label: string }[];  // trophy stat block — TODO-confirm
+}
+
+export interface NationalPillar {
+  name: string;
+  description: string;
+}
+
+export interface NationalBenefit {
+  name: string;
+  description: string;
+}
+
+export interface GovernanceArticle {
+  number: string;   // "I", "VI–VII"
+  title: string;
+  summary: string;
+}
+
+export interface GovernanceOfficer {
+  role: string;
+  duty: string;
+}
+
+export interface GovernanceData {
+  document: { title: string; edition: string; articleCount: string };
+  articles: GovernanceArticle[];
+  officers: GovernanceOfficer[];
+  officersNote: string;
+  process: { label: string; detail: string }[];
+  advisor: {
+    name: string;
+    title: string;
+    school: string;
+    bio: string;
+    duties: string[];
+    profileUrl: string;
+  };
+}
+
+export interface NationalData {
+  founded: string;       // "1974"
+  foundedCity: string;   // "Los Angeles, California"
+  history: string[];     // paragraphs
+  mission: string;
+  vision: string;
+  pillars: NationalPillar[];
+  membership: {
+    studentDues: string; // "$10"
+    duesNote: string;
+    joinUrl: string;
+    benefits: NationalBenefit[];
+  };
 }

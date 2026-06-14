@@ -18,9 +18,25 @@
     "Chapter operations and supplies"
   ],
   "givingImpact": [
-    { "amount": "$25", "outcome": "Covers supplies for a resume workshop" },
-    { "amount": "$50", "outcome": "Funds a student's convention registration" },
-    { "amount": "$100", "outcome": "Sponsors a company visit trip" },
-    { "amount": "$200", "outcome": "Funds a full semester of professional development events" }
-  ]
+    {
+      "headline": "A seat on the Convention floor",
+      "detail": "Travel and registration to SHPE National, where thousands of engineers come to mentor, recruit, and hire."
+    },
+    {
+      "headline": "A sharper resume in hand",
+      "detail": "The workshops, materials, and coaching that turn a rough first draft into an interview."
+    },
+    {
+      "headline": "A first yes from a recruiter",
+      "detail": "Company visits and networking nights that put members in the same room as the people doing the hiring."
+    },
+    {
+      "headline": "A full semester of momentum",
+      "detail": "The supplies and behind-the-scenes operations that keep every event running, week after week."
+    }
+  ],
+  "closingCta": {
+    "primary": { "label": "Donate via BU Trusted", "hrefSource": "donateUrl" },
+    "secondary": { "label": "or get in touch", "hrefSource": "contactEmail" }
+  }
 }

@@ -1,0 +1,248 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import ContactModal from "@/components/ContactModal.astro";
+import type { Sponsor } from "@/types";
+import supportData from "@/data/support.json";
+import sponsorsData from "@/data/sponsors.json";
+import siteData from "@/data/site.json";
+
+const sponsors = sponsorsData as Sponsor[];
+const corporate = sponsors.filter((s) => !s.name.startsWith("BU "));
+
+const partnerBenefits = supportData.partnerBenefits as string[];
+
+const valuePitches = [
+  {
+    title: "Hispanic STEM talent at a top engineering school",
+    description:
+      "More than 100 students take part each year, studying mechanical, electrical, biomedical, and computer engineering at one of the nation's top programs.",
+  },
+  {
+    title: "Visibility on campus and at Convention",
+    description:
+      "Workshops, panels, and career fairs across 20+ events a year, plus the largest Hispanic STEM conference in the country.",
+  },
+  {
+    title: "A direct line to organized students",
+    description:
+      "Meet motivated students directly through the chapter, not the résumé pile. 7+ partners already recruit here.",
+  },
+];
+
+// Supported-events mosaic — differently sized image tiles filling one rectangle.
+const eventCollage = [
+  { src: "/assets/events/leadershpe-live-2023.jpg", alt: "LeaderSHPE Live 2023", cls: "col-span-2 row-span-2" },
+  { src: "/assets/events/national-convention-2022.jpg", alt: "SHPE National Convention", cls: "col-span-4 row-span-1" },
+  { src: "/assets/events/capital-one-workshop.jpg", alt: "Money Matters Workshop with Capital One", cls: "col-span-2 row-span-1" },
+  { src: "/assets/events/boston-scientific-visit.jpg", alt: "Boston Scientific company visit", cls: "col-span-2 row-span-1" },
+];
+
+// Shared input styling (matches MailingListForm.astro).
+const fieldClass =
+  "w-full rounded-[var(--radius-card)] border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none";
+const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
+
+// Tri-color asymmetric bento for the five benefits (migrated from the classic
+// page; numerals re-set in the dossier mono face).
+const benefitTiles = [
+  { wrap: "bg-deep sm:col-span-3 min-h-[220px] md:min-h-[260px]", text: "text-cream text-2xl md:text-3xl", num: "text-cream/10" },
+  { wrap: "bg-accent sm:col-span-3 min-h-[220px] md:min-h-[260px]", text: "text-white text-2xl md:text-3xl", num: "text-white/15" },
+  { wrap: "bg-cream sm:col-span-2 min-h-[190px]", text: "text-ink text-xl md:text-2xl", num: "text-accent/20" },
+  { wrap: "bg-surface-soft sm:col-span-2 min-h-[190px]", text: "text-ink text-xl md:text-2xl", num: "text-ink/10" },
+  { wrap: "bg-accent/10 sm:col-span-2 min-h-[190px]", text: "text-ink text-xl md:text-2xl", num: "text-accent/25" },
+];
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">BU SHPE · Corporate · 2026</p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      <em class="font-serif italic font-normal lowercase tracking-normal text-accent">Partner</em> with BU SHPE.
+    </h1>
+    <p class="mt-7 text-cream/80 max-w-xl text-lg">
+      Connect your team to Hispanic engineers, scientists, and technologists at one of the nation's top engineering schools, before they reach the job market.
+    </p>
+  </div>
+</header>
+
+<!-- 01 — WHY PARTNER (outline-number triptych, migrated from classic) -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex index="01" label="Why partner" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Where companies meet <em class="font-serif italic font-normal lowercase tracking-normal text-accent">engineers</em>.</h2>
+  <p class="mt-4 text-ink-muted max-w-2xl">
+    Three reasons partners keep coming back to the chapter.
+  </p>
+
+  <div class="mt-14 grid grid-cols-1 gap-y-12 sm:grid-cols-3 sm:gap-y-0 sm:divide-x sm:divide-outline-soft">
+    {valuePitches.map((pitch, i) => (
+      <div class="sm:px-8 sm:first:pl-0 sm:last:pr-0">
+        <span
+          aria-hidden="true"
+          class="block font-mono text-7xl leading-none tabular-nums text-transparent [-webkit-text-stroke:2px_var(--color-accent)] md:text-8xl"
+        >0{i + 1}</span>
+        <h3 class="display mt-6 text-2xl leading-tight text-ink md:text-3xl">{pitch.title}</h3>
+        <p class="mt-3 leading-relaxed text-ink-muted">{pitch.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 02 — WHAT'S INCLUDED -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex index="02" label="What's included" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">What partnership includes.</h2>
+  <div class="mt-12 grid gap-3 sm:grid-cols-6">
+    {partnerBenefits.map((b, i) => {
+      const s = benefitTiles[i];
+      return (
+        <article
+          class:list={[
+            "group relative isolate flex flex-col justify-end overflow-hidden rounded-[var(--radius-card)] p-8 md:p-9",
+            s.wrap,
+          ]}
+        >
+          <span
+            aria-hidden="true"
+            class:list={[
+              "pointer-events-none absolute -bottom-8 -right-2 select-none font-mono text-[7rem] leading-none tabular-nums transition-transform duration-500 group-hover:-translate-y-1 md:text-[8rem]",
+              s.num,
+            ]}
+          >0{i + 1}</span>
+          <p class:list={["display relative z-10 leading-tight", s.text]}>{b}</p>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 03 — GET STARTED -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12 md:items-center">
+  <div class="md:col-span-5">
+    <SectionIndex index="03" label="Get started" accent="scarlet" />
+    <p class="pullquote mt-5 text-ink">
+      Support here turns into convention trips, workshops, and <em class="text-accent">first jobs</em>.
+    </p>
+  </div>
+  <div class="md:col-span-7">
+    <h3 class="display text-2xl md:text-3xl text-ink leading-tight">
+      Two ways to start the conversation.
+    </h3>
+    <div class="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <a href={siteData.sponsorshipPacketUrl} target="_blank" rel="noopener" class="group inline-flex items-center justify-center gap-2 btn-dossier">
+        Download the Sponsorship Packet
+        <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+      </a>
+      <button type="button" data-open-modal-d="corporate-d" class="group inline-flex items-center justify-center gap-2 btn-dossier-ghost">
+        Become a Partner
+        <span aria-hidden="true">+</span>
+      </button>
+    </div>
+    <p class="mt-6 text-sm text-ink-muted">
+      Prefer email? <a href={`mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry`} class="text-ink underline underline-offset-2 hover:text-accent">{siteData.contactEmail}</a>
+    </p>
+  </div>
+</section>
+
+<!-- Supported events — overlapping photo collage -->
+<section class="max-w-[1200px] mx-auto px-6 pb-20 md:pb-28">
+  <div class="grid aspect-[3/1] w-full grid-cols-6 grid-rows-2 gap-px bg-outline-soft border border-outline-soft">
+    {eventCollage.map((p) => (
+      <figure class:list={["group photo-warm overflow-hidden bg-bg", p.cls]}>
+        <img src={p.src} alt={p.alt} loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      </figure>
+    ))}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 04 — OUR PARTNERS -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex index="04" label="Our partners" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Thank you to our partners.</h2>
+  <p class="mt-4 max-w-2xl font-serif text-lg italic text-ink-muted">
+    With continued support from the BU College of Engineering and the Student Activities Office.
+  </p>
+  <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-outline-soft border border-outline-soft">
+    {corporate.map((s) => (
+      <a
+        href={s.url}
+        target="_blank"
+        rel="noopener"
+        class="group flex items-center justify-center bg-bg p-7 aspect-[4/3] transition-colors hover:bg-surface-soft"
+        aria-label={s.name}
+      >
+        <img src={s.logo} alt={s.name} loading="lazy" class="max-h-12 w-auto max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100" />
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- CTA -->
+<CtaBand
+  heading={`Become a <em class="font-serif italic font-normal lowercase tracking-normal text-accent">partner</em>.`}
+  body="Support here turns into convention trips, workshops, and first jobs. Start the conversation today."
+  primaryCta={{ label: "Download the Sponsorship Packet", href: siteData.sponsorshipPacketUrl }}
+  secondaryCta={{ label: "Email the chapter", href: `mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry` }}
+/>
+
+<!-- Corporate contact modal (dossier-scoped id to avoid clashing with classic) -->
+<ContactModal id="corporate-d" title="Become a Partner">
+  <label class={labelClass}>
+    <span>Company name</span>
+    <input type="text" name="Company Name" required class={fieldClass} placeholder="Acme Engineering" />
+  </label>
+  <label class={labelClass}>
+    <span>Contact name</span>
+    <input type="text" name="Contact Name" required class={fieldClass} placeholder="Jordan Rivera" />
+  </label>
+  <label class={labelClass}>
+    <span>Email</span>
+    <input type="email" name="Email" required class={fieldClass} placeholder="you@company.com" />
+  </label>
+  <label class={labelClass}>
+    <span>Your role</span>
+    <select name="Role" class={fieldClass}>
+      <option value="Recruiter">Recruiter</option>
+      <option value="Engineering Manager">Engineering Manager</option>
+      <option value="Diversity & Inclusion Lead">Diversity &amp; Inclusion Lead</option>
+      <option value="Other">Other</option>
+    </select>
+  </label>
+  <fieldset class="flex flex-col gap-2.5">
+    <legend class="mb-1 text-sm font-medium text-ink">I'm interested in</legend>
+    {[
+      "Sponsorship Tier Info",
+      "Host a Workshop",
+      "Attend an Event",
+      "Convention Recruiting",
+      "General Inquiry",
+    ].map((opt) => (
+      <label class="flex items-center gap-2.5 text-sm font-normal text-ink-muted">
+        <input type="checkbox" name="Interest" value={opt} class="h-4 w-4 accent-accent" />
+        {opt}
+      </label>
+    ))}
+  </fieldset>
+  <label class={labelClass}>
+    <span>Message <span class="font-normal text-ink-muted">(optional)</span></span>
+    <textarea name="Message" rows="3" class={fieldClass} placeholder="Tell us what you're hoping to do with BU SHPE."></textarea>
+  </label>
+</ContactModal>
+
+<!-- Dossier-scoped trigger: [data-open-modal-d="x"] opens #modal-x (separate attr from classic) -->
+<script is:inline>
+  document.querySelectorAll("[data-open-modal-d]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-open-modal-d");
+      const dlg = document.getElementById("modal-" + id);
+      if (dlg && typeof dlg.showModal === "function") dlg.showModal();
+    });
+  });
+</script>

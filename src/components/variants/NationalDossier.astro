@@ -1,0 +1,123 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+
+import nationalData from "@/data/national.json";
+import type { NationalData } from "@/types";
+
+const national = nationalData as NationalData;
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">About · SHPE Nationals</p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      Where the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">network</em> began.
+    </h1>
+    <p class="mt-7 text-cream/80 max-w-xl text-lg">
+      Founded in Los Angeles in 1974, the Society of Hispanic Professional Engineers grew from one city department into a national familia of professional and student chapters.
+    </p>
+    <div class="mt-9 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs tracking-[0.14em] uppercase text-cream/60">
+      <span>Est. {national.founded}</span>
+      <span>{national.foundedCity}</span>
+      <span>Chapters nationwide</span>
+    </div>
+  </div>
+</header>
+
+<!-- 01 — ORIGINS -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <div class="md:col-span-5">
+    <a href="/about" class="group inline-flex items-center gap-2 font-mono text-sm text-ink-muted hover:text-ink transition-colors mb-8 tracking-wide uppercase">
+      <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
+      <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to about</span>
+    </a>
+    <SectionIndex label="Origins" accent="scarlet" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5">Role models, by design.</h2>
+    <p class="mt-4 text-ink-muted max-w-md">
+      A network built deliberately, chapter by chapter, since 1974.
+    </p>
+  </div>
+  <div class="md:col-span-7 flex flex-col gap-6 leading-relaxed text-ink">
+    {national.history.map((paragraph) => <p>{paragraph}</p>)}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 02 — MISSION & VISION -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex label="Mission & Vision" />
+  <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-soft border border-outline-soft">
+    <div class="bg-bg p-7">
+      <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">Mission</p>
+      <p class="text-ink">“{national.mission}”</p>
+    </div>
+    <div class="bg-bg p-7">
+      <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">Vision</p>
+      <p class="text-ink">{national.vision}</p>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 03 — FIVE PILLARS -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex label="Five Pillars" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">What SHPE is built on.</h2>
+  <p class="mt-4 text-ink-muted max-w-md">
+    Every program the chapter runs maps back to one of five national pillars.
+  </p>
+
+  <div class="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-px bg-outline-soft border border-outline-soft">
+    {national.pillars.map((pillar, i) => (
+      <div class="bg-bg p-7">
+        <p class="font-mono text-xs text-ink-muted mb-4">{String(i + 1).padStart(2, "0")}</p>
+        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{pillar.name}</p>
+        <p class="text-ink text-sm leading-relaxed">{pillar.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 04 — MEMBERSHIP -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <div class="md:col-span-5">
+    <SectionIndex label="Why join nationals" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5">
+      {national.membership.studentDues} a year, national reach.
+    </h2>
+    <p class="mt-4 text-ink-muted max-w-md">
+      National membership is separate from the BU chapter — {national.membership.studentDues} {national.membership.duesNote} unlocks the national layer of SHPE.
+    </p>
+    <a
+      href={national.membership.joinUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mt-8 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-accent/80 transition-colors"
+    >
+      <span class="border-b border-current pb-0.5">Join SHPE Nationals</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-px bg-outline-soft border border-outline-soft">
+    {national.membership.benefits.map((benefit) => (
+      <div class="bg-bg p-7">
+        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{benefit.name}</p>
+        <p class="text-ink text-sm leading-relaxed">{benefit.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- CTA -->
+<CtaBand
+  heading={`Join the national <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em>.`}
+  body="The BU chapter is your home base — national membership plugs it into chapters, conventions, and careers across the country."
+  primaryCta={{ label: "Join SHPE Nationals", href: national.membership.joinUrl }}
+  secondaryCta={{ label: "Back to about", href: "/about" }}
+/>

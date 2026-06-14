@@ -1,0 +1,174 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import Icon from "@/components/Icon.astro";
+
+// PLACEHOLDER — chapter stats. Update with real numbers when known.
+const chapterStats = [
+  { value: "50+", label: "Active members" },
+  { value: "12",  label: "National conventions attended" },
+  { value: "1,000+", label: "Volunteer hours since 2020" },
+];
+
+const eventCategories = [
+  {
+    label: "Professional",
+    description: "Resume reviews, company visits, recruiter sessions.",
+    photo: "/assets/events/capital-one-workshop.jpg",
+    href: "/events/all?cat=Professional",
+  },
+  {
+    label: "Cultural",
+    description: "Cafecitos and conversations on Latin American topics.",
+    photo: "/assets/events/navidad-en-familia.jpg",
+    href: "/events/all?cat=Cultural",
+  },
+  {
+    label: "Social",
+    description: "Familia-bonding events, game nights, field days.",
+    photo: "/assets/events/indoor-field-day.jpg",
+    href: "/events/all?cat=Social",
+  },
+  {
+    label: "Study Nights",
+    description: "Peer tutoring across STEM courses.",
+    photo: "/assets/events/resume-review-ge.png",
+    href: "/events",
+  },
+  {
+    label: "Volunteering",
+    description: "Service across Greater Boston.",
+    photo: "/assets/volunteering/museum-of-science-1.jpeg",
+    href: "/volunteering",
+  },
+];
+
+const exploreLinks = [
+  {
+    href: "/about/national",
+    eyebrow: "SHPE NATIONALS",
+    title: "The national network",
+    description: "Est. 1974 in Los Angeles — history, mission, and five pillars.",
+  },
+  {
+    href: "/about/board",
+    eyebrow: "E-BOARD",
+    title: "Meet the board",
+    description: "The students running the chapter this term.",
+  },
+  {
+    href: "/about/governance",
+    eyebrow: "GOVERNANCE",
+    title: "How we run",
+    description: "The constitution article by article, the nine-seat board, and our faculty advisor.",
+  },
+];
+---
+
+<!-- ① Hero — navy -->
+<header class="relative w-full bg-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <span class="eyebrow text-cream/70 mb-4 block">ABOUT</span>
+    <h1 class="display text-5xl md:text-6xl lg:text-7xl text-cream max-w-3xl leading-tight">
+      A <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em> of engineers.
+    </h1>
+    <p class="mt-8 text-cream/80 max-w-xl text-lg">
+      <span class="font-serif italic text-cream">¡Bienvenidos!</span> BU SHPE has built a home in STEM for Hispanic students at Boston University — engineers, designers, scientists, mentors, allies.
+    </p>
+  </div>
+</header>
+
+<!-- ② Core values pull-quote -->
+<section class="reveal border-t border-rule/20 bg-surface py-24">
+  <div class="mx-auto max-w-[1200px] px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="pullquote">
+        Familia&ensp;<span class="text-rule not-italic font-sans text-2xl leading-none align-middle">·</span>&ensp;Service&ensp;<span class="text-rule not-italic font-sans text-2xl leading-none align-middle">·</span>&ensp;Education&ensp;<span class="text-rule not-italic font-sans text-2xl leading-none align-middle">·</span>&ensp;Resilience
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ③ Explore — link cards into subpages -->
+<section class="reveal border-t border-rule/20 bg-surface py-24 md:py-32">
+  <div class="mx-auto max-w-[1200px] px-6">
+    <SectionHeading
+      eyebrow="KEEP EXPLORING"
+      title="More of the story."
+      lede="The about section continues — the national organization we belong to, the students who run the chapter, and the rules we run it by."
+    />
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {exploreLinks.map((link) => (
+        <a
+          href={link.href}
+          class="group flex flex-col gap-3 rounded-[var(--radius-card)] border border-outline-soft bg-bg p-8 transition-colors hover:border-rule"
+        >
+          <span class="eyebrow text-ink-muted">{link.eyebrow}</span>
+          <h3 class="display text-4xl md:text-5xl text-ink">{link.title}</h3>
+          <p class="text-sm leading-relaxed text-ink-muted">{link.description}</p>
+          <Icon
+            name="arrow-forward"
+            class="mt-2 w-5 h-5 text-accent transition-transform group-hover:translate-x-1"
+          />
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ④ By the numbers (folded in from /about/history) -->
+<section class="reveal mx-auto max-w-[1200px] px-6 py-24 md:py-32">
+  <div class="max-w-3xl mb-16">
+    <SectionHeading
+      eyebrow="BY THE NUMBERS"
+      title="What our familia adds up to."
+    />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0 border-t border-rule/40 pt-12 md:pt-16">
+    {chapterStats.map((stat, i) => (
+      <div
+        class:list={[
+          "flex flex-col gap-3",
+          i > 0 && "md:border-l md:border-rule/40 md:pl-12",
+        ]}
+      >
+        <span class="display text-6xl md:text-7xl lg:text-8xl leading-none text-accent tabular-nums">
+          {stat.value}
+        </span>
+        <span class="eyebrow text-ink-muted max-w-[14ch]">{stat.label}</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ⑤ What we do — photo cards -->
+<section class="reveal border-t border-rule/20 mx-auto max-w-[1200px] px-6 py-24 md:py-32">
+  <SectionHeading
+    eyebrow="WHAT WE DO"
+    title="Five kinds of gatherings."
+    lede="Across the year, the chapter comes together in a handful of distinct ways."
+  />
+
+  <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+    {eventCategories.map((cat) => (
+      <a
+        href={cat.href}
+        class="group relative block aspect-[3/4] overflow-hidden bg-surface-soft rounded-[var(--radius-card)]"
+      >
+        <img
+          src={cat.photo}
+          alt={cat.label}
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 p-5">
+          <span class="block font-cond uppercase tracking-[0.14em] text-xs font-bold text-cream/80 mb-2">
+            {cat.label}
+          </span>
+          <p class="text-sm leading-snug text-cream">{cat.description}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

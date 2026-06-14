@@ -6,16 +6,25 @@ const c = conventionData as Convention;
 const staticFallback = formatDate(c.startDate);
 ---
 <div data-countdown data-target={c.countdownTarget} class="font-mono">
-  <p class="mono-label mb-3">Countdown to Indianapolis</p>
+  <p class="mono-label mb-3 lede">Countdown to Indianapolis</p>
   <div class="flex gap-4 md:gap-6" data-countdown-display>
     <!-- JS fills these; reduced-motion replaces with static date -->
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="days">—</span><span class="block mono-label mt-1">days</span></div>
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="hours">—</span><span class="block mono-label mt-1">hrs</span></div>
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="minutes">—</span><span class="block mono-label mt-1">min</span></div>
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-ink" data-unit="seconds">—</span><span class="block mono-label mt-1">sec</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="days">—</span><span class="block mono-label mt-1">days</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="hours">—</span><span class="block mono-label mt-1">hrs</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="minutes">—</span><span class="block mono-label mt-1">min</span></div>
+    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="seconds">—</span><span class="block mono-label mt-1">sec</span></div>
   </div>
   <p class="mono-label mt-3" data-countdown-static hidden>{staticFallback}</p>
 </div>
+
+<style>
+  /* This component lives on the navy bg-deep hero — lift the light-bg
+     .mono-label color (ink-muted gray) to cream so it reads on dark.
+     Astro scopes these to .mono-label.astro-* (specificity beats the
+     global unlayered rule). */
+  .mono-label { color: color-mix(in srgb, var(--color-cream) 70%, transparent); }
+  .mono-label.lede { color: var(--color-cream); }
+</style>
 
 <script is:inline define:vars={{ staticFallback }}>
   (function () {

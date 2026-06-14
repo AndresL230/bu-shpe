@@ -9,7 +9,7 @@ const { photos } = Astro.props;
   {photos.map((p, i) => (
     <button
       type="button"
-      class="mb-3 block w-full break-inside-avoid overflow-hidden rounded-lg shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent"
+      class="mb-3 block w-full break-inside-avoid overflow-hidden rounded-[var(--radius-card)] shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent"
       data-gallery-index={i}
       data-category={p.group}
     >
