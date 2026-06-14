@@ -65,10 +65,10 @@ const parts = headlineAccent && headline.includes(headlineAccent)
             <a
               href={cta.href}
               class:list={[
-                "inline-flex items-center rounded-full px-8 py-3.5 font-sans text-sm font-medium transition",
+                "inline-flex items-center rounded-[var(--radius-card)] px-7 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.1em] transition-colors",
                 cta.variant === "outline"
                   ? "border border-cream/30 text-cream hover:border-cream hover:bg-cream hover:text-ink"
-                  : "bg-accent text-white hover:-translate-y-0.5 hover:shadow-lg",
+                  : "bg-accent text-white hover:bg-accent-deep",
               ]}
             >{cta.label}</a>
           ))}

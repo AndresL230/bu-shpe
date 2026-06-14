@@ -14,7 +14,7 @@ import Icon from "@/components/Icon.astro";
       id="ml-firstname"
       name="First Name" required
       placeholder="First name"
-      class="w-full rounded-lg border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
+      class="w-full rounded-[var(--radius-card)] border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
     />
   </div>
   <div class="relative">
@@ -23,7 +23,7 @@ import Icon from "@/components/Icon.astro";
       id="ml-lastname"
       name="Last Name" required
       placeholder="Last name"
-      class="w-full rounded-lg border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
+      class="w-full rounded-[var(--radius-card)] border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
     />
   </div>
   <div class="relative">
@@ -32,12 +32,12 @@ import Icon from "@/components/Icon.astro";
       id="ml-email"
       type="email" name="Email" required
       placeholder="you@bu.edu"
-      class="w-full rounded-lg border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
+      class="w-full rounded-[var(--radius-card)] border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
     />
   </div>
   <button
     type="submit"
-    class="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md"
+    class="group inline-flex items-center gap-2 btn-dossier"
   >
     Sign Up
     <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
