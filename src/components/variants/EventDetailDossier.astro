@@ -1,0 +1,110 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+
+import siteData from "@/data/site.json";
+
+import type { EventItem } from "@/types";
+
+interface Props {
+  event: EventItem;
+  displayDate: string;
+  upcoming: boolean;
+}
+
+const { event, displayDate, upcoming } = Astro.props as Props;
+
+const copy = event.body ?? event.description;
+const paragraphs = copy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+
+// Headline accent: split off the last word of the title for the italic accent treatment.
+const titleWords = event.title.trim().split(/\s+/);
+const accentWord = titleWords.length > 1 ? titleWords.pop()! : "";
+const headlineLead = titleWords.join(" ");
+
+const statusLabel = upcoming ? "Upcoming" : "Archived";
+const metaLine = [displayDate, event.location, event.category].filter(Boolean);
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">
+      Dossier · {statusLabel}
+    </p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      {accentWord
+        ? (
+          <>
+            {headlineLead}{" "}
+            <em class="font-serif italic font-normal lowercase tracking-normal text-accent">{accentWord}</em>
+          </>
+        )
+        : event.title}
+    </h1>
+    <p class="mt-7 font-mono text-cream/70 text-sm tracking-[0.12em] uppercase">
+      {displayDate}{event.location && (<span> · {event.location}</span>)}
+    </p>
+    <p class="mt-6 text-cream/80 max-w-xl text-lg">{event.description}</p>
+  </div>
+</header>
+
+<!-- 01 — BRIEF : full-width header + bounded two-column body (image beside copy) -->
+<section class="py-16 md:py-24">
+  <div class="max-w-[1200px] mx-auto px-6">
+
+    <!-- Header — full container width -->
+    <a
+      href="/events"
+      class="group inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-ink-muted hover:text-ink transition-colors mb-10"
+    >
+      <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
+      <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to the calendar</span>
+    </a>
+
+    <SectionIndex index="01" label="Brief" />
+
+    <h2 class="display text-4xl md:text-5xl text-ink leading-[1.05] mt-5 mb-3">
+      {event.title}
+    </h2>
+
+    <p class="font-mono text-sm tracking-[0.12em] uppercase mb-12">
+      {metaLine.map((part, i) => (
+        <span class={i === 0 ? "text-accent" : "text-ink-muted"}>
+          {i > 0 && <span class="text-ink-muted"> · </span>}{part}
+        </span>
+      ))}
+    </p>
+
+    <!-- Two-column body grid: figure left, body right (mirrors classic) -->
+    <div class={`grid grid-cols-1 ${event.photo ? "lg:grid-cols-[1.4fr_1fr]" : ""} gap-10 lg:gap-14 items-center`}>
+
+      {event.photo && (
+        <!-- Image framing: tweak aspect ratio + object-position per event if needed -->
+        <figure class="aspect-[3/2] overflow-hidden border border-outline-soft photo-warm">
+          <img
+            src={event.photo}
+            alt={event.title}
+            class="h-full w-full object-cover object-[50%_40%]"
+          />
+        </figure>
+      )}
+
+      <div class:list={[!event.photo && "max-w-2xl"]}>
+        {paragraphs.map((p) => (
+          <p class="text-lg text-ink-muted leading-relaxed mb-6 last:mb-0">{p}</p>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<CtaBand
+  heading={`Don't miss the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">next one</em>.`}
+  body="The mailing list is how members hear about workshops, mixers, and conference travel."
+  primaryCta={{ label: "Join the mailing list", href: "/join" }}
+  secondaryCta={{ label: "Follow on Instagram", href: siteData.socials.instagram }}
+/>

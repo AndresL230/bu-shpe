@@ -1,0 +1,91 @@
+---
+import OrangeTick from "@/components/OrangeTick.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
+
+import siteData from "@/data/site.json";
+
+import type { EventItem } from "@/types";
+
+interface Props {
+  event: EventItem;
+  displayDate: string;
+  currentYear: number;
+}
+
+const { event, displayDate, currentYear } = Astro.props as Props;
+
+const copy = event.body ?? event.description;
+const paragraphs = copy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+---
+
+<!-- ① Navy hero -->
+<section class="bg-deep py-24 md:py-32 px-6">
+  <div class="max-w-[1200px] mx-auto">
+    <OrangeTick />
+    <p class="eyebrow text-cream/70 mb-4">CALENDAR {currentYear}</p>
+    <p class="display text-5xl md:text-6xl text-cream leading-none">
+      Events &amp; <em class="font-serif italic font-normal lowercase tracking-normal text-accent">opportunities</em>.
+    </p>
+    <p class="max-w-2xl mt-8 text-cream/80 text-lg">
+      From professional development workshops to community building socials, discover how BU SHPE empowers Hispanic STEM students to reach their full potential.
+    </p>
+  </div>
+</section>
+
+<!-- ② Editorial detail: full-width header + bounded two-column body -->
+<section class="py-16 md:py-24">
+  <div class="max-w-[1200px] mx-auto px-6">
+
+    <!-- Header — full container width -->
+    <a
+      href="/events"
+      class="group inline-flex items-center gap-2 font-sans text-sm font-medium text-ink-muted hover:text-ink transition-colors mb-8"
+    >
+      <Icon name="arrow-forward" class="w-4 h-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+      <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to events</span>
+    </a>
+
+    <h1 class="display text-4xl md:text-5xl text-ink leading-[1.05] mb-3">
+      {event.title}
+    </h1>
+
+    <p class="eyebrow text-sm tracking-wide mb-12">
+      <span class="text-accent">{displayDate}</span>
+      {event.location && (
+        <span class="text-ink-muted"> · {event.location}</span>
+      )}
+    </p>
+
+    <!-- Two-column body grid: figure left, body right -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-center">
+
+      {event.photo && (
+        <!-- Image framing: tweak aspect ratio + object-position per event if needed -->
+        <figure class="aspect-[3/2] overflow-hidden rounded-[var(--radius-card)] photo-warm">
+          <img
+            src={event.photo}
+            alt={event.title}
+            class="h-full w-full object-cover object-[50%_40%]"
+          />
+        </figure>
+      )}
+
+      <div>
+        {paragraphs.map((p) => (
+          <p class="text-lg text-ink-muted leading-relaxed mb-6 last:mb-0">{p}</p>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ Mailing list CTA -->
+<CtaBand
+  heading="Don't miss the next one."
+  body="The mailing list is how members hear about workshops, mixers, and conference travel."
+  primaryCta={{ label: "Join the mailing list", href: "/join" }}
+  secondaryCta={{ label: "Follow on Instagram", href: siteData.socials.instagram }}
+/>

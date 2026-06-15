@@ -10,14 +10,12 @@ const links: NavLink[] = [
     href: "/about",
     label: "About",
     submenu: [
-      { href: "/about",               label: "all of about" },
-      { href: "/about#mission",        label: "mission" },
-      { href: "/about#history",        label: "history" },
-      { href: "/about#advisor",        label: "faculty advisor" },
-      { href: "/about#constitution",   label: "constitution" },
+      { href: "/about",                          label: "all of about" },
+      { href: "/about/national",                 label: "shpe nationals" },
+      { href: "/about/board",                    label: "e-board" },
+      { href: "/about/governance",               label: "governance" },
     ],
   },
-  { href: "/board",         label: "E-Board" },
   {
     href: "/events",
     label: "Events",
@@ -32,10 +30,9 @@ const links: NavLink[] = [
     href: "/conferences",
     label: "Conferences",
     submenu: [
-      { href: "/conferences",              label: "all conferences" },
-      { href: "/conferences/prep",         label: "career fair prep" },
-      { href: "/conferences/competitions", label: "competitions" },
-      { href: "/conferences/delegations",  label: "past delegations" },
+      { href: "/conferences",        label: "all conferences" },
+      { href: "/conferences/prep",   label: "career fair prep" },
+      { href: "/conferences/record", label: "the record" },
     ],
   },
   { href: "/volunteering",  label: "Volunteering" },
@@ -43,10 +40,8 @@ const links: NavLink[] = [
     href: "/gallery",
     label: "Gallery",
     submenu: [
-      { href: "/gallery",                    label: "all photos" },
-      { href: "/gallery?cat=Events",         label: "events" },
-      { href: "/gallery?cat=Volunteering",   label: "volunteering" },
-      { href: "/gallery?cat=Conferences",    label: "conferences" },
+      { href: "/gallery",             label: "all photos" },
+      { href: "/gallery?cat=Events",  label: "events" },
     ],
   },
   {
@@ -77,7 +72,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     </a>
     <details class="relative">
       <summary
-        class="grid h-11 w-11 cursor-pointer place-items-center rounded-md border border-cream/40 text-cream list-none [&::-webkit-details-marker]:hidden"
+        class="grid h-11 w-11 cursor-pointer place-items-center rounded-[var(--radius-card)] border border-cream/40 text-cream list-none [&::-webkit-details-marker]:hidden"
         aria-label="Open menu"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -95,7 +90,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
             <li>
               <a
                 href="/join"
-                class="group mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-sans text-base font-semibold text-white"
+                class="group mt-4 inline-flex items-center gap-2 btn-dossier"
               >
                 Join SHPE
                 <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -156,7 +151,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     <div class="flex items-center justify-end px-6 md:px-12 lg:px-16 xl:px-24">
       <a
         href="/join"
-        class="group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-sans text-base font-semibold text-white shadow-sm transition hover:-translate-y-px hover:shadow-md whitespace-nowrap"
+        class="group inline-flex items-center gap-2 btn-dossier whitespace-nowrap hover:bg-accent-deep hover:text-white"
       >
         Join SHPE
         <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />

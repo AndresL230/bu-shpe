@@ -1,0 +1,138 @@
+---
+import PageHero from "@/components/PageHero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import Icon from "@/components/Icon.astro";
+
+import governanceData from "@/data/governance.json";
+import siteData from "@/data/site.json";
+import type { GovernanceData } from "@/types";
+
+const gov = governanceData as GovernanceData;
+---
+
+<PageHero
+  eyebrow="GOVERNANCE"
+  headline="How the chapter runs."
+  headlineAccent="runs"
+  subtitle="A written constitution, a nine-officer executive board, and a faculty advisor — the structure that keeps the familia going year after year."
+  meta={`${gov.document.title.toUpperCase()} — ${gov.document.edition.toUpperCase()}`}
+  metaRight={`${gov.document.articleCount} ARTICLES`}
+/>
+
+<!-- ① The charter -->
+<section id="constitution" class="scroll-mt-24 mx-auto max-w-[1200px] px-6 py-24 md:py-32">
+  <a href="/about" class="group inline-flex items-center gap-2 font-sans text-sm font-medium text-ink-muted hover:text-ink transition-colors mb-12">
+    <Icon name="arrow-forward" class="w-4 h-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+    <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to about</span>
+  </a>
+
+  <div class="max-w-3xl mb-16">
+    <SectionHeading
+      eyebrow="THE CHARTER"
+      title="What the constitution covers."
+      lede="Nine articles govern everything the chapter does. The digest below summarizes each — the full text is a one-click download."
+    />
+  </div>
+
+  <ol class="grid grid-cols-1 md:grid-cols-2 gap-x-12">
+    {gov.articles.map((article) => (
+      <li class="flex gap-6 border-t border-rule/40 py-7">
+        <span class="display text-3xl leading-none text-accent w-[3.5ch] shrink-0">{article.number}</span>
+        <div class="flex flex-col gap-2">
+          <h3 class="display text-2xl text-ink">{article.title}</h3>
+          <p class="text-sm leading-relaxed text-ink-muted">{article.summary}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <a
+    href={siteData.constitutionUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group mt-12 inline-flex items-center gap-2 btn-dossier"
+  >
+    Download the constitution (PDF)
+    <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+  </a>
+</section>
+
+<!-- ② The board structure -->
+<section class="reveal border-t border-rule/20 bg-surface py-24 md:py-32">
+  <div class="mx-auto max-w-[1200px] px-6">
+    <div class="max-w-3xl mb-16">
+      <SectionHeading
+        eyebrow="THE STRUCTURE"
+        title="Nine seats, one board."
+        lede="Article IV defines the executive board; Article V gives every seat a job description."
+      />
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
+      {gov.officers.map((officer) => (
+        <div class="flex flex-col gap-2 border-t border-rule/40 pt-5">
+          <h3 class="font-cond text-sm font-semibold uppercase tracking-[0.14em] text-ink">{officer.role}</h3>
+          <p class="text-sm leading-relaxed text-ink-muted">{officer.duty}</p>
+        </div>
+      ))}
+    </div>
+
+    <p class="mt-12 max-w-2xl text-sm leading-relaxed text-ink-muted">
+      {gov.officersNote}
+      <a href="/about/board" class="text-accent underline underline-offset-4 hover:text-accent/80 transition-colors">Meet the current board.</a>
+    </p>
+  </div>
+</section>
+
+<!-- ③ Process -->
+<section class="reveal mx-auto max-w-[1200px] px-6 py-24 md:py-32">
+  <div class="max-w-3xl mb-16">
+    <SectionHeading
+      eyebrow="THE PROCESS"
+      title="Elections, meetings, amendments."
+    />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0 border-t border-rule/40 pt-12 md:pt-16">
+    {gov.process.map((item, i) => (
+      <div
+        class:list={[
+          "flex flex-col gap-3",
+          i > 0 && "md:border-l md:border-rule/40 md:pl-12",
+        ]}
+      >
+        <span class="eyebrow text-accent">{item.label}</span>
+        <p class="text-sm leading-relaxed text-ink-muted max-w-[36ch]">{item.detail}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ④ Faculty advisor — navy band -->
+<section id="advisor" class="scroll-mt-24 reveal bg-deep py-24 md:py-32">
+  <div class="mx-auto max-w-[1200px] px-6">
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
+      <div class="md:col-span-5">
+        <p class="eyebrow text-cream/70">FACULTY ADVISOR</p>
+        <h2 class="display mt-4 text-4xl text-cream md:text-5xl">{gov.advisor.name}</h2>
+        <p class="mt-3 font-cond text-sm font-semibold uppercase tracking-[0.14em] text-accent">{gov.advisor.title}</p>
+        <p class="font-cond text-sm uppercase tracking-[0.14em] text-cream/60">{gov.advisor.school}</p>
+        <div class="mt-8 flex flex-col gap-3">
+          <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="text-cream underline underline-offset-4 hover:text-accent transition-colors w-fit">{siteData.facultyAdvisorEmail}</a>
+          <a href={gov.advisor.profileUrl} target="_blank" rel="noopener noreferrer" class="text-cream/70 underline underline-offset-4 hover:text-accent transition-colors w-fit">BU faculty profile</a>
+        </div>
+      </div>
+      <div class="md:col-span-7">
+        <p class="text-lg leading-relaxed text-cream/80">{gov.advisor.bio}</p>
+        <ul class="mt-10 flex flex-col gap-4">
+          {gov.advisor.duties.map((duty) => (
+            <li class="flex gap-4 border-t border-cream/20 pt-4 text-cream/80">
+              <span class="text-accent" aria-hidden="true">—</span>
+              <span>{duty}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

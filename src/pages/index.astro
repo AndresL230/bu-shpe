@@ -1,8 +1,10 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Landing from "@/components/Landing.astro";
+import HomeClassic from "@/components/variants/HomeClassic.astro";
+import HomeDossier from "@/components/variants/HomeDossier.astro";
 ---
 
 <Base title="Home">
-  <Landing />
+  <div data-variant-block="classic"><HomeClassic /></div>
+  <div data-variant-block="dossier"><HomeDossier /></div>
 </Base>

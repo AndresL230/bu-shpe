@@ -1,0 +1,223 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+
+import siteData from "@/data/site.json";
+import eventsRaw from "@/data/events.json";
+
+import { eventSlug } from "@/lib/events";
+import type { EventItem } from "@/types";
+
+const events = eventsRaw as EventItem[];
+
+const today = new Date().toISOString().slice(0, 7); // yyyy-mm
+const currentYear = new Date().getFullYear();
+
+const upcoming = events
+  .filter((e) => e.date >= today)
+  .sort((a, b) => a.date.localeCompare(b.date));
+
+const past = events
+  .filter((e) => e.date < today)
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+const monthNames = [
+  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
+];
+
+function dateLabel(iso: string): string {
+  const [y, m] = iso.split("-");
+  const monthIdx = parseInt(m, 10) - 1;
+  const month = monthNames[monthIdx] ?? "—";
+  return `${month} ${y}`;
+}
+
+// Oversized date for the "Next Up" feature: big month over a day·year sub-line.
+function bigDate(iso: string): { month: string; sub: string } {
+  const [y, m, d] = iso.split("-");
+  const month = monthNames[parseInt(m, 10) - 1] ?? "—";
+  return { month, sub: d ? `${parseInt(d, 10)} · ${y}` : y };
+}
+
+const nextUp = upcoming[0];
+const restUpcoming = upcoming.slice(1);
+
+// Archive mosaic: 6 most-recent past events, tiled asymmetrically (md+).
+// Pattern tiles a 4-col grid into a clean rectangle: big 2×2, then wides + squares.
+const recordTiles = past.slice(0, 6);
+const mosaicSpans = [
+  "md:col-span-2 md:row-span-2",
+  "md:col-span-2",
+  "",
+  "",
+  "md:col-span-2",
+  "md:col-span-2",
+];
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Chapter Calendar · {currentYear}</p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      Events &amp; <em class="font-serif italic font-normal lowercase tracking-normal text-accent">opportunities</em>.
+    </h1>
+    <p class="mt-7 text-cream/80 max-w-xl text-lg">
+      From professional development workshops to community building socials, discover how BU SHPE empowers Hispanic STEM students to reach their full potential.
+    </p>
+  </div>
+
+  <!-- Decorative year watermark -->
+  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
+    <span class="display text-[200px] lg:text-[280px] leading-none text-cream translate-y-1/4 inline-block">{currentYear}</span>
+  </div>
+</header>
+
+<!-- 01 — UPCOMING -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 md:items-end">
+    <div class="md:col-span-8">
+      <SectionIndex label="Upcoming" />
+      <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">What's on the docket.</h2>
+      <p class="mt-4 text-ink-muted max-w-md">
+        The next stops on the chapter's schedule, in chronological order. Subscribe and it syncs straight to your phone.
+      </p>
+    </div>
+    <div class="md:col-span-4 md:text-right">
+      <a
+        href={siteData.calendarEmbedUrl}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors"
+      >
+        <span class="border-b border-current pb-0.5">Subscribe to calendar →</span>
+      </a>
+    </div>
+  </div>
+
+  {upcoming.length === 0 ? (
+    <p class="mt-12 text-ink-muted italic">Nothing scheduled right now — subscribe to the calendar for updates.</p>
+  ) : (
+    <div class="mt-12">
+      <!-- Next Up — featured -->
+      <a
+        href={`/events/${eventSlug(nextUp.title)}`}
+        class="group grid grid-cols-1 lg:grid-cols-12 border border-outline-soft bg-bg overflow-hidden"
+      >
+        <div class="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:min-h-[340px] overflow-hidden photo-warm bg-surface-soft">
+          {nextUp.photo && (
+            <img
+              src={nextUp.photo}
+              alt={nextUp.title}
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="eager"
+            />
+          )}
+          <span class="mono-label absolute left-0 top-0 z-10 bg-accent px-3 py-1.5 text-white">
+            Next Up
+          </span>
+        </div>
+        <div class="lg:col-span-5 flex flex-col justify-between border-t border-outline-soft p-7 md:p-9 lg:border-l lg:border-t-0">
+          <div>
+            <p class="display text-5xl md:text-6xl leading-[0.9] text-ink">
+              {bigDate(nextUp.date).month} <span class="text-ink-muted">{bigDate(nextUp.date).sub}</span>
+            </p>
+            <p class="mono-label mt-5 text-accent">{nextUp.category}</p>
+            <h3 class="display text-3xl text-ink mt-3 leading-tight transition-colors group-hover:text-accent">{nextUp.title}</h3>
+            <p class="mt-3 text-ink-muted leading-relaxed">{nextUp.description}</p>
+          </div>
+          <span class="mt-8 inline-flex items-center gap-2 font-mono text-sm tracking-wide uppercase text-accent">
+            <span class="border-b border-current pb-0.5">View details →</span>
+          </span>
+        </div>
+      </a>
+
+      <!-- The rest of upcoming — 2-up, seamed under the feature -->
+      {restUpcoming.length > 0 && (
+        <div class="grid grid-cols-1 border-x border-b border-outline-soft sm:grid-cols-2 sm:[&>*:nth-child(2)]:border-l sm:[&>*:nth-child(2)]:border-outline-soft">
+          {restUpcoming.map((event) => (
+            <a
+              href={`/events/${eventSlug(event.title)}`}
+              class="group flex items-stretch bg-bg transition-colors hover:bg-surface-soft"
+            >
+              {event.photo && (
+                <div class="relative w-40 shrink-0 overflow-hidden photo-warm bg-surface-soft sm:w-48">
+                  <img
+                    src={event.photo}
+                    alt={event.title}
+                    class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div class="flex flex-col p-7 md:p-8">
+                <p class="font-mono text-sm tracking-wide uppercase text-accent">{dateLabel(event.date)}</p>
+                <p class="mono-label mt-1">{event.category}</p>
+                <h3 class="display text-2xl text-ink mt-3 leading-tight transition-colors group-hover:text-accent">{event.title}</h3>
+                <p class="mt-2 text-sm text-ink-muted leading-relaxed line-clamp-2">{event.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  )}
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 02 — THE RECORD -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex label="The Record" accent="scarlet" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Recently in the books.</h2>
+  <p class="mt-4 text-ink-muted max-w-md">
+    A look back at the chapter's most recent gatherings.
+  </p>
+
+  {past.length === 0 ? (
+    <p class="mt-12 text-ink-muted italic">The archive is just getting started.</p>
+  ) : (
+    <div class="mt-12 grid grid-cols-2 auto-rows-[150px] gap-px border border-outline-soft bg-outline-soft sm:auto-rows-[180px] md:grid-cols-4 md:auto-rows-[210px]">
+      {recordTiles.map((event, i) => (
+        <a
+          href={`/events/${eventSlug(event.title)}`}
+          class:list={["group relative overflow-hidden bg-deep photo-warm", mosaicSpans[i]]}
+        >
+          {event.photo && (
+            <img
+              src={event.photo}
+              alt={event.title}
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="lazy"
+            />
+          )}
+          <span class="mono-label absolute left-0 top-0 z-10 bg-deep px-3 py-1.5 text-cream">
+            {dateLabel(event.date)}
+          </span>
+          <div class="absolute inset-x-0 bottom-0 z-10 bg-deep/85 px-4 py-3">
+            <p class="mono-label text-accent">{event.category}</p>
+            <h3 class="display text-base md:text-lg text-cream leading-tight mt-0.5 line-clamp-2">{event.title}</h3>
+          </div>
+        </a>
+      ))}
+    </div>
+  )}
+
+  <div class="mt-12">
+    <a
+      href="/events/all"
+      class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors"
+    >
+      <span class="border-b border-current pb-0.5">See all events →</span>
+    </a>
+  </div>
+</section>
+
+<!-- CTA -->
+<CtaBand
+  heading={`Don't miss a <em class="font-serif italic font-normal lowercase tracking-normal text-accent">beat</em>.`}
+  body="Get a heads-up about workshops, mixers, and conference travel. We email maybe twice a month."
+  primaryCta={{ label: "Join the mailing list", href: "/join" }}
+  secondaryCta={{ label: "Follow on Instagram", href: siteData.socials.instagram }}
+/>

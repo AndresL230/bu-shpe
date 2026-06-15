@@ -2,6 +2,7 @@
 import "@/styles/global.css";
 import Nav from "@/components/Nav.astro";
 import Footer from "@/components/Footer.astro";
+import VariantToggle from "@/components/VariantToggle.astro";
 import siteData from "@/data/site.json";
 
 interface Props {
@@ -20,10 +21,20 @@ const fullTitle = title ? `${title} â€” ${siteData.name}` : `${siteData.name} â€
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 <!doctype html>
-<html lang="en" data-guides="on">
+<html lang="en" data-guides="on" data-variant="classic">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        try {
+          var v = localStorage.getItem("site-variant");
+          if (v === "classic" || v === "dossier") {
+            document.documentElement.setAttribute("data-variant", v);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -57,6 +68,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     </main>
 
     <Footer />
+
+    <VariantToggle />
 
     <button
       id="guides-toggle"

@@ -1,0 +1,63 @@
+{
+  "founded": "1974",
+  "foundedCity": "Los Angeles, California",
+  "history": [
+    "The Society of Hispanic Professional Engineers was founded in Los Angeles, California, in 1974 by a group of engineers employed by the City of Los Angeles. Their objective: a national organization of professional engineers who would serve as role models in the Hispanic community.",
+    "Networking was the key basis for the organization. SHPE quickly established two student chapters to begin the network — one that would grow to encompass the nation and reach countries beyond the United States. Today SHPE is a strong, independent network of professional and student chapters across the country, and BU's chapter is one node in it."
+  ],
+  "mission": "SHPE changes lives by empowering the Hispanic community to realize its fullest potential and to impact the world through STEM awareness, access, support and development.",
+  "vision": "A world where Hispanics are highly valued and influential as the leading innovators, scientists, mathematicians and engineers.",
+  "pillars": [
+    {
+      "name": "Academic Excellence",
+      "description": "Tools and strategies that keep members at a 3.0+ GPA."
+    },
+    {
+      "name": "Professional Development",
+      "description": "The skills to excel in the workplace and move up the corporate ladder."
+    },
+    {
+      "name": "Community Outreach",
+      "description": "Ambitious initiatives that give back to the Hispanic community and promote STEM."
+    },
+    {
+      "name": "Chapter Development",
+      "description": "Events that build stronger bonds between members and grow our presence on campus."
+    },
+    {
+      "name": "Leadership Development",
+      "description": "Members are encouraged into leadership roles that keep the chapter sustainable for the long term."
+    }
+  ],
+  "membership": {
+    "studentDues": "$10",
+    "duesNote": "per year for undergraduate members",
+    "joinUrl": "https://shpe.org/membership/become-a-member/",
+    "benefits": [
+      {
+        "name": "SHPEconnect portal",
+        "description": "Exclusive access to job postings, online renewals, convention registration, and more."
+      },
+      {
+        "name": "National Convention",
+        "description": "The largest gathering of Hispanics in STEM in the country — with member discounts on registration."
+      },
+      {
+        "name": "ScholarSHPE",
+        "description": "Scholarship programs awarding over $1M annually to members continuing their education."
+      },
+      {
+        "name": "MentorSHPE",
+        "description": "Mentorship pairing students with professionals across industry and academia."
+      },
+      {
+        "name": "Career development",
+        "description": "Leadership training, regional events, internships through InternSHPE, and SHPE's career center."
+      },
+      {
+        "name": "The network",
+        "description": "Corporate representatives, professional members, and SHPE leaders nationwide."
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@ import siteData from "@/data/site.json";
 
 const quickLinks = [
   { href: "/about", label: "About" },
-  { href: "/board", label: "E-Board" },
+  { href: "/about/board", label: "E-Board" },
   { href: "/events", label: "Events" },
   { href: "/support", label: "Support" },
   { href: "/join", label: "Join Us" },
@@ -54,7 +54,7 @@ const quickLinks = [
       <a
         href={siteData.donateUrl}
         rel="noopener"
-        class="mt-8 inline-flex items-center rounded-full border border-accent px-5 py-2 text-sm font-medium text-accent transition hover:bg-accent hover:text-white"
+        class="mt-8 inline-flex items-center rounded-[var(--radius-card)] border border-accent px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-accent transition hover:bg-accent hover:text-white"
       >Donate to BU SHPE</a>
     </div>
   </div>

@@ -1,0 +1,159 @@
+---
+import PageHero from "@/components/PageHero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import Gallery from "@/components/Gallery.astro";
+
+import eventsData from "@/data/events.json";
+import volunteeringData from "@/data/volunteering.json";
+import conferencesData from "@/data/conferences.json";
+import siteData from "@/data/site.json";
+
+const allPhotos = [
+  ...eventsData.map((e) => ({ src: e.photo, alt: e.title, group: "Events" })),
+  ...volunteeringData.flatMap((v) =>
+    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering" }))
+  ),
+  ...conferencesData.flatMap((c) =>
+    c.photos.map((src) => ({
+      src,
+      alt: `${c.region ?? "Conference"} ${c.year} — ${c.city}`,
+      group: "Conferences",
+    }))
+  ),
+];
+
+// Category chips appear only once a category has enough photos to be worth
+// filtering — re-added automatically as the archive grows.
+const CHIP_MIN = 4;
+const counts: Record<string, number> = {};
+allPhotos.forEach((p) => { counts[p.group] = (counts[p.group] ?? 0) + 1; });
+const filters = ["All", "Events", "Volunteering", "Conferences"].filter(
+  (label) => label === "All" || (counts[label] ?? 0) >= CHIP_MIN
+);
+
+const chipBase = "inline-flex items-center rounded-full px-5 py-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] transition-colors";
+const chipInactive = "border border-rule/60 text-ink-muted hover:border-ink hover:text-ink";
+---
+
+<!-- ① Compact Hero -->
+<PageHero
+  eyebrow="GALLERY"
+  headline="Moments from the familia."
+  headlineAccent="familia"
+  meta="GALLERY / EVENTS · VOLUNTEERING · CONFERENCES"
+/>
+
+<!-- ② Filter + Gallery -->
+<section id="gallery-filter-root" class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+  <SectionHeading eyebrow="ARCHIVE" title="The whole familia." />
+
+  <!-- Filter chips -->
+  <nav aria-label="Filter gallery by category" class="mt-8 flex flex-wrap gap-3">
+    {filters.map((label) => {
+      const value = label === "All" ? "" : label;
+      const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
+      return (
+        <a
+          data-chip
+          data-chip-value={value}
+          href={href}
+          class:list={[chipBase, chipInactive]}
+        >
+          {label}
+        </a>
+      );
+    })}
+  </nav>
+
+  <!-- Empty state (JS toggles visibility) -->
+  <div
+    data-empty-state
+    hidden
+    class="mt-12 flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-rule/30 bg-surface py-20 text-center"
+  >
+    <p class="pullquote mx-auto max-w-md">
+      No photos in this category yet. Check back soon.
+    </p>
+  </div>
+
+  <!-- Gallery grid (all photos; JS filters by category) -->
+  <div class="mt-12">
+    <Gallery photos={allPhotos} />
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var root = document.getElementById("gallery-filter-root");
+    if (!root) return;
+
+    var chips = root.querySelectorAll("[data-chip]");
+    var items = root.querySelectorAll("[data-gallery-index]");
+    var emptyState = root.querySelector("[data-empty-state]");
+
+    var inactiveClasses = ["border", "border-rule/60", "text-ink-muted", "hover:border-ink", "hover:text-ink"];
+    var activeClasses = ["bg-ink", "text-cream"];
+
+    function setActive(value) {
+      chips.forEach(function (chip) {
+        var chipValue = chip.getAttribute("data-chip-value") || "";
+        if (chipValue === value) {
+          inactiveClasses.forEach(function (c) { chip.classList.remove(c); });
+          activeClasses.forEach(function (c) { chip.classList.add(c); });
+          chip.setAttribute("aria-current", "true");
+        } else {
+          activeClasses.forEach(function (c) { chip.classList.remove(c); });
+          inactiveClasses.forEach(function (c) { chip.classList.add(c); });
+          chip.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    function applyFilter(cat) {
+      cat = cat || "";
+      setActive(cat);
+      var anyVisible = false;
+      items.forEach(function (el) {
+        var matches = !cat || el.getAttribute("data-category") === cat;
+        el.hidden = !matches;
+        if (matches) anyVisible = true;
+      });
+      if (emptyState) emptyState.hidden = anyVisible;
+    }
+
+    var params = new URLSearchParams(location.search);
+    applyFilter(params.get("cat"));
+
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function (e) {
+        e.preventDefault();
+        var value = chip.getAttribute("data-chip-value") || "";
+        var url = value
+          ? location.pathname + "?cat=" + encodeURIComponent(value)
+          : location.pathname;
+        history.pushState({}, "", url);
+        applyFilter(value);
+      });
+    });
+
+    window.addEventListener("popstate", function () {
+      var p = new URLSearchParams(location.search);
+      applyFilter(p.get("cat"));
+    });
+  })();
+</script>
+
+<!-- ③ Submit photos CTA -->
+<section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
+  <p class="pullquote italic">Have photos from a SHPE event?</p>
+  <p class="mt-6 text-lg text-ink-muted leading-relaxed">
+    Send them to{" "}
+    <a
+      href={`mailto:${siteData.contactEmail}?subject=Gallery%20Submission`}
+      class="text-accent underline underline-offset-4 hover:text-accent/80 transition-colors"
+    >
+      {siteData.contactEmail}
+    </a>
+    {" "}and we'll add your shots to the archive.
+  </p>
+</section>

@@ -1,0 +1,50 @@
+---
+// Dev/preview-only floating switch to A/B the page styling between the
+// established "classic" design and the conferences-style "dossier" design.
+// Choice persists in localStorage under "site-variant" and drives the
+// [data-variant] attribute on <html>; CSS in global.css shows/hides the
+// matching [data-variant-block] wrappers on each page.
+---
+<div
+  class="fixed bottom-4 left-4 z-50 flex items-center gap-1 rounded-full bg-deep p-1 font-cond text-xs font-bold uppercase tracking-widest shadow-md"
+  role="group"
+  aria-label="Preview style"
+>
+  <button
+    type="button"
+    data-variant-btn="classic"
+    class="rounded-full px-3 py-1.5 transition bg-accent text-white"
+  >Classic</button>
+  <button
+    type="button"
+    data-variant-btn="dossier"
+    class="rounded-full px-3 py-1.5 transition text-cream/60"
+  >Dossier</button>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    var KEY = "site-variant";
+    var btns = document.querySelectorAll("[data-variant-btn]");
+    if (!btns.length) return;
+    function paint(v) {
+      root.setAttribute("data-variant", v);
+      btns.forEach(function (b) {
+        var on = b.getAttribute("data-variant-btn") === v;
+        b.classList.toggle("bg-accent", on);
+        b.classList.toggle("text-white", on);
+        b.classList.toggle("text-cream/60", !on);
+      });
+    }
+    var stored = localStorage.getItem(KEY);
+    paint(stored === "dossier" ? "dossier" : "classic");
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var v = b.getAttribute("data-variant-btn");
+        try { localStorage.setItem(KEY, v); } catch (e) {}
+        paint(v);
+      });
+    });
+  })();
+</script>

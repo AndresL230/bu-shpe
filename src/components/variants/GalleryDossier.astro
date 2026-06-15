@@ -1,0 +1,219 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+
+import eventsData from "@/data/events.json";
+import volunteeringData from "@/data/volunteering.json";
+import conferencesData from "@/data/conferences.json";
+import siteData from "@/data/site.json";
+
+const allPhotos = [
+  ...eventsData.map((e) => ({ src: e.photo, alt: e.title, group: "Events" })),
+  ...volunteeringData.flatMap((v) =>
+    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering" }))
+  ),
+  ...conferencesData.flatMap((c) =>
+    c.photos.map((src) => ({
+      src,
+      alt: `${c.region ?? "Conference"} ${c.year} — ${c.city}`,
+      group: "Conferences",
+    }))
+  ),
+];
+
+// Per-category counts for the manifest strip
+const counts = {
+  All: allPhotos.length,
+  Events: allPhotos.filter((p) => p.group === "Events").length,
+  Volunteering: allPhotos.filter((p) => p.group === "Volunteering").length,
+  Conferences: allPhotos.filter((p) => p.group === "Conferences").length,
+};
+
+// Category chips appear only once a category has enough photos to be worth
+// filtering — re-added automatically as the archive grows.
+const CHIP_MIN = 4;
+const allFilters = ["All", "Events", "Volunteering", "Conferences"] as const;
+const filters = allFilters.filter((label) => label === "All" || counts[label] >= CHIP_MIN);
+
+const chipBase =
+  "inline-flex items-center font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 border transition-colors";
+const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:text-ink";
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">
+      Photo Archive · {counts.All} frames on file
+    </p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      Moments from the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em>.
+    </h1>
+    <p class="mt-7 text-cream/80 max-w-xl text-lg">
+      A visual record of the chapter — events, volunteering, and conference delegations, logged frame by frame.
+    </p>
+  </div>
+
+  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
+    <span class="display text-[200px] lg:text-[280px] leading-none text-cream translate-y-1/4 inline-block">{counts.All}</span>
+  </div>
+</header>
+
+<!-- 01 — ARCHIVE -->
+<section
+  id="gallery-dossier-root"
+  class="max-w-[1200px] mx-auto px-6 py-20 md:py-28"
+>
+  <SectionIndex label="Archive" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">The whole familia, on file.</h2>
+  <p class="mt-4 text-ink-muted max-w-2xl">
+    Filter the record by category. Tap any frame to open it full-size.
+  </p>
+
+  <!-- Mono filter chips -->
+  <nav aria-label="Filter gallery by category" class="mt-10 flex flex-wrap gap-3">
+    {filters.map((label) => {
+      const value = label === "All" ? "" : label;
+      const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
+      return (
+        <a
+          data-chip-d
+          data-chip-value={value}
+          href={href}
+          class:list={[chipBase, chipInactive]}
+        >
+          {label}
+        </a>
+      );
+    })}
+  </nav>
+
+  <!-- Empty state -->
+  <div
+    data-empty-state-d
+    hidden
+    class="mt-12 flex flex-col items-center justify-center border border-outline-soft bg-surface-soft py-20 text-center"
+  >
+    <p class="font-mono text-sm text-ink-muted uppercase tracking-[0.14em]">No frames in this category yet.</p>
+    <p class="pullquote mx-auto max-w-md mt-3">Check back soon.</p>
+  </div>
+
+  <!-- Masonry grid -->
+  <div class="mt-12 gap-3 [column-count:1] sm:[column-count:2] lg:[column-count:3]" id="gallery-grid-d">
+    {allPhotos.map((p, i) => (
+      <button
+        type="button"
+        class="group mb-3 block w-full break-inside-avoid overflow-hidden border border-outline-soft transition focus:outline-none focus:ring-2 focus:ring-accent"
+        data-gallery-index-d={i}
+        data-category={p.group}
+      >
+        <img
+          src={p.src}
+          alt={p.alt}
+          loading="lazy"
+          class="w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+        />
+      </button>
+    ))}
+  </div>
+</section>
+
+<!-- Dossier lightbox (dossier-unique ids) -->
+<dialog
+  id="gallery-lightbox-d"
+  aria-label="Photo lightbox"
+  aria-modal="true"
+  class="m-0 max-h-dvh max-w-screen-md p-0 backdrop:bg-deep/90 open:flex"
+>
+  <button
+    type="button"
+    id="lightbox-close-d"
+    class="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-ink"
+    aria-label="Close"
+  >×</button>
+  <img id="lightbox-image-d" alt="" class="max-h-dvh w-full object-contain" />
+</dialog>
+
+<script is:inline define:vars={{ photos: allPhotos }}>
+  (function () {
+    var root = document.getElementById("gallery-dossier-root");
+    if (!root) return;
+
+    var chips = root.querySelectorAll("[data-chip-d]");
+    var items = root.querySelectorAll("[data-gallery-index-d]");
+    var emptyState = root.querySelector("[data-empty-state-d]");
+
+    var inactiveClasses = ["border-outline-soft", "text-ink-muted", "hover:border-ink", "hover:text-ink"];
+    var activeClasses = ["bg-ink", "text-cream", "border-ink"];
+
+    function setActive(value) {
+      chips.forEach(function (chip) {
+        var chipValue = chip.getAttribute("data-chip-value") || "";
+        if (chipValue === value) {
+          inactiveClasses.forEach(function (c) { chip.classList.remove(c); });
+          activeClasses.forEach(function (c) { chip.classList.add(c); });
+          chip.setAttribute("aria-current", "true");
+        } else {
+          activeClasses.forEach(function (c) { chip.classList.remove(c); });
+          inactiveClasses.forEach(function (c) { chip.classList.add(c); });
+          chip.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    function applyFilter(cat) {
+      cat = cat || "";
+      setActive(cat);
+      var anyVisible = false;
+      items.forEach(function (el) {
+        var matches = !cat || el.getAttribute("data-category") === cat;
+        el.hidden = !matches;
+        if (matches) anyVisible = true;
+      });
+      if (emptyState) emptyState.hidden = anyVisible;
+    }
+
+    var params = new URLSearchParams(location.search);
+    applyFilter(params.get("cat"));
+
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function (e) {
+        e.preventDefault();
+        var value = chip.getAttribute("data-chip-value") || "";
+        var url = value
+          ? location.pathname + "?cat=" + encodeURIComponent(value)
+          : location.pathname;
+        history.pushState({}, "", url);
+        applyFilter(value);
+      });
+    });
+
+    window.addEventListener("popstate", function () {
+      var p = new URLSearchParams(location.search);
+      applyFilter(p.get("cat"));
+    });
+
+    // Lightbox (scoped to dossier subtree)
+    var dlg = document.getElementById("gallery-lightbox-d");
+    var img = document.getElementById("lightbox-image-d");
+    var close = document.getElementById("lightbox-close-d");
+    items.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var i = Number(btn.getAttribute("data-gallery-index-d"));
+        img.src = photos[i].src;
+        img.alt = photos[i].alt;
+        dlg.showModal();
+      });
+    });
+    if (close) close.addEventListener("click", function () { dlg.close(); });
+    if (dlg) dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+  })();
+</script>
+
+<!-- CTA -->
+<CtaBand
+  heading={`Have photos from a SHPE <em class="font-serif italic font-normal lowercase tracking-normal text-accent">event</em>?`}
+  body="Send your shots to the chapter and we'll log them into the archive alongside the rest of the record."
+  primaryCta={{ label: "Submit photos", href: `mailto:${siteData.contactEmail}?subject=Gallery%20Submission` }}
+  secondaryCta={{ label: "Browse events", href: "/events" }}
+/>

@@ -1,0 +1,142 @@
+---
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import SocialLinks from "@/components/SocialLinks.astro";
+import MailingListForm from "@/components/MailingListForm.astro";
+
+import siteData from "@/data/site.json";
+
+const steps = [
+  {
+    index: "01",
+    label: "SUBSCRIBE",
+    body: "Get on the mailing list so you hear about every meeting and event.",
+  },
+  {
+    index: "02",
+    label: "FOLLOW",
+    body: "Follow @shpe.bostonu on Instagram for daily updates and stories.",
+  },
+  {
+    index: "03",
+    label: "SHOW UP",
+    body: "Walk into the next event. You don't need to RSVP — bring a friend.",
+  },
+];
+---
+
+<!-- HERO -->
+<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto relative z-10">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Membership · No fee · No application</p>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
+      Find your <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em>.
+    </h1>
+    <p class="mt-7 text-cream/80 max-w-xl text-lg">
+      There's no membership fee. There's no application. Just say hi — subscribe, follow, and walk into the next event.
+    </p>
+  </div>
+</header>
+
+<!-- 01 — INTAKE -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex index="01" label="Intake" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Three small steps.</h2>
+  <p class="mt-4 text-ink-muted max-w-md">
+    Joining the chapter is a short procedure — three moves and you're in the loop.
+  </p>
+
+  <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+    {steps.map((step) => (
+      <div class="bg-bg p-7 flex flex-col gap-3">
+        <span class="display text-5xl text-accent leading-none tabular-nums">{step.index}</span>
+        <p class="font-mono text-sm text-accent tracking-wide uppercase">{step.label}</p>
+        <p class="text-sm leading-relaxed text-ink-muted">{step.body}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 02 — MAILING LIST -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+  <div class="md:col-span-5">
+    <SectionIndex index="02" label="Mailing List" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5">Get event invites in your inbox.</h2>
+    <p class="mt-4 text-ink-muted max-w-md">
+      One email per major event. We don't share your address.
+    </p>
+  </div>
+  <div class="md:col-span-7">
+    <MailingListForm />
+  </div>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 03 — CHANNELS -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <SectionIndex index="03" label="Channels" />
+  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Stay close to the familia.</h2>
+  <p class="mt-4 text-ink-muted max-w-md">
+    We post most updates on Instagram. LinkedIn is for jobs and conferences.
+  </p>
+
+  <div class="mt-8">
+    <SocialLinks />
+  </div>
+
+  <p class="mt-6 text-sm text-ink-muted">
+    Curious about the national org? Visit{" "}
+    <a
+      href={siteData.socials.shpe}
+      class="text-accent hover:underline underline-offset-4 transition"
+      target="_blank"
+      rel="noopener"
+    >shpe.org</a>.
+  </p>
+</section>
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 04 — CONTACT -->
+<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+  <div class="md:col-span-5">
+    <SectionIndex index="04" label="Contact" />
+    <h2 class="display text-3xl md:text-4xl text-ink mt-5">Have a question?</h2>
+    <p class="mt-4 text-ink-muted max-w-md">
+      Email us anytime — the board reads every message.
+    </p>
+  </div>
+  <div class="md:col-span-7">
+    <div class="grid grid-cols-1 gap-px bg-outline-soft border border-outline-soft">
+      <div class="bg-bg p-7">
+        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">Chapter</p>
+        <a
+          href={`mailto:${siteData.contactEmail}`}
+          class="font-mono text-ink hover:text-accent transition-colors break-all"
+        >
+          {siteData.contactEmail}
+        </a>
+      </div>
+      <div class="bg-bg p-7">
+        <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-3">Faculty Advisor</p>
+        <a
+          href={`mailto:${siteData.facultyAdvisorEmail}`}
+          class="text-ink hover:text-accent transition-colors"
+        >
+          Enrique Gutierrez-Wing, Ph.D.
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / Donate closer -->
+<CtaBand
+  heading={`Support the next generation of <em class="font-serif italic font-normal lowercase tracking-normal text-accent">engineers</em>.`}
+  body="There's no fee to join — but if you can, help keep the chapter's programs running for the students who come next."
+  primaryCta={{ label: "Donate via BU Trusted", href: siteData.donateUrl }}
+  secondaryCta={{ label: "Browse events", href: "/events" }}
+/>

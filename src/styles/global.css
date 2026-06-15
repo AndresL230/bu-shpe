@@ -8,6 +8,7 @@
   --color-ink:         #001F5B;   /* SHPE navy — primary text */
   --color-ink-muted:   #626366;   /* SHPE gray — secondary text */
   --color-accent:      #FD652F;   /* SHPE orange — CTAs, highlights */
+  --color-accent-deep: #E8632B;   /* deeper orange — hover/active of accent */
   --color-link:        #0070C0;   /* SHPE blue — interactive */
   --color-rule:        #72A9BE;   /* SHPE pale blue — dividers, tags */
   --color-cream:       #FCF0D6;   /* footer / dark-section text */
@@ -31,7 +32,7 @@
   --font-mono:    "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
 
   /* Editorial rhythm */
-  --radius-card: 12px;
+  --radius-card: 2px;
   --shadow-card: 0 1px 2px rgba(0,31,91,.04), 0 12px 24px -12px rgba(0,31,91,.10);
   --shadow-card-hover: 0 2px 4px rgba(0,31,91,.06), 0 24px 40px -16px rgba(0,31,91,.18);
 
@@ -244,14 +245,55 @@ html[data-guides="on"] .guide-content::before {
   }
 }
 
+/* ---------- A/B variant preview (classic vs dossier) — dev/preview toggle ---------- */
+[data-variant="classic"] [data-variant-block="dossier"] { display: none; }
+[data-variant="dossier"] [data-variant-block="classic"] { display: none; }
+
 /* ---------- Dossier section-local utilities (conferences/*) ---------- */
-.mono-label {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.72rem;
-  color: var(--color-ink-muted);
+/* In @layer components so Tailwind utilities (a later layer) can override
+   individual properties, e.g. `mono-label text-cream` on navy surfaces. */
+@layer components {
+  .mono-label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    color: var(--color-ink-muted);
+  }
+
+  /* Dossier button language — sharp 2px corners, IBM Plex Mono, flat fill,
+     navy-fill hover (no pill, no soft shadow lift). Pair with the element's
+     own `group inline-flex items-center gap-2` for icon layout.
+     In @layer components so per-element Tailwind utilities still win. */
+  .btn-dossier,
+  .btn-dossier-ghost {
+    border-radius: var(--radius-card);
+    padding: 0.7rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .btn-dossier {
+    background-color: var(--color-accent);
+    color: #fff;
+  }
+  .btn-dossier:hover {
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+  }
+  .btn-dossier-ghost {
+    border: 1px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
+    color: var(--color-ink);
+  }
+  .btn-dossier-ghost:hover {
+    background-color: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-cream);
+  }
 }
 
 /* Low-contrast engineering grid — use in 1–2 spots only, never full-page */

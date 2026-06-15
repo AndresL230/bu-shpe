@@ -1,0 +1,164 @@
+---
+import PageHero from "@/components/PageHero.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import Icon from "@/components/Icon.astro";
+
+import volunteeringData from "@/data/volunteering.json";
+import siteData from "@/data/site.json";
+---
+
+  <!-- ① Tall Hero -->
+  <PageHero
+    eyebrow="VOLUNTEERING"
+    headline="Service is part of the SHPE familia."
+    headlineAccent="Service"
+    subtitle="We show up for Greater Boston — at museums, food banks, and on the street with meals."
+    meta="VOLUNTEERING / GREATER BOSTON"
+  />
+
+  <!-- ② Intro pull-quote -->
+  <section class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
+    <p class="pullquote">
+      "Pay it forward. Build community. Show up for Greater Boston."
+    </p>
+  </section>
+
+  <!-- ③ Program list -->
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+    {volunteeringData.map((program, index) => (
+      <article class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center py-20 border-t border-rule/20 first:border-t-0">
+
+        {/* Image side — md:col-span-7, alternates left/right */}
+        <div
+          class:list={[
+            "md:col-span-7",
+            index % 2 === 0 ? "md:order-1" : "md:order-2",
+          ]}
+        >
+          {program.photos.length >= 2 ? (
+            /* Two photos: stacked on mobile, overlapping on md+ */
+            <div class="relative pb-8 md:pb-10">
+              <div class="rounded-[var(--radius-card)] overflow-hidden shadow-[var(--shadow-card)] photo-warm">
+                <img
+                  src={program.photos[0]}
+                  alt={`${program.name} — photo 1`}
+                  class="w-full h-full object-cover aspect-[4/3]"
+                  loading="lazy"
+                />
+              </div>
+              <div class="md:absolute md:bottom-[-2rem] md:right-[-1rem] mt-3 md:mt-0 w-1/2 rounded-[var(--radius-card)] overflow-hidden shadow-[var(--shadow-card)] photo-warm border-4 border-bg">
+                <img
+                  src={program.photos[1]}
+                  alt={`${program.name} — photo 2`}
+                  class="w-full h-full object-cover aspect-[4/3]"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          ) : program.photos.length === 1 ? (
+            /* Single photo */
+            <div class="rounded-[var(--radius-card)] overflow-hidden shadow-[var(--shadow-card)] photo-warm">
+              <img
+                src={program.photos[0]}
+                alt={`${program.name}`}
+                class="w-full h-full object-cover aspect-[4/3]"
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            /* No photos — editorial deep-navy card */
+            <div class="aspect-[4/3] rounded-[var(--radius-card)] overflow-hidden">
+              <div class="grain bg-deep text-cream rounded-[var(--radius-card)] p-12 h-full flex flex-col justify-center">
+                <p class="pullquote text-cream text-left leading-snug">
+                  "{program.description.split(".")[0]}."
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Text side — md:col-span-5, opposite order */}
+        <div
+          class:list={[
+            "md:col-span-5 flex flex-col gap-5",
+            index % 2 === 0 ? "md:order-2" : "md:order-1",
+            /* Extra bottom padding on programs with the overlapping photo so text isn't clipped */
+            program.photos.length >= 2 ? "pb-10 md:pb-0" : "",
+          ]}
+        >
+          <p class="eyebrow">VOLUNTEERING</p>
+          <h2 class="display text-3xl md:text-4xl">{program.name}</h2>
+          <p class="text-sm leading-relaxed text-ink-muted">{program.description}</p>
+        </div>
+
+      </article>
+    ))}
+  </section>
+
+  <!-- ④ Impact — facts from the field log -->
+  <section class="mx-auto max-w-[1200px] px-6 py-24 reveal">
+    <div class="max-w-3xl mb-16">
+      <SectionHeading
+        eyebrow="IMPACT"
+        title="What showing up adds up to."
+      />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0 border-t border-rule/40 pt-12 md:pt-16">
+      {[
+        { value: "16,000 lbs", label: "of food sorted in one afternoon at the Greater Boston Food Bank" },
+        { value: "2 routes", label: "of Rhetty-to-Go meals — Kenmore & Back Bay, with Swipes for Boston" },
+        { value: "3 partners", label: "Museum of Science · Swipes for Boston · Greater Boston Food Bank" },
+      ].map((stat, i) => (
+        <div
+          class:list={[
+            "flex flex-col gap-3",
+            i > 0 && "md:border-l md:border-rule/40 md:pl-12",
+          ]}
+        >
+          <span class="display text-5xl md:text-6xl leading-none text-accent">{stat.value}</span>
+          <span class="eyebrow text-ink-muted max-w-[24ch]">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ⑤ Get involved CTA -->
+  <section class="grain bg-cream text-ink">
+    <div class="mx-auto max-w-3xl px-6 py-24 text-center reveal">
+      <div class="flex justify-center">
+        <SectionHeading
+          align="center"
+          eyebrow="GET INVOLVED"
+          title="Have a partner in mind?"
+        />
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 text-left">
+        {[
+          { t: "Get on the list", d: "Volunteer calls go out through the mailing list first." },
+          { t: "Show up", d: "Most outings are a single afternoon — no experience needed." },
+          { t: "Bring an idea", d: "Know an organization that could use engineers? Tell us." },
+        ].map((step, i) => (
+          <div class="flex flex-col gap-2">
+            <span class="display text-3xl leading-none text-accent tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+            <h3 class="display text-xl">{step.t}</h3>
+            <p class="text-sm leading-relaxed text-ink-muted">{step.d}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="mt-10 text-lg leading-relaxed text-ink-muted">
+        Tell us where you'd like to serve next.
+      </p>
+      <div class="mt-10">
+        <a
+          href={`mailto:${siteData.contactEmail}?subject=Volunteer%20Idea`}
+          class="group inline-flex items-center gap-2 btn-dossier"
+        >
+          Send us your idea
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+    </div>
+  </section>
