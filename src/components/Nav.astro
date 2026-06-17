@@ -138,7 +138,10 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
                 <div class="dropdown-wrap">
                   <div class="dropdown">
                     {submenu.map((item) => (
-                      <a href={item.href} class="dropdown-link">{item.label} <span aria-hidden="true">→</span></a>
+                      <a href={item.href} class="dropdown-link">
+                        <span class="dropdown-label">{item.label}</span>
+                        <span class="dropdown-arrow" aria-hidden="true">→</span>
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -182,19 +185,22 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     transform: scaleX(1);
   }
 
-  /* ---------- Dropdown card (left-aligned, notched, flush with navbar bottom) ---------- */
-  /* The wrapper is absolutely positioned at the parent <li>'s bottom edge
-     and uses padding-top as an invisible hover-bridge that fills the
-     navbar's bottom padding zone. The visible card sits below the bridge,
-     so its top edge lands at the navbar's bottom border. */
+  /* ---------- Index dropdown panel (light, page-palette) ---------- */
+  /* The wrapper sits at the parent <li>'s bottom edge; its padding-top is an
+     invisible hover-bridge that fills the navbar's bottom padding so the
+     visible panel lands flush under the navbar and the hover never breaks
+     when the cursor crosses the gap from trigger into panel. */
   .dropdown-wrap {
     position: absolute;
     top: 100%;
-    left: 0;
-    padding-top: 22px;
+    left: -16px;                  /* offset the item padding so text lines up with the trigger */
+    padding-top: 27px;            /* hover bridge — lands the panel top flush at the navbar's bottom edge */
     z-index: 50;
     opacity: 0;
     visibility: hidden;
+    /* ~150ms grace on close: visibility holds through the fade so moving from
+       the trigger into the panel doesn't dismiss it; re-entering hover (or
+       focus) restores it instantly. */
     transition: opacity 0.15s ease, visibility 0.15s ease;
   }
   .has-subnav:hover .dropdown-wrap,
@@ -203,53 +209,54 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     visibility: visible;
   }
   .dropdown {
-    position: relative;
-    min-width: 180px;
-    padding: 8px 0;
-    background: #14336B;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0 0 8px 8px;
-  }
-  .dropdown::before {
-    content: "";
-    position: absolute;
-    top: -6px;
-    left: 20px;
-    width: 12px;
-    height: 12px;
-    background: #14336B;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    transform: rotate(45deg);
+    width: 244px;
+    padding: 6px 0;
+    background: var(--color-surface);                 /* white, on the warm page */
+    border: 0.5px solid var(--color-hairline);        /* hairline all around */
+    border-radius: 0 0 var(--radius-card) var(--radius-card);  /* square top, dossier radius at bottom */
+    box-shadow: 0 16px 28px -20px rgba(0, 31, 91, 0.22);
   }
   .dropdown-link {
-    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px 12px 20px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
+    justify-content: space-between;
+    gap: 16px;
+    padding: 9px 16px;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: background-color 0.15s ease;
   }
-  .dropdown-link:hover {
-    color: #fff;
+  .dropdown-label {
+    font-family: var(--font-sans);      /* match the navbar links (Inter) */
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--color-ink);            /* navy */
+    transition: color 0.15s ease;
   }
-  .dropdown-link::after {
-    content: "";
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 6px;
-    height: 2px;
-    background: var(--color-accent);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.25s ease;
+  .dropdown-arrow {
+    color: var(--color-arrow-mute);     /* muted by default */
+    font-size: 15px;
+    line-height: 1;
+    transition: color 0.15s ease, transform 0.15s ease;
   }
-  .dropdown-link:hover::after {
-    transform: scaleX(1);
+  .dropdown-link:hover,
+  .dropdown-link:focus-visible {
+    background-color: var(--color-tint-warm);   /* warm wash */
+  }
+  .dropdown-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;                       /* keep the ring inside the panel */
+    border-radius: 2px;
+  }
+  .dropdown-link:hover .dropdown-label,
+  .dropdown-link:focus-visible .dropdown-label,
+  .dropdown-link:hover .dropdown-arrow,
+  .dropdown-link:focus-visible .dropdown-arrow {
+    color: var(--color-accent);                 /* label + arrow → orange */
+  }
+  .dropdown-link:hover .dropdown-arrow,
+  .dropdown-link:focus-visible .dropdown-arrow {
+    transform: translateX(2px);                 /* nudge right */
   }
 </style>
 

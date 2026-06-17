@@ -39,6 +39,11 @@
   /* Editorial redesign additions */
   --color-surface-soft: #F4F3F9;   /* slight gray for card-band backgrounds */
   --color-outline-soft: #C5C6D1;   /* warmer border for event/conference card grids */
+
+  /* Nav index-panel (light dropdown) palette */
+  --color-hairline:   #ECEAE2;   /* warm hairline — panel sides/bottom */
+  --color-tint-warm:  #FBF3EF;   /* pale orange wash — row hover/focus */
+  --color-arrow-mute: #B4B2A9;   /* muted arrow glyph (default state) */
 }
 
 /* ---------- Base resets ---------- */
