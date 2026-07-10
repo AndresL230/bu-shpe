@@ -156,7 +156,7 @@ If a future design wants the logo on a light background, the chapter needs to su
   EOF
   )"
   ```
-- **Never push to remote unless asked.** No remote is currently configured.
+- **Never push to remote unless asked.** Remote is `origin` → `github.com/AndresL230/bu-shpe`. Pushing to `main` **deploys to production** via Cloudflare (see Deployment) — so a push is a deploy; only push when the user asks.
 - **Co-author trailer:** the user's repo has been receiving Sonnet 4.6 co-author trailers from sub-agents and Opus 4.7 trailers from the main session. Don't pre-bake a model name into sub-agent commit prompts — let each sub-agent attribute its own work.
 
 ## Original implementation plan
