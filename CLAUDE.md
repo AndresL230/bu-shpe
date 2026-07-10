@@ -4,7 +4,7 @@ Project context for Claude Code sessions working on this repo. Read once at sess
 
 ## What this is
 
-Editorial-style marketing site for **Boston University's SHPE chapter**. Astro 5 static site, Tailwind v4, TypeScript strict, deployed to Cloudflare Pages. Every page is a `.astro` file that composes shared components and pulls content from `src/data/*.json`. No SSR, no React island, no client-side framework.
+Editorial-style marketing site for **Boston University's SHPE chapter**. Astro 5 static site, Tailwind v4, TypeScript strict, deployed to **Cloudflare Workers static assets** (Git-connected). Every page is a `.astro` file that composes shared components and pulls content from `src/data/*.json`. No SSR, no React island, no client-side framework.
 
 User: chapter member (`andreslopez.23061@gmail.com`). Tone is editorial / magazine, not corporate / SaaS.
 
@@ -17,6 +17,10 @@ npm run dev          # http://localhost:4321
 ```
 
 There are no unit tests — this is a static marketing site. **Verification = `check` + `build` clean + visual confirmation in dev server.** Don't waste time scaffolding a test runner.
+
+## Deployment
+
+Git-connected **Cloudflare Workers static assets** (Worker name `bu-shpe`). Pushing to `main` on `AndresL230/bu-shpe` triggers a Cloudflare build that runs `npx wrangler deploy`; `wrangler.toml`'s `[build] command = "npm run build"` generates `./dist`, and `[assets] directory = "./dist"` uploads it. No dashboard build command is configured — the build lives in `wrangler.toml`. Live at `https://bu-shpe.andreslopez-23061.workers.dev`. Node is pinned to 22 via `.nvmrc`. **Not** Cloudflare Pages — the two config styles (`[assets]` vs `pages_build_output_dir`) are mutually exclusive; don't reintroduce `pages_build_output_dir`. `astro.config.mjs` `site:` is still the `https://shpe.bu.edu` placeholder, so built canonical URLs won't match the live workers.dev host until a real domain is set.
 
 ## File map
 
