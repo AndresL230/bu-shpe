@@ -1,3 +1,12 @@
 name = "bu-shpe"
 compatibility_date = "2026-01-01"
-pages_build_output_dir = "dist"
+
+# Cloudflare's Git build runs `npx wrangler deploy`, which honors this build
+# step first (generating ./dist), then uploads the [assets] directory below.
+# This makes a single `git push` build + deploy the static site — no dashboard
+# build command required.
+[build]
+command = "npm run build"
+
+[assets]
+directory = "./dist"
