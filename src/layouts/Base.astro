@@ -2,7 +2,6 @@
 import "@/styles/global.css";
 import Nav from "@/components/Nav.astro";
 import Footer from "@/components/Footer.astro";
-import VariantToggle from "@/components/VariantToggle.astro";
 import siteData from "@/data/site.json";
 
 interface Props {
@@ -21,20 +20,10 @@ const fullTitle = title ? `${title} â€” ${siteData.name}` : `${siteData.name} â€
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 <!doctype html>
-<html lang="en" data-guides="on" data-variant="classic">
+<html lang="en" data-variant="dossier">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>
-      (function () {
-        try {
-          var v = localStorage.getItem("site-variant");
-          if (v === "classic" || v === "dossier") {
-            document.documentElement.setAttribute("data-variant", v);
-          }
-        } catch (e) {}
-      })();
-    </script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -69,17 +58,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
     <Footer />
 
-    <VariantToggle />
-
-    <button
-      id="guides-toggle"
-      type="button"
-      aria-pressed="true"
-      class="fixed bottom-4 right-4 z-50 bg-deep text-cream px-3 py-1.5 font-cond text-xs font-bold uppercase tracking-widest rounded-full shadow-md hover:opacity-90 transition"
-    >
-      Guides: <span data-guides-state>ON</span>
-    </button>
-
     <script is:inline>
       (function () {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -97,27 +75,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       })();
     </script>
 
-    <script is:inline>
-      (function () {
-        const root = document.documentElement;
-        const btn = document.getElementById("guides-toggle");
-        const state = btn && btn.querySelector("[data-guides-state]");
-        if (!btn || !state) return;
-        const KEY = "site-guides";
-        const stored = localStorage.getItem(KEY);
-        const initial = stored === "off" ? "off" : "on";
-        const apply = function (v) {
-          root.setAttribute("data-guides", v);
-          state.textContent = v.toUpperCase();
-          btn.setAttribute("aria-pressed", v === "on" ? "true" : "false");
-        };
-        apply(initial);
-        btn.addEventListener("click", function () {
-          const next = root.getAttribute("data-guides") === "on" ? "off" : "on";
-          apply(next);
-          localStorage.setItem(KEY, next);
-        });
-      })();
-    </script>
   </body>
 </html>
