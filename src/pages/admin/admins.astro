@@ -1,0 +1,127 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requireOwner } from "@/lib/server/auth";
+
+export const prerender = false;
+
+const denied = requireOwner(Astro.locals);
+if (denied) return denied;
+
+const me = Astro.locals.admin!;
+const db = Astro.locals.runtime.env.DB;
+const { results: admins } = await db
+  .prepare(
+    `SELECT a.email, a.name, a.role, a.added_by, a.created_at,
+            (SELECT MAX(s.created_at) FROM sessions s WHERE s.email = a.email) AS last_sign_in
+       FROM admins a
+      ORDER BY CASE a.role WHEN 'owner' THEN 0 ELSE 1 END, a.email`,
+  )
+  .all<{ email: string; name: string | null; role: "owner" | "editor"; added_by: string | null; created_at: string; last_sign_in: string | null }>();
+
+const MESSAGES: Record<string, string> = {
+  added: "Added to the allowlist. They can sign in with that Google account now.",
+  role: "Role updated.",
+  removed: "Removed. Any open sessions for that account were signed out.",
+  email: "Enter a valid email address.",
+  role_invalid: "Pick a role: owner or editor.",
+  exists: "That email is already on the list.",
+  missing: "That email isn't on the list.",
+  self: "You can't change or remove your own access — ask another owner.",
+  last_owner: "The chapter needs at least one owner. Promote someone else first.",
+  action: "Unknown action.",
+};
+const okKey = Astro.url.searchParams.get("ok");
+const errKey = Astro.url.searchParams.get("error");
+const ok = okKey ? MESSAGES[okKey] : null;
+const error = errKey ? (MESSAGES[errKey === "role" ? "role_invalid" : errKey] ?? null) : null;
+const soleOwner = admins.filter((a) => a.role === "owner").length === 1;
+---
+<AdminLayout title="Admin" accent="access" eyebrow="04 — Admins / Owner only" section="admins">
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <div class="grid gap-10 lg:grid-cols-[1fr_300px]">
+    <div class="overflow-x-auto">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Role</th>
+            <th>Last sign-in</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {admins.map((a) => {
+            const isMe = a.email.toLowerCase() === me.email.toLowerCase();
+            const lastOwner = a.role === "owner" && soleOwner;
+            return (
+              <tr>
+                <td>
+                  <span class="font-semibold text-ink">{a.name ?? "—"}</span>
+                  {isMe && <span class="adm-badge adm-badge--muted ml-2">You</span>}
+                  <span class="block font-mono text-xs text-ink-muted">{a.email}</span>
+                </td>
+                <td>
+                  {isMe || lastOwner ? (
+                    <span class:list={["adm-badge", a.role === "owner" ? "adm-badge--live" : "adm-badge--muted"]}>{a.role}</span>
+                  ) : (
+                    <form method="post" action="/api/admin/admins" class="flex items-center gap-2">
+                      <input type="hidden" name="action" value="role" />
+                      <input type="hidden" name="email" value={a.email} />
+                      <select name="role" class="adm-select w-auto py-1.5 text-xs" aria-label={`Role for ${a.email}`}>
+                        <option value="editor" selected={a.role === "editor"}>Editor</option>
+                        <option value="owner" selected={a.role === "owner"}>Owner</option>
+                      </select>
+                      <button type="submit" class="adm-link">Save</button>
+                    </form>
+                  )}
+                </td>
+                <td class="whitespace-nowrap font-mono text-xs text-ink-muted">
+                  {a.last_sign_in ? a.last_sign_in.slice(0, 10) : "Never"}
+                </td>
+                <td class="text-right">
+                  {isMe || lastOwner ? (
+                    <span class="font-mono text-xs text-ink-muted">—</span>
+                  ) : (
+                    <details class="inline-block text-left">
+                      <summary class="adm-link adm-link--danger cursor-pointer list-none">Remove</summary>
+                      <form method="post" action="/api/admin/admins" class="mt-2 flex items-center gap-3">
+                        <input type="hidden" name="action" value="remove" />
+                        <input type="hidden" name="email" value={a.email} />
+                        <span class="text-xs text-ink-muted">Revoke access?</span>
+                        <button type="submit" class="btn-danger px-3 py-1.5 text-[0.65rem]">Yes, remove</button>
+                      </form>
+                    </details>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <p class="adm-hint mt-4">
+        Editors manage events and the mailing list. Owners can also manage this list.
+        Removing someone signs them out immediately.
+      </p>
+    </div>
+
+    <form method="post" action="/api/admin/admins" class="adm-panel grid content-start gap-5">
+      <input type="hidden" name="action" value="add" />
+      <p class="mono-label">Add someone</p>
+      <div>
+        <label class="adm-label" for="new-email">Google account email</label>
+        <input id="new-email" type="email" name="email" class="adm-input" required placeholder="name@bu.edu" autocomplete="off" />
+      </div>
+      <div>
+        <label class="adm-label" for="new-role">Role</label>
+        <select id="new-role" name="role" class="adm-select">
+          <option value="editor" selected>Editor</option>
+          <option value="owner">Owner</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-dossier">Grant access</button>
+      <p class="adm-hint">They sign in at /admin with that exact Google account.</p>
+    </form>
+  </div>
+</AdminLayout>

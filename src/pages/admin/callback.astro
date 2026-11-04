@@ -1,0 +1,136 @@
+---
+/**
+ * Google OAuth redirect target ("callback screen"). Validates state + PKCE,
+ * exchanges the code, checks the allowlist, creates the session, then hands
+ * control back to the opener window (popup flow) or redirects (full-page flow).
+ */
+import AuthShell from "@/components/admin/AuthShell.astro";
+import { createSession, exchangeGoogleCode, takeOAuthCookies } from "@/lib/server/auth";
+
+export const prerender = false;
+
+const env = Astro.locals.runtime.env;
+const url = Astro.url;
+const oauth = takeOAuthCookies(Astro.cookies, url);
+const mode = oauth.state ? oauth.mode : url.searchParams.get("mode") === "popup" ? "popup" : "page";
+
+let ok = false;
+let error: "not_allowed" | "oauth_failed" | "cancelled" | "not_configured" | null = null;
+let who: { email: string; name: string | null } | null = null;
+
+const googleError = url.searchParams.get("error");
+const code = url.searchParams.get("code");
+const state = url.searchParams.get("state");
+
+if (googleError) {
+  error = googleError === "access_denied" ? "cancelled" : googleError === "not_configured" ? "not_configured" : "oauth_failed";
+} else if (!code || !state || !oauth.state || !oauth.verifier || state !== oauth.state) {
+  error = "oauth_failed";
+} else if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+  error = "not_configured";
+} else {
+  try {
+    const identity = await exchangeGoogleCode(env, url, code, oauth.verifier);
+    const row = await env.DB
+      .prepare("SELECT email, name FROM admins WHERE email = ? COLLATE NOCASE")
+      .bind(identity.email)
+      .first<{ email: string; name: string | null }>();
+    if (!row) {
+      error = "not_allowed";
+      who = identity;
+    } else {
+      // Store the allowlist's canonical email so the session JOIN always matches.
+      await createSession(env.DB, Astro.cookies, url, { ...identity, email: row.email });
+      if (!row.name && identity.name) {
+        await env.DB.prepare("UPDATE admins SET name = ? WHERE email = ?").bind(identity.name, row.email).run();
+      }
+      ok = true;
+      who = identity;
+    }
+  } catch (err) {
+    console.error("oauth callback failed:", err instanceof Error ? err.message : err);
+    error = "oauth_failed";
+  }
+}
+
+const target = ok ? "/admin/dashboard" : `/admin?error=${error ?? "oauth_failed"}`;
+const payload = { type: "shpe-auth", ok, error };
+const statusLine = ok
+  ? "Authenticated // Returning to portal"
+  : error === "not_allowed"
+    ? "Access denied // Not on the admin list"
+    : error === "cancelled"
+      ? "Sign-in cancelled // No account returned"
+      : error === "not_configured"
+        ? "Offline // OAuth client not configured"
+        : "Sign-in failed // Handshake incomplete";
+
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+<AuthShell title={ok ? "Signed in" : "Sign-in"} compact>
+  <div class="w-full py-10">
+    <p class:list={["mono-label mb-5", ok ? "text-accent" : "text-cream/70"]} role="status">
+      {statusLine}
+    </p>
+    {ok ? (
+      <h1 class="display text-5xl leading-[1.02] text-cream">
+        Welcome <em class="font-serif font-normal lowercase italic tracking-normal text-accent">back</em>
+      </h1>
+    ) : (
+      <h1 class="display text-5xl leading-[1.02] text-cream">
+        Not this <em class="font-serif font-normal lowercase italic tracking-normal text-accent">time</em>
+      </h1>
+    )}
+
+    {ok && who && (
+      <p class="mt-6 text-cream/70">
+        Signed in as <span class="text-cream">{who.email}</span>. This window will close on its own.
+      </p>
+    )}
+    {error === "not_allowed" && (
+      <p class="mt-6 max-w-sm leading-relaxed text-cream/70">
+        {who ? <><span class="text-cream">{who.email}</span> isn't</> : "This account isn't"} on the
+        chapter's admin list. Ask a chapter owner to add your email from the Admins page, then sign in again.
+      </p>
+    )}
+    {error && error !== "not_allowed" && (
+      <p class="mt-6 max-w-sm leading-relaxed text-cream/70">
+        Close this window and try “Continue with Google” again. If it keeps failing, let the webmaster know.
+      </p>
+    )}
+
+    <a href={target} class="mono-label mt-10 inline-block text-cream/60 hover:text-accent" data-fallback>
+      {ok ? "Continue to the portal →" : "Back to sign-in →"}
+    </a>
+  </div>
+  <Fragment slot="footer">BU SHPE // OAuth callback</Fragment>
+</AuthShell>
+
+<script is:inline define:vars={{ payload, target, mode }}>
+  (function () {
+    var delivered = false;
+    try {
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage(payload, location.origin);
+        delivered = true;
+      }
+    } catch (e) {}
+    try {
+      if (mode === "popup" && "BroadcastChannel" in window) {
+        var bc = new BroadcastChannel("shpe-auth");
+        bc.postMessage(payload);
+        bc.close();
+        delivered = true;
+      }
+    } catch (e) {}
+
+    if (mode === "popup" && delivered) {
+      // Success closes almost at once; a denial lingers long enough to read.
+      setTimeout(function () { window.close(); }, payload.ok ? 500 : 2500);
+      // If the browser refuses to close us, carry on in this window instead.
+      setTimeout(function () { location.replace(target); }, payload.ok ? 1500 : 4000);
+    } else {
+      setTimeout(function () { location.replace(target); }, payload.ok ? 600 : 3000);
+    }
+  })();
+</script>

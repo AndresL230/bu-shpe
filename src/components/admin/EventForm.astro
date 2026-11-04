@@ -1,0 +1,142 @@
+---
+/**
+ * Shared create/edit form for events. Plain multipart POST; the API route
+ * validates and redirects back with ?ok= / ?error=. The only JS is a local
+ * preview when a new photo file is chosen.
+ */
+import { EVENT_CATEGORIES, type EventRecord } from "@/lib/server/events";
+
+interface Props {
+  action: string;
+  event?: EventRecord;
+  submitLabel: string;
+}
+
+const { action, event, submitLabel } = Astro.props;
+
+const monthOnly = event ? event.date.length === 7 : false;
+const today = new Date().toISOString().slice(0, 10);
+const dayValue = event ? (monthOnly ? `${event.date}-01` : event.date) : today;
+const monthValue = event ? event.date.slice(0, 7) : today.slice(0, 7);
+const published = event ? event.published : true;
+---
+<form method="post" action={action} enctype="multipart/form-data" class="grid gap-8 lg:grid-cols-[1fr_300px]">
+  <!-- Copy -->
+  <div class="adm-panel grid gap-6">
+    <div>
+      <label class="adm-label" for="ev-title">Title</label>
+      <input id="ev-title" name="title" class="adm-input" required maxlength="160" value={event?.title ?? ""} />
+      {event && <p class="adm-hint">URL: <span class="font-mono">/events/{event.slug}</span> — changes if you rename the event.</p>}
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <fieldset class="adm-date">
+        <legend class="adm-label">Date</legend>
+        <div class="adm-segment mb-3">
+          <label><input type="radio" name="date_precision" value="day" checked={!monthOnly} />Full date</label>
+          <label><input type="radio" name="date_precision" value="month" checked={monthOnly} />Month only</label>
+        </div>
+        <div class="adm-date__day">
+          <input type="date" name="date_day" class="adm-input" value={dayValue} aria-label="Event date" />
+        </div>
+        <div class="adm-date__month">
+          <input type="month" name="date_month" class="adm-input" value={monthValue} aria-label="Event month" placeholder="yyyy-mm" />
+        </div>
+        <p class="adm-hint">Month only renders as “October 2026”.</p>
+      </fieldset>
+
+      <div>
+        <label class="adm-label" for="ev-category">Category</label>
+        <select id="ev-category" name="category" class="adm-select" required>
+          {EVENT_CATEGORIES.map((c) => (
+            <option value={c} selected={event ? event.category === c : c === "Professional"}>{c}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label class="adm-label" for="ev-location">Location <span class="normal-case tracking-normal">(optional)</span></label>
+      <input id="ev-location" name="location" class="adm-input" maxlength="160" value={event?.location ?? ""} placeholder="BU College of Engineering" />
+    </div>
+
+    <div>
+      <label class="adm-label" for="ev-description">Card description</label>
+      <textarea id="ev-description" name="description" class="adm-textarea min-h-[6rem]" required maxlength="600">{event?.description ?? ""}</textarea>
+      <p class="adm-hint">One or two sentences. Shown on event cards and in search results.</p>
+    </div>
+
+    <div>
+      <label class="adm-label" for="ev-body">Long copy <span class="normal-case tracking-normal">(optional)</span></label>
+      <textarea id="ev-body" name="body" class="adm-textarea min-h-[16rem]" maxlength="20000">{event?.body ?? ""}</textarea>
+      <p class="adm-hint">For the event's own page. Separate paragraphs with a blank line. Left empty, the page uses the card description.</p>
+    </div>
+  </div>
+
+  <!-- Side rail: photo + status + save -->
+  <div class="grid content-start gap-6">
+    <div class="adm-panel grid gap-4">
+      <p class="adm-label mb-0">Photo</p>
+      <figure class="aspect-[4/3] overflow-hidden border border-hairline bg-surface-soft photo-warm">
+        <img
+          data-photo-preview
+          src={event?.photo || undefined}
+          alt=""
+          class:list={["h-full w-full object-cover", !event?.photo && "hidden"]}
+        />
+        <p data-photo-empty class:list={["flex h-full items-center justify-center mono-label", event?.photo && "hidden"]}>
+          No photo yet
+        </p>
+      </figure>
+      <div>
+        <label class="adm-label" for="ev-photo-file">Upload new</label>
+        <input
+          id="ev-photo-file"
+          type="file"
+          name="photo_file"
+          accept="image/jpeg,image/png,image/webp,image/avif"
+          class="adm-file"
+          data-photo-input
+        />
+        <p class="adm-hint">JPEG, PNG, WebP or AVIF, up to 8 MB. Landscape works best.</p>
+      </div>
+      <div>
+        <label class="adm-label" for="ev-photo-path">Or keep / use path</label>
+        <input id="ev-photo-path" name="photo_path" class="adm-input font-mono text-xs" value={event?.photo ?? ""} placeholder="/assets/events/…" />
+        <p class="adm-hint">An upload replaces this.</p>
+      </div>
+    </div>
+
+    <div class="adm-panel grid gap-4">
+      <p class="adm-label mb-0">Status</p>
+      <label class="adm-check">
+        <input type="checkbox" name="published" checked={published} />
+        <span>Published<span class="block text-xs text-ink-muted">Unchecked = draft, hidden from the public site.</span></span>
+      </label>
+      <label class="adm-check">
+        <input type="checkbox" name="featured" checked={event?.featured ?? false} />
+        <span>Featured<span class="block text-xs text-ink-muted">Flags the event for highlight placements.</span></span>
+      </label>
+      <button type="submit" class="btn-dossier mt-2 w-full">{submitLabel}</button>
+      {event && (
+        <p class="mono-label text-[0.62rem]">Last saved {event.updatedAt.slice(0, 16).replace("T", " ")} UTC</p>
+      )}
+    </div>
+  </div>
+</form>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>("[data-photo-input]");
+  const preview = document.querySelector<HTMLImageElement>("[data-photo-preview]");
+  const empty = document.querySelector<HTMLElement>("[data-photo-empty]");
+  let objectUrl: string | null = null;
+  input?.addEventListener("change", () => {
+    const file = input.files?.[0];
+    if (!file || !preview) return;
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    preview.src = objectUrl;
+    preview.classList.remove("hidden");
+    empty?.classList.add("hidden");
+  });
+</script>

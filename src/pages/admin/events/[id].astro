@@ -1,0 +1,45 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EventForm from "@/components/admin/EventForm.astro";
+import { getEventById } from "@/lib/server/events";
+import { flashMessage } from "@/lib/server/event-form";
+
+export const prerender = false;
+
+const id = Number(Astro.params.id);
+const event = Number.isInteger(id) && id > 0 ? await getEventById(Astro.locals.runtime.env.DB, id) : null;
+if (!event) return Astro.redirect("/admin/events?error=not_found", 302);
+
+const ok = flashMessage(Astro.url.searchParams.get("ok"));
+const errorCode = Astro.url.searchParams.get("error");
+const error = flashMessage(errorCode);
+---
+<AdminLayout title={event.title} eyebrow={`01 — Events / Edit #${event.id}`} section="events">
+  <Fragment slot="actions">
+    {event.published
+      ? <a href={`/events/${event.slug}`} class="btn-dossier-ghost" target="_blank" rel="noopener">View ↗</a>
+      : <span class="adm-badge adm-badge--draft">Draft</span>}
+    <a href="/admin/events" class="btn-dossier-ghost">← All events</a>
+  </Fragment>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <EventForm action={`/api/admin/events/${event.id}`} event={event} submitLabel="Save changes" />
+
+  <details id="delete" class="adm-danger mt-12 max-w-xl" open={errorCode === "confirm"}>
+    <summary>Delete this event</summary>
+    <form method="post" action={`/api/admin/events/${event.id}/delete`} class="grid gap-4 p-5">
+      <p class="text-sm leading-relaxed text-ink-muted">
+        Removes “{event.title}” from the site and the archive permanently.
+        {event.photo.startsWith("/media/") && " Its uploaded photo is deleted too."}
+        This can't be undone — unpublish it instead if you might want it back.
+      </p>
+      <div>
+        <label class="adm-label" for="confirm-delete">Type DELETE to confirm</label>
+        <input id="confirm-delete" name="confirm" class="adm-input max-w-[12rem] font-mono" autocomplete="off" required pattern="[Dd][Ee][Ll][Ee][Tt][Ee]" />
+      </div>
+      <div><button type="submit" class="btn-danger">Delete permanently</button></div>
+    </form>
+  </details>
+</AdminLayout>

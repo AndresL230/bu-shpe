@@ -1,0 +1,57 @@
+---
+/**
+ * Standalone navy shell for the two signed-out admin screens (sign-in at
+ * /admin and the OAuth callback). No sidebar, no masthead — just the DKBG
+ * logo on bg-deep + blueprint-deep, which is the one place it reads.
+ */
+import "@/styles/global.css";
+import "@/styles/admin.css";
+
+interface Props {
+  title: string;
+  /** Compact variant for the ~500×620 popup callback window. */
+  compact?: boolean;
+}
+
+const { title, compact = false } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <title>{title} — BU SHPE Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Playfair+Display:ital,wght@1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    />
+  </head>
+  <body class="min-h-dvh bg-deep blueprint-deep text-cream antialiased">
+    <div
+      class:list={[
+        "mx-auto flex min-h-dvh max-w-[1200px] flex-col px-6",
+        compact ? "py-8" : "py-10 md:py-14",
+      ]}
+    >
+      <header class="flex items-center justify-between gap-6 border-b border-cream/15 pb-5">
+        <img
+          src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
+          alt="SHPE Boston University"
+          class:list={["w-auto", compact ? "h-8" : "h-10"]}
+        />
+        {!compact && <span class="mono-label hidden text-cream/60 sm:inline">Restricted // Board access</span>}
+      </header>
+      <main class="flex flex-1 items-center">
+        <slot />
+      </main>
+      <footer class="mono-label border-t border-cream/15 pt-5 text-cream/45">
+        <slot name="footer">BU SHPE // Admin portal</slot>
+      </footer>
+    </div>
+  </body>
+</html>

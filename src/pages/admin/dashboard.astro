@@ -1,0 +1,93 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { formatEventDate } from "@/lib/events";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const admin = Astro.locals.admin!;
+const thisMonth = new Date().toISOString().slice(0, 7); // matches isUpcoming()
+
+async function count(sql: string, ...binds: (string | number)[]): Promise<number> {
+  try {
+    const row = await db.prepare(sql).bind(...binds).first<{ n: number }>();
+    return row?.n ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+const [events, upcoming, drafts, subscribers, campaignsSent] = await Promise.all([
+  count("SELECT COUNT(*) AS n FROM events"),
+  count("SELECT COUNT(*) AS n FROM events WHERE published = 1 AND date >= ?", thisMonth),
+  count("SELECT COUNT(*) AS n FROM events WHERE published = 0"),
+  count("SELECT COUNT(*) AS n FROM subscribers WHERE status = 'subscribed'"),
+  count("SELECT COUNT(*) AS n FROM campaigns WHERE status IN ('sent','partial')"),
+]);
+
+const { results: nextUp } = await db
+  .prepare("SELECT id, title, date, category FROM events WHERE published = 1 AND date >= ? ORDER BY date ASC, id ASC LIMIT 3")
+  .bind(thisMonth)
+  .all<{ id: number; title: string; date: string; category: string }>();
+
+const tiles = [
+  { index: "01", label: "Events", value: events, href: "/admin/events" },
+  { index: "02", label: "Upcoming", value: upcoming, href: "/admin/events?view=upcoming" },
+  { index: "03", label: "Drafts", value: drafts, href: "/admin/events?view=drafts" },
+  { index: "04", label: "Active subscribers", value: subscribers, href: "/admin/subscribers" },
+  { index: "05", label: "Campaigns sent", value: campaignsSent, href: "/admin/campaigns" },
+];
+
+const firstName = (admin.name ?? admin.email).split(/[\s@]/)[0];
+const ownerOnlyError = Astro.url.searchParams.get("error") === "owner_only";
+---
+<AdminLayout title="Chapter" accent="overview" eyebrow={`00 — Hola, ${firstName}`} section="dashboard">
+  <Fragment slot="actions">
+    <a href="/admin/events/new" class="btn-dossier">+ New event</a>
+    <a href="/admin/campaigns/new" class="btn-dossier-ghost">Write campaign</a>
+  </Fragment>
+
+  {ownerOnlyError && (
+    <p class="adm-flash adm-flash--error mb-8" role="alert">That page is limited to chapter owners.</p>
+  )}
+
+  <section aria-label="Counts" class="grid grid-cols-2 gap-px border border-hairline bg-hairline lg:grid-cols-5">
+    {tiles.map((t, i) => (
+      <a href={t.href} class:list={["group bg-surface p-6 transition-colors hover:bg-tint-warm", i === 0 && "col-span-2 lg:col-span-1"]}>
+        <p class="mono-label mb-6">{t.index} — {t.label}</p>
+        <p class="adm-stat group-hover:text-accent">{t.value}</p>
+      </a>
+    ))}
+  </section>
+
+  <section class="mt-14 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+    <div>
+      <div class="mb-4 flex items-baseline justify-between border-b border-ink pb-3">
+        <h2 class="display text-2xl text-ink">Next up</h2>
+        <a href="/admin/events?view=upcoming" class="adm-link">All upcoming →</a>
+      </div>
+      {nextUp.length === 0 ? (
+        <p class="text-ink-muted">No upcoming events on the calendar. <a href="/admin/events/new" class="text-link hover:text-accent">Add one</a>.</p>
+      ) : (
+        <ul>
+          {nextUp.map((e) => (
+            <li class="flex items-baseline justify-between gap-6 border-b border-hairline py-3">
+              <a href={`/admin/events/${e.id}`} class="font-semibold text-ink hover:text-accent">{e.title}</a>
+              <span class="whitespace-nowrap font-mono text-xs text-ink-muted">{formatEventDate(e.date, { withDay: true })} · {e.category}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <div class="adm-panel">
+      <p class="mono-label mb-4">Quick links</p>
+      <ul class="grid gap-3 text-sm">
+        <li><a href="/admin/events/new" class="text-link hover:text-accent">Post a new event →</a></li>
+        <li><a href="/admin/campaigns/new" class="text-link hover:text-accent">Write a campaign to the mailing list →</a></li>
+        <li><a href="/admin/subscribers" class="text-link hover:text-accent">Review subscribers →</a></li>
+        {admin.role === "owner" && <li><a href="/admin/admins" class="text-link hover:text-accent">Manage who has access →</a></li>}
+      </ul>
+    </div>
+  </section>
+</AdminLayout>
