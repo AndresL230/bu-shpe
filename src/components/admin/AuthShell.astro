@@ -52,8 +52,12 @@ const { title, compact = false } = Astro.props;
       <main class="flex flex-1 items-center">
         <slot />
       </main>
-      <footer class="mono-label border-t border-cream/15 pt-5 text-cream/45">
+      <footer class="mono-label flex flex-wrap items-center justify-between gap-3 border-t border-cream/15 pt-5 text-cream/45">
         <slot name="footer">BU SHPE // Admin portal</slot>
+        <span class="flex gap-5">
+          <a href="/privacy" class="hover:text-accent">Privacy</a>
+          <a href="/terms" class="hover:text-accent">Terms</a>
+        </span>
       </footer>
     </div>
   </body>

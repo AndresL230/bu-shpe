@@ -1,41 +1,74 @@
 ---
 /**
- * Continuously scrolling strip of partner logos (CSS-only, no JS).
+ * Continuously scrolling strip of logos (CSS-only motion).
  * The list is rendered twice and the track slides -50%, so the loop is
  * seamless. Hover/focus pauses it; prefers-reduced-motion stops it and
  * lets the first copy wrap as a static row.
+ *
+ * Items without an in-repo `logo` resolve one by `domain` (see lib/logos);
+ * if no image loads, the company name is shown in display type instead.
  */
-import type { Sponsor } from "@/types";
+import { logoSrc, faviconSrc } from "@/lib/logos";
 
-interface Props {
-  sponsors: Sponsor[];
-  label?: string;
+interface Item {
+  name: string;
+  logo?: string;
+  domain?: string;
+  url?: string;
 }
 
-const { sponsors, label = "Partners & sponsors" } = Astro.props;
+interface Props {
+  items: Item[];
+  label: string;
+  /** Scroll left-to-right instead of right-to-left. */
+  reverse?: boolean;
+  /** When set, the label becomes a link and items without `url` link here. */
+  href?: string;
+  linkText?: string;
+}
+
+const { items, label, reverse = false, href, linkText = "See all" } = Astro.props;
 // Repeat short lists so one copy is always wider than the viewport.
-const copy = sponsors.length < 8 ? [...sponsors, ...sponsors] : sponsors;
+const copy = items.length < 8 ? [...items, ...items] : items;
 ---
-<section class="logo-marquee border-y border-hairline bg-surface" aria-label={label}>
+<section
+  class:list={["logo-marquee border-y border-hairline bg-surface", { "logo-marquee--reverse": reverse }]}
+  aria-label={label}
+>
   <div class="flex items-stretch">
-    <p class="hidden shrink-0 items-center border-r border-hairline px-6 mono-label md:flex lg:px-10">
-      <span class="mr-3 inline-block h-[3px] w-5 bg-accent" aria-hidden="true"></span>
-      {label}
-    </p>
+    <div class="hidden w-[240px] shrink-0 flex-col justify-center gap-1.5 border-r border-hairline px-6 md:flex lg:w-[280px] lg:px-10">
+      <p class="mono-label flex items-center">
+        <span class="mr-3 inline-block h-[3px] w-5 bg-accent" aria-hidden="true"></span>
+        {label}
+      </p>
+      {href && (
+        <a href={href} class="ml-8 font-mono text-[0.68rem] uppercase tracking-[0.08em] text-link hover:text-accent">
+          {linkText} →
+        </a>
+      )}
+    </div>
     <div class="logo-marquee__viewport relative min-w-0 flex-1 overflow-hidden">
       <div class="logo-marquee__track flex w-max">
         {[0, 1].map((dup) => (
           <ul class="flex shrink-0 items-center" aria-hidden={dup === 1 ? "true" : undefined}>
             {copy.map((s, i) => (
-              <li class:list={["flex h-24 items-center px-10 md:px-14", { "is-repeat": i >= sponsors.length }]}>
+              <li class:list={["flex h-24 items-center px-10 md:px-14", { "is-repeat": i >= items.length }]}>
                 <a
-                  href={s.url ?? "/support"}
-                  rel="noopener"
+                  href={s.url ?? href ?? "/support"}
+                  rel={s.url ? "noopener" : undefined}
                   tabindex={dup === 1 ? -1 : undefined}
-                  class="logo-marquee__logo block"
+                  class="logo-marquee__logo flex items-center"
                   aria-label={s.name}
                 >
-                  <img src={s.logo} alt={s.name} class="h-10 w-auto max-w-[150px] object-contain" loading="lazy" />
+                  <img
+                    src={logoSrc(s)}
+                    data-fallback={s.logo ? undefined : faviconSrc(s.domain)}
+                    alt={s.name}
+                    class="marquee-logo h-10 w-auto max-w-[150px] object-contain"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                  <span class="display hidden whitespace-nowrap text-xl tracking-wide text-ink">{s.name}</span>
                 </a>
               </li>
             ))}
@@ -46,13 +79,37 @@ const copy = sponsors.length < 8 ? [...sponsors, ...sponsors] : sponsors;
   </div>
 </section>
 
+<script>
+  // Logo fallback chain: unavatar → favicon → company name in display type.
+  function fallback(img: HTMLImageElement) {
+    const fb = img.dataset.fallback;
+    if (fb) {
+      delete img.dataset.fallback;
+      img.src = fb;
+      return;
+    }
+    img.style.display = "none";
+    const label = img.nextElementSibling as HTMLElement | null;
+    if (label) label.style.display = "block";
+  }
+  document.querySelectorAll<HTMLImageElement>("img.marquee-logo").forEach((img) => {
+    img.addEventListener("error", () => fallback(img));
+    if (img.complete && img.naturalWidth === 0) fallback(img);
+  });
+</script>
+
 <style>
   .logo-marquee__viewport {
     /* Soft fade at both edges (alpha mask, not a color gradient). */
     mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   }
+  /* Stacked marquees share a single hairline. */
+  .logo-marquee + .logo-marquee { border-top: 0; }
   .logo-marquee__track {
     animation: logo-marquee-scroll 40s linear infinite;
+  }
+  .logo-marquee--reverse .logo-marquee__track {
+    animation-direction: reverse;
   }
   .logo-marquee:hover .logo-marquee__track,
   .logo-marquee:focus-within .logo-marquee__track {
@@ -64,13 +121,15 @@ const copy = sponsors.length < 8 ? [...sponsors, ...sponsors] : sponsors;
   }
   /* Editorial restraint: logos sit in grayscale, color on hover.
      multiply drops the white box behind JPG logos on the white strip. */
-  .logo-marquee__logo img {
+  .logo-marquee__logo img,
+  .logo-marquee__logo span {
     filter: grayscale(1);
     opacity: 0.7;
     mix-blend-mode: multiply;
     transition: filter 0.25s ease, opacity 0.25s ease;
   }
   .logo-marquee__logo:hover img,
+  .logo-marquee__logo:hover span,
   .logo-marquee__logo:focus-visible img {
     filter: none;
     opacity: 1;

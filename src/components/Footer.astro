@@ -62,7 +62,11 @@ const quickLinks = [
   <div class="border-t border-cream/10">
     <div class="mx-auto flex max-w-[1200px] flex-col gap-2 px-6 py-6 text-xs text-cream/60 md:flex-row md:items-center md:justify-between">
       <p>© {new Date().getFullYear()} SHPE-BostonU. Designed con familia.</p>
-      <p>{siteData.region} · Boston University</p>
+      <p class="flex flex-wrap gap-x-5 gap-y-1">
+        <a href="/privacy" class="hover:text-accent">Privacy</a>
+        <a href="/terms" class="hover:text-accent">Terms</a>
+        <span>{siteData.region} · Boston University</span>
+      </p>
     </div>
   </div>
 </footer>

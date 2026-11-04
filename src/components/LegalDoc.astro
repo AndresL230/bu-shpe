@@ -1,0 +1,67 @@
+---
+/**
+ * Dossier-styled legal document (privacy policy, terms). Content comes from
+ * src/data/legal.json; numbered sections render as a two-column ledger.
+ */
+import Base from "@/layouts/Base.astro";
+import siteData from "@/data/site.json";
+import legal from "@/data/legal.json";
+import { formatEventDate } from "@/lib/events";
+
+interface Props {
+  doc: "privacy" | "terms";
+}
+
+const { doc } = Astro.props;
+const d = legal[doc];
+const effective = formatEventDate(legal.effectiveDate, { withDay: true });
+const other = doc === "privacy"
+  ? { href: "/terms", label: "Terms of Service" }
+  : { href: "/privacy", label: "Privacy Policy" };
+---
+<Base title={d.title} description={d.intro}>
+  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-24 md:py-32">
+    <div class="relative z-10 mx-auto max-w-[1200px]">
+      <p class="mb-5 font-mono text-sm uppercase tracking-[0.18em] text-cream/60">{d.eyebrow}</p>
+      <h1 class="display max-w-3xl text-5xl leading-[1.02] text-cream md:text-7xl">
+        {d.headline} <em class="font-serif font-normal lowercase italic tracking-normal text-accent">{d.headlineAccent}</em>.
+      </h1>
+      <p class="mt-7 max-w-xl text-lg text-cream/80">{d.intro}</p>
+      <p class="mt-9 font-mono text-xs uppercase tracking-[0.14em] text-cream/60">Effective {effective}</p>
+    </div>
+  </header>
+
+  <section class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+    <ol class="border-t border-ink">
+      {d.sections.map((s, i) => (
+        <li class="grid grid-cols-1 gap-4 border-b border-outline-soft py-10 md:grid-cols-12 md:gap-12">
+          <div class="md:col-span-4">
+            <p class="font-mono text-xs text-ink-muted">{String(i + 1).padStart(2, "0")}</p>
+            <h2 class="display mt-2 text-2xl text-ink md:text-3xl">{s.heading}</h2>
+          </div>
+          <div class="max-w-3xl space-y-4 text-ink-muted leading-relaxed md:col-span-8">
+            {s.body.map((p) => <p>{p}</p>)}
+          </div>
+        </li>
+      ))}
+      <li class="grid grid-cols-1 gap-4 py-10 md:grid-cols-12 md:gap-12">
+        <div class="md:col-span-4">
+          <p class="font-mono text-xs text-ink-muted">{String(d.sections.length + 1).padStart(2, "0")}</p>
+          <h2 class="display mt-2 text-2xl text-ink md:text-3xl">Contact</h2>
+        </div>
+        <div class="max-w-3xl space-y-4 text-ink-muted leading-relaxed md:col-span-8">
+          <p>
+            Questions about this page? Email us at
+            <a href={`mailto:${siteData.contactEmail}`} class="text-link underline">{siteData.contactEmail}</a>.
+          </p>
+          <p class="text-sm">{siteData.mailingAddress}</p>
+        </div>
+      </li>
+    </ol>
+
+    <a href={other.href} class="mt-10 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-ink">
+      <span class="border-b border-current pb-0.5">Read the {other.label}</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </section>
+</Base>

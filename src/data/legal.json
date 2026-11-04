@@ -1,0 +1,126 @@
+{
+  "effectiveDate": "2026-11-04",
+  "privacy": {
+    "title": "Privacy Policy",
+    "eyebrow": "Legal · Privacy",
+    "headline": "What we collect, and",
+    "headlineAccent": "why",
+    "intro": "SHPE at Boston University is a student chapter of the Society of Hispanic Professional Engineers. This policy explains what information this website collects, how we use it, and the choices you have. We keep it short because we collect very little.",
+    "sections": [
+      {
+        "heading": "Information we collect",
+        "body": [
+          "Mailing list. When you join our mailing list we store your first name, last name, email address, the date you signed up, and whether you are subscribed.",
+          "Contact forms. If you send us a message through a form on this site, we receive the details you enter (such as your name, email, organization and message).",
+          "Admin sign-in. Chapter officers who sign in to the site's admin area with Google share their Google account email address, name and profile photo with us. We use these only to confirm the person is an authorized officer and to show who is signed in. We do not receive or store Google passwords, and we do not access any other Google data.",
+          "Technical data. Like any website, our hosting provider processes basic request data (such as IP address and browser type) to deliver pages and protect against abuse."
+        ]
+      },
+      {
+        "heading": "How we use it",
+        "body": [
+          "To send chapter news, event announcements and opportunities to people who asked to receive them.",
+          "To reply to messages you send us.",
+          "To let authorized officers manage the website's events and mailing list.",
+          "We do not sell, rent or trade personal information, and we do not use it for advertising."
+        ]
+      },
+      {
+        "heading": "Cookies",
+        "body": [
+          "Public pages of this site do not set tracking or advertising cookies, and we do not run analytics.",
+          "The admin area uses a single sign-in cookie, plus short-lived cookies during Google sign-in, which are strictly necessary to keep officers signed in securely.",
+          "Some pages embed third-party content (for example our Google Calendar), and those providers may set their own cookies under their own policies."
+        ]
+      },
+      {
+        "heading": "Service providers",
+        "body": [
+          "We rely on a small number of providers to run the site: Cloudflare (hosting, database and file storage), Google (officer sign-in, calendar embed and web fonts), Resend (delivering mailing-list email, once enabled) and Formspree (contact-form delivery). They process data on our behalf only to provide those services."
+        ]
+      },
+      {
+        "heading": "Your choices",
+        "body": [
+          "Every mailing-list email includes an unsubscribe link that takes effect immediately.",
+          "You can ask us to see, correct or delete the information we hold about you by emailing us at the address below."
+        ]
+      },
+      {
+        "heading": "Retention and security",
+        "body": [
+          "We keep mailing-list records while you are subscribed, and may keep a record that you unsubscribed so we don't email you again. Admin sign-in sessions expire after 14 days. Data is stored with our hosting provider and access is limited to authorized chapter officers."
+        ]
+      },
+      {
+        "heading": "Children",
+        "body": [
+          "This site is intended for university students, professionals and the public. We do not knowingly collect information from children under 13."
+        ]
+      },
+      {
+        "heading": "Changes",
+        "body": [
+          "If we change this policy we will update the effective date at the top of this page."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "eyebrow": "Legal · Terms",
+    "headline": "The ground",
+    "headlineAccent": "rules",
+    "intro": "These terms apply to your use of the SHPE at Boston University website. By using the site you agree to them.",
+    "sections": [
+      {
+        "heading": "Who we are",
+        "body": [
+          "This website is run by SHPE at Boston University, a student chapter of the Society of Hispanic Professional Engineers. The chapter is a student organization and does not speak for Boston University or SHPE National."
+        ]
+      },
+      {
+        "heading": "Using the site",
+        "body": [
+          "You may browse and share the site's content for personal, non-commercial purposes. Please don't misuse the site: don't attempt to break into restricted areas, interfere with its operation, scrape it in bulk, or submit false or abusive information through its forms."
+        ]
+      },
+      {
+        "heading": "Admin area",
+        "body": [
+          "The admin area is for authorized chapter officers only. Access is granted and removed by the chapter at its discretion. Officers are responsible for the content they publish and must not use the mailing list for anything other than chapter communications."
+        ]
+      },
+      {
+        "heading": "Mailing list",
+        "body": [
+          "By joining the mailing list you agree to receive chapter emails. You can unsubscribe at any time using the link in any email."
+        ]
+      },
+      {
+        "heading": "Content and trademarks",
+        "body": [
+          "Chapter photos and text belong to SHPE at Boston University or their respective owners. The SHPE name and logo are trademarks of the Society of Hispanic Professional Engineers, and sponsor and employer logos belong to their owners. They appear here to recognize our partners and do not imply endorsement."
+        ]
+      },
+      {
+        "heading": "Links to other sites",
+        "body": [
+          "The site links to third-party websites, such as sponsors and SHPE National. We are not responsible for their content or practices."
+        ]
+      },
+      {
+        "heading": "No warranty",
+        "body": [
+          "The site and its information, including event dates and details, are provided as is and may change. To the fullest extent permitted by law, the chapter is not liable for any loss arising from your use of the site."
+        ]
+      },
+      {
+        "heading": "Changes",
+        "body": [
+          "We may update these terms from time to time. The effective date at the top of this page shows when they last changed."
+        ]
+      }
+    ]
+  }
+}
