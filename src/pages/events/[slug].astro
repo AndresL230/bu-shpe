@@ -4,7 +4,7 @@ import EventDetailClassic from "@/components/variants/EventDetailClassic.astro";
 import EventDetailDossier from "@/components/variants/EventDetailDossier.astro";
 
 import { formatEventDate, isUpcoming } from "@/lib/events";
-import { getEventBySlug, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { getEventBySlug, listEventPhotos, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
 
 // Rendered on demand from D1 so newly published events appear without a rebuild.
 export const prerender = false;
@@ -19,6 +19,7 @@ if (!event) {
 }
 
 Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
+const photos = await listEventPhotos(Astro.locals.runtime.env.DB, event.id);
 
 const upcoming = isUpcoming(event.date);
 const displayDate = formatEventDate(event.date, { withDay: upcoming });
@@ -33,6 +34,6 @@ const currentYear = new Date().getFullYear();
     <EventDetailClassic event={event} displayDate={displayDate} currentYear={currentYear} />
   </div>
   <div data-variant-block="dossier">
-    <EventDetailDossier event={event} displayDate={displayDate} upcoming={upcoming} />
+    <EventDetailDossier event={event} displayDate={displayDate} upcoming={upcoming} photos={photos} />
   </div>
 </Base>
