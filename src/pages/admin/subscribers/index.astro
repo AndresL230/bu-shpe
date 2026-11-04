@@ -1,0 +1,214 @@
+---
+/**
+ * Mailing list ledger: search, filter, paginate, add, bulk import, row
+ * actions and CSV export. All mutations are plain form POSTs to
+ * /api/admin/subscribers/* that 303 back here with a ?flash= code.
+ */
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { PAGE_SIZE, countByStatus, listSubscribers } from "@/lib/server/subscribers";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const params = Astro.url.searchParams;
+const q = (params.get("q") ?? "").slice(0, 200);
+const statusParam = params.get("status");
+const status = statusParam === "subscribed" || statusParam === "unsubscribed" ? statusParam : "";
+const page = Math.max(1, Number.parseInt(params.get("page") ?? "1", 10) || 1);
+
+const [{ rows, total }, counts] = await Promise.all([listSubscribers(db, { q, status, page }), countByStatus(db)]);
+const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+// Current view, minus flash params, so actions return to the same page.
+const backUrl = new URL(Astro.url);
+for (const k of ["flash", "added", "skipped", "invalid", "email"]) backUrl.searchParams.delete(k);
+const back = `${backUrl.pathname}${backUrl.search}`;
+
+const pageHref = (p: number) => {
+  const u = new URLSearchParams();
+  if (q) u.set("q", q);
+  if (status) u.set("status", status);
+  if (p > 1) u.set("page", String(p));
+  const s = u.toString();
+  return `/admin/subscribers${s ? `?${s}` : ""}`;
+};
+
+const flash = params.get("flash");
+const fEmail = params.get("email") ?? "";
+const n = (k: string) => Number(params.get(k) ?? 0) || 0;
+const flashMsg: { ok: boolean; text: string } | null = (() => {
+  switch (flash) {
+    case "add-added": return { ok: true, text: `Added ${fEmail} to the list.` };
+    case "add-exists": return { ok: false, text: `${fEmail} is already subscribed.` };
+    case "add-opted-out": return { ok: false, text: `${fEmail} unsubscribed earlier. Only use Resubscribe on their row if they asked to be re-added.` };
+    case "add-invalid": return { ok: false, text: `"${fEmail}" isn't a valid email address.` };
+    case "imported": return { ok: n("added") > 0 || n("invalid") === 0, text: `Import finished: ${n("added")} ${n("added") === 1 ? "address" : "addresses"} added, ${n("skipped")} skipped (already on the list or opted out), ${n("invalid")} invalid.` };
+    case "unsubscribe": return { ok: true, text: `${fEmail} is unsubscribed.` };
+    case "resubscribe": return { ok: true, text: `${fEmail} is subscribed again.` };
+    case "delete": return { ok: true, text: `${fEmail} was deleted from the ledger.` };
+    case "bad-request": return { ok: false, text: "That action couldn't be applied. Reload and try again." };
+    default: return null;
+  }
+})();
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/New_York" });
+const fullName = (r: { first_name: string | null; last_name: string | null }) =>
+  [r.first_name, r.last_name].filter(Boolean).join(" ");
+---
+<AdminLayout title="Mailing" accent="list" eyebrow="02 // Subscribers" section="subscribers">
+  <Fragment slot="actions">
+    <a href="/api/admin/subscribers/export" class="btn-dossier-ghost">Export CSV</a>
+    <a href="/admin/campaigns/new" class="btn-dossier">New campaign</a>
+  </Fragment>
+
+  {flashMsg && (
+    <p class:list={["adm-flash mb-8", flashMsg.ok ? "adm-flash--ok" : "adm-flash--error"]} role="status">{flashMsg.text}</p>
+  )}
+
+  <!-- Figures -->
+  <div class="mb-10 flex flex-wrap gap-x-14 gap-y-6">
+    <div>
+      <p class="adm-stat">{counts.subscribed}</p>
+      <p class="mono-label mt-2">Subscribed</p>
+    </div>
+    <div>
+      <p class="adm-stat text-ink-muted">{counts.unsubscribed}</p>
+      <p class="mono-label mt-2">Opted out</p>
+    </div>
+  </div>
+
+  <!-- Add + import -->
+  <div class="mb-12 grid gap-6 xl:grid-cols-2">
+    <form method="post" action="/api/admin/subscribers/create" class="adm-panel">
+      <p class="mono-label mb-5">Add one</p>
+      <input type="hidden" name="back" value={back} />
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="add-first" class="adm-label">First name</label>
+          <input id="add-first" name="first_name" class="adm-input" maxlength="80" />
+        </div>
+        <div>
+          <label for="add-last" class="adm-label">Last name</label>
+          <input id="add-last" name="last_name" class="adm-input" maxlength="80" />
+        </div>
+        <div class="sm:col-span-2">
+          <label for="add-email" class="adm-label">Email</label>
+          <input id="add-email" name="email" type="email" required class="adm-input" maxlength="254" placeholder="name@bu.edu" />
+        </div>
+      </div>
+      <button type="submit" class="btn-dossier mt-5">Add subscriber</button>
+    </form>
+
+    <form method="post" action="/api/admin/subscribers/import" class="adm-panel">
+      <p class="mono-label mb-5">Bulk import</p>
+      <input type="hidden" name="back" value={back} />
+      <label for="import-lines" class="adm-label">Paste one per line</label>
+      <textarea
+        id="import-lines"
+        name="lines"
+        required
+        class="adm-textarea font-mono text-[0.8rem]"
+        placeholder={"jane@bu.edu\nJane Doe <jane@bu.edu>\nJane,Doe,jane@bu.edu"}
+      ></textarea>
+      <p class="adm-hint">
+        Accepts <code>email</code>, <code>First Last &lt;email&gt;</code> or CSV <code>first,last,email</code>.
+        Addresses already on the list, including people who opted out, are skipped.
+      </p>
+      <button type="submit" class="btn-dossier mt-5">Import</button>
+    </form>
+  </div>
+
+  <!-- Search / filter -->
+  <form method="get" action="/admin/subscribers" class="mb-6 flex flex-wrap items-end gap-4">
+    <div class="min-w-[16rem] flex-1">
+      <label for="q" class="adm-label">Search</label>
+      <input id="q" name="q" type="search" value={q} placeholder="Name or email" class="adm-input" />
+    </div>
+    <div>
+      <label for="status" class="adm-label">Status</label>
+      <select id="status" name="status" class="adm-select">
+        <option value="" selected={status === ""}>All</option>
+        <option value="subscribed" selected={status === "subscribed"}>Subscribed</option>
+        <option value="unsubscribed" selected={status === "unsubscribed"}>Opted out</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-dossier-ghost">Apply</button>
+    {(q || status) && <a href="/admin/subscribers" class="adm-link self-center">Clear</a>}
+  </form>
+
+  <p class="mono-label mb-3">
+    {total} {total === 1 ? "entry" : "entries"}{pages > 1 && ` · page ${page} of ${pages}`}
+  </p>
+
+  {rows.length === 0 ? (
+    <div class="adm-panel">
+      <p class="text-ink-muted">
+        {q || status ? "No subscribers match this search." : "No subscribers yet. Signups from the join page land here."}
+      </p>
+    </div>
+  ) : (
+    <div class="overflow-x-auto">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Joined</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <td>{fullName(r) || <span class="text-ink-muted">—</span>}</td>
+              <td class="font-mono text-[0.8rem]">{r.email}</td>
+              <td>
+                {r.status === "subscribed"
+                  ? <span class="adm-badge adm-badge--live">Subscribed</span>
+                  : <span class="adm-badge adm-badge--muted">Opted out</span>}
+              </td>
+              <td class="mono-label">{r.source}</td>
+              <td class="whitespace-nowrap text-ink-muted">{fmtDate(r.created_at)}</td>
+              <td>
+                <div class="flex items-start justify-end gap-4">
+                  <form method="post" action="/api/admin/subscribers/update">
+                    <input type="hidden" name="id" value={r.id} />
+                    <input type="hidden" name="email" value={r.email} />
+                    <input type="hidden" name="back" value={back} />
+                    <input type="hidden" name="action" value={r.status === "subscribed" ? "unsubscribe" : "resubscribe"} />
+                    <button type="submit" class="adm-link">{r.status === "subscribed" ? "Unsubscribe" : "Resubscribe"}</button>
+                  </form>
+                  <details class="adm-confirm">
+                    <summary class="adm-link adm-link--danger">Delete</summary>
+                    <div class="adm-confirm__panel">
+                      <p class="text-sm text-ink">Delete <strong>{r.email}</strong> permanently?</p>
+                      <p class="adm-hint">Unsubscribe instead if they opted out, so an import can't add them back.</p>
+                      <form method="post" action="/api/admin/subscribers/update" class="mt-3">
+                        <input type="hidden" name="id" value={r.id} />
+                        <input type="hidden" name="email" value={r.email} />
+                        <input type="hidden" name="back" value={back} />
+                        <input type="hidden" name="action" value="delete" />
+                        <button type="submit" class="adm-link adm-link--danger">Yes, delete</button>
+                      </form>
+                    </div>
+                  </details>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+
+  {pages > 1 && (
+    <nav aria-label="Pagination" class="mt-8 flex items-center justify-between">
+      {page > 1 ? <a href={pageHref(page - 1)} class="adm-link">← Newer</a> : <span></span>}
+      <span class="mono-label">{page} / {pages}</span>
+      {page < pages ? <a href={pageHref(page + 1)} class="adm-link">Older →</a> : <span></span>}
+    </nav>
+  )}
+</AdminLayout>

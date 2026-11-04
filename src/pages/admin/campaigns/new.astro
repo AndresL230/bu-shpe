@@ -1,0 +1,160 @@
+---
+/**
+ * Campaign composer. The page POSTs to itself with an `intent`:
+ *   preview  → re-render with the server-rendered preview (no-JS fallback)
+ *   test     → send one copy to the signed-in admin only
+ *   review   → confirm step showing the exact recipient count
+ *   edit     → back from review with the draft intact
+ *   send     → create the campaign, hand the send loop to waitUntil, redirect
+ * A ~20-line inline script refreshes the preview iframe as you type by
+ * posting to /api/admin/campaigns/preview; without JS the button still works.
+ */
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { BODY_MAX, SUBJECT_MAX, startCampaign } from "@/lib/server/campaigns";
+import { EmailConfigError, emailConfig, emailConfigured, sendEmail } from "@/lib/server/email";
+import { personalize, renderCampaign, unsubscribePageUrl } from "@/lib/server/email-template";
+import { countByStatus } from "@/lib/server/subscribers";
+
+export const prerender = false;
+
+const env = Astro.locals.runtime.env;
+const admin = Astro.locals.admin;
+const site = env.SITE_URL || Astro.url.origin;
+
+let subject = "";
+let body = "";
+let step: "compose" | "review" = "compose";
+let flash: { ok: boolean; text: string } | null = null;
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  subject = String(form.get("subject") ?? "").replace(/[\r\n]+/g, " ").trim().slice(0, SUBJECT_MAX);
+  body = String(form.get("body") ?? "").slice(0, BODY_MAX);
+  const intent = String(form.get("intent") ?? "preview");
+
+  const missing = !subject || !body.trim();
+  if ((intent === "test" || intent === "review" || intent === "send") && missing) {
+    flash = { ok: false, text: "Add a subject and a body first." };
+  } else if (intent === "test") {
+    if (!admin?.email) {
+      flash = { ok: false, text: "Couldn't tell who you are, so the test wasn't sent. Sign in again." };
+    } else {
+      try {
+        const cfg = emailConfig(env);
+        const r = personalize(renderCampaign(subject, body, site), unsubscribePageUrl(site, "test-preview"));
+        const res = await sendEmail(cfg, { to: admin.email, subject: `[Test] ${subject}`, html: r.html, text: r.text });
+        flash = res.ok
+          ? { ok: true, text: `Test sent to ${admin.email}. Check your inbox (and spam) before sending to the list.` }
+          : { ok: false, text: `Resend rejected the test: ${res.error}` };
+      } catch (err) {
+        flash = { ok: false, text: err instanceof EmailConfigError ? err.message : `Test failed: ${(err as Error).message}` };
+      }
+    }
+  } else if (intent === "review") {
+    step = "review";
+  } else if (intent === "send") {
+    try {
+      const started = await startCampaign(env, { subject, body, sentBy: admin?.email ?? "unknown" });
+      const ctx = Astro.locals.runtime.ctx;
+      if (ctx?.waitUntil) ctx.waitUntil(started.run);
+      else await started.run;
+      return Astro.redirect(`/admin/campaigns/${started.id}${started.duplicate ? "?flash=duplicate" : ""}`, 303);
+    } catch (err) {
+      flash = { ok: false, text: err instanceof EmailConfigError ? err.message : `Nothing was sent: ${(err as Error).message}` };
+    }
+  }
+}
+
+const recipients = (await countByStatus(env.DB)).subscribed;
+const canSend = emailConfigured(env);
+const preview = personalize(renderCampaign(subject || "Untitled dispatch", body, site), "#").html;
+const recipientLabel = `${recipients} subscriber${recipients === 1 ? "" : "s"}`;
+---
+<AdminLayout title={step === "review" ? "Confirm" : "New"} accent={step === "review" ? "the send" : "campaign"} eyebrow="03 // Compose" section="campaigns">
+  <Fragment slot="actions">
+    <a href="/admin/campaigns" class="btn-dossier-ghost">All campaigns</a>
+  </Fragment>
+
+  {!canSend && (
+    <p class="adm-flash adm-flash--error mb-6" role="status">
+      Sending is switched off: the <code>RESEND_API_KEY</code> secret isn't set on this Worker. You can draft and preview, but test and final sends will fail until it's added.
+    </p>
+  )}
+  {flash && (
+    <p class:list={["adm-flash mb-8", flash.ok ? "adm-flash--ok" : "adm-flash--error"]} role="status">{flash.text}</p>
+  )}
+
+  {step === "review" ? (
+    <div class="grid gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+      <div class="adm-panel self-start">
+        <p class="mono-label mb-4">Final check</p>
+        <p class="display text-3xl text-ink">{subject}</p>
+        <p class="mt-4 text-ink-muted">
+          This goes out now to <strong class="text-ink">{recipientLabel}</strong>, each with their own unsubscribe link.
+          It can't be recalled once sent.
+        </p>
+        <form method="post" class="mt-8 flex flex-wrap items-center gap-4">
+          <input type="hidden" name="subject" value={subject} />
+          <input type="hidden" name="body" value={body} />
+          <button type="submit" name="intent" value="send" class="btn-dossier" disabled={recipients === 0}>
+            Send to {recipientLabel}
+          </button>
+          <button type="submit" name="intent" value="edit" class="btn-dossier-ghost">Back to editing</button>
+        </form>
+        {recipients === 0 && <p class="adm-hint mt-3">There's nobody subscribed yet, so there's nothing to send.</p>}
+      </div>
+      <div>
+        <p class="mono-label mb-3">Preview</p>
+        <iframe class="adm-preview" title="Email preview" sandbox="" srcdoc={preview}></iframe>
+      </div>
+    </div>
+  ) : (
+    <div class="grid gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+      <form method="post" id="composer" class="self-start">
+        <div class="mb-5">
+          <label for="subject" class="adm-label">Subject</label>
+          <input id="subject" name="subject" value={subject} maxlength={SUBJECT_MAX} required class="adm-input" placeholder="General body meeting this Thursday" />
+        </div>
+        <div>
+          <label for="body" class="adm-label">Body</label>
+          <textarea id="body" name="body" maxlength={BODY_MAX} required class="adm-textarea min-h-[22rem]" placeholder={"Hola familia,\n\nOur first GBM is this **Thursday at 6pm** in PHO 206.\n\n- Free food\n- Meet the e-board\n\nRSVP on [Instagram](https://www.instagram.com/shpe.bostonu/)."}>{body}</textarea>
+          <p class="adm-hint">
+            Blank line = new paragraph · <code>**bold**</code> · <code>[label](https://…)</code> · lines starting <code>- </code> become bullets.
+            The SHPE masthead, sign-off and unsubscribe footer are added for you.
+          </p>
+        </div>
+        <div class="mt-8 flex flex-wrap items-center gap-3 border-t border-hairline pt-6">
+          <button type="submit" name="intent" value="review" class="btn-dossier">Review &amp; send</button>
+          <button type="submit" name="intent" value="test" class="btn-dossier-ghost" formnovalidate>Send test to me</button>
+          <button type="submit" name="intent" value="preview" class="adm-link ml-2" formnovalidate>Refresh preview</button>
+        </div>
+        <p class="adm-hint mt-3">
+          The test goes only to {admin?.email ?? "your signed-in address"}. The list currently has {recipientLabel}.
+        </p>
+      </form>
+      <div>
+        <p class="mono-label mb-3">Live preview</p>
+        <iframe id="preview" class="adm-preview" title="Email preview" sandbox="" srcdoc={preview}></iframe>
+      </div>
+    </div>
+  )}
+
+  <script is:inline>
+    (function () {
+      var form = document.getElementById("composer");
+      var frame = document.getElementById("preview");
+      if (!form || !frame) return;
+      var timer;
+      form.addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          var data = new FormData(form);
+          fetch("/api/admin/campaigns/preview", { method: "POST", body: data, credentials: "same-origin" })
+            .then(function (r) { return r.ok ? r.text() : null; })
+            .then(function (html) { if (html) frame.srcdoc = html; })
+            .catch(function () {});
+        }, 400);
+      });
+    })();
+  </script>
+</AdminLayout>

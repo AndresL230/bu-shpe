@@ -1,0 +1,100 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { listAllEvents } from "@/lib/server/events";
+import { flashMessage } from "@/lib/server/event-form";
+import { formatEventDate, isUpcoming } from "@/lib/events";
+
+export const prerender = false;
+
+const all = await listAllEvents(Astro.locals.runtime.env.DB);
+
+const views = [
+  { key: "all", label: "All" },
+  { key: "upcoming", label: "Upcoming" },
+  { key: "past", label: "Past" },
+  { key: "drafts", label: "Drafts" },
+] as const;
+type View = (typeof views)[number]["key"];
+const requested = Astro.url.searchParams.get("view");
+const view: View = views.some((v) => v.key === requested) ? (requested as View) : "all";
+
+const counts: Record<View, number> = {
+  all: all.length,
+  upcoming: all.filter((e) => e.published && isUpcoming(e.date)).length,
+  past: all.filter((e) => e.published && !isUpcoming(e.date)).length,
+  drafts: all.filter((e) => !e.published).length,
+};
+
+let rows = all;
+if (view === "upcoming") rows = all.filter((e) => e.published && isUpcoming(e.date)).reverse(); // soonest first
+if (view === "past") rows = all.filter((e) => e.published && !isUpcoming(e.date));
+if (view === "drafts") rows = all.filter((e) => !e.published);
+
+const ok = flashMessage(Astro.url.searchParams.get("ok"));
+const error = flashMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="Events" accent="ledger" eyebrow="01 — Events" section="events">
+  <a slot="actions" href="/admin/events/new" class="btn-dossier">+ New event</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <nav class="adm-segment mb-6" aria-label="Filter events">
+    {views.map((v) => (
+      <a href={v.key === "all" ? "/admin/events" : `/admin/events?view=${v.key}`} aria-current={v.key === view ? "page" : undefined}>
+        {v.label} <span class="opacity-60">{counts[v.key]}</span>
+      </a>
+    ))}
+  </nav>
+
+  {rows.length === 0 ? (
+    <div class="adm-panel">
+      <p class="mono-label mb-2">Empty</p>
+      <p class="text-ink-muted">Nothing in this view yet.</p>
+    </div>
+  ) : (
+    <div class="overflow-x-auto">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Featured</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((e) => {
+            const upcoming = isUpcoming(e.date);
+            return (
+              <tr>
+                <td class="whitespace-nowrap font-mono text-xs text-ink-muted">
+                  {formatEventDate(e.date, { withDay: true })}
+                </td>
+                <td>
+                  <a href={`/admin/events/${e.id}`} class="font-semibold text-ink hover:text-accent">{e.title}</a>
+                  {e.location && <span class="block text-xs text-ink-muted">{e.location}</span>}
+                </td>
+                <td class="whitespace-nowrap text-ink-muted">{e.category}</td>
+                <td>
+                  {e.published
+                    ? <span class:list={["adm-badge", upcoming ? "adm-badge--live" : "adm-badge--muted"]}>{upcoming ? "Upcoming" : "Published"}</span>
+                    : <span class="adm-badge adm-badge--draft">Draft</span>}
+                </td>
+                <td class="font-mono text-xs">{e.featured ? <span class="text-accent">★ Yes</span> : <span class="text-ink-muted">—</span>}</td>
+                <td class="whitespace-nowrap text-right">
+                  <a href={`/admin/events/${e.id}`} class="adm-link">Edit</a>
+                  {e.published && (
+                    <a href={`/events/${e.slug}`} class="adm-link ml-4" target="_blank" rel="noopener">View ↗</a>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

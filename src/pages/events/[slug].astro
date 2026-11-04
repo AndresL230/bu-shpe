@@ -3,24 +3,22 @@ import Base from "@/layouts/Base.astro";
 import EventDetailClassic from "@/components/variants/EventDetailClassic.astro";
 import EventDetailDossier from "@/components/variants/EventDetailDossier.astro";
 
-import eventsRaw from "@/data/events.json";
+import { formatEventDate, isUpcoming } from "@/lib/events";
+import { getEventBySlug, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
 
-import { eventSlug, formatEventDate, isUpcoming } from "@/lib/events";
-import type { EventItem } from "@/types";
+// Rendered on demand from D1 so newly published events appear without a rebuild.
+export const prerender = false;
 
-export async function getStaticPaths() {
-  const events = eventsRaw as EventItem[];
-  return events.map((e) => ({
-    params: { slug: eventSlug(e.title) },
-    props: { event: e },
-  }));
+const slug = Astro.params.slug ?? "";
+const event = await getEventBySlug(Astro.locals.runtime.env.DB, slug);
+
+// Unknown slug or a draft: real 404. Rewrites to /404 so a future
+// src/pages/404.astro is picked up; until then Astro serves its default.
+if (!event) {
+  return Astro.rewrite("/404");
 }
 
-interface Props {
-  event: EventItem;
-}
-
-const { event } = Astro.props as Props;
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 
 const upcoming = isUpcoming(event.date);
 const displayDate = formatEventDate(event.date, { withDay: upcoming });

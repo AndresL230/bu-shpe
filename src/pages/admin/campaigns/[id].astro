@@ -1,0 +1,92 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { STALL_MS, getCampaign } from "@/lib/server/campaigns";
+import { personalize, renderCampaign } from "@/lib/server/email-template";
+
+export const prerender = false;
+
+const id = Number(Astro.params.id);
+const campaign = Number.isInteger(id) && id > 0 ? await getCampaign(Astro.locals.runtime.env.DB, id) : null;
+if (!campaign) return new Response("Campaign not found", { status: 404 });
+
+const site = Astro.locals.runtime.env.SITE_URL || Astro.url.origin;
+const { html } = personalize(renderCampaign(campaign.subject, campaign.body, site), "#");
+
+const stalled = campaign.status === "sending" && Date.now() - Date.parse(campaign.created_at) > STALL_MS;
+const sending = campaign.status === "sending" && !stalled;
+const failedCount = campaign.recipient_count - campaign.sent_count;
+
+const fmt = (iso: string | null) =>
+  iso
+    ? new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" })
+    : "—";
+
+const badge = stalled
+  ? { cls: "adm-badge--alert", label: "Stalled" }
+  : campaign.status === "sent"
+    ? { cls: "adm-badge--live", label: "Sent" }
+    : campaign.status === "sending"
+      ? { cls: "adm-badge--draft", label: "Sending" }
+      : { cls: "adm-badge--alert", label: campaign.status === "partial" ? "Partial" : "Failed" };
+
+const sentFlash = Astro.url.searchParams.get("flash");
+---
+<AdminLayout title={campaign.subject} eyebrow={`03 // Campaign ${String(campaign.id).padStart(3, "0")}`} section="campaigns">
+  {sending && <meta slot="head" http-equiv="refresh" content="3" />}
+  <Fragment slot="actions">
+    <a href="/admin/campaigns" class="btn-dossier-ghost">All campaigns</a>
+  </Fragment>
+
+  {sentFlash === "duplicate" && (
+    <p class="adm-flash mb-8" role="status">That campaign was already sent a moment ago, so it wasn't sent twice. Here it is.</p>
+  )}
+  {sending && (
+    <p class="adm-flash mb-8" role="status">Sending now: {campaign.sent_count} of {campaign.recipient_count} delivered so far. This page refreshes on its own.</p>
+  )}
+  {stalled && (
+    <p class="adm-flash adm-flash--error mb-8" role="status">
+      This send stopped reporting progress. {campaign.sent_count} of {campaign.recipient_count} were handed to Resend; check the Resend dashboard before sending again.
+    </p>
+  )}
+
+  <dl class="mb-10 grid grid-cols-2 gap-x-10 gap-y-8 md:grid-cols-4">
+    <div>
+      <dt class="mono-label mb-2">Status</dt>
+      <dd><span class:list={["adm-badge", badge.cls]}>{badge.label}</span></dd>
+    </div>
+    <div>
+      <dt class="mono-label mb-2">Recipients</dt>
+      <dd class="adm-stat">{campaign.recipient_count}</dd>
+    </div>
+    <div>
+      <dt class="mono-label mb-2">Delivered to Resend</dt>
+      <dd class="adm-stat">{campaign.sent_count}</dd>
+    </div>
+    <div>
+      <dt class="mono-label mb-2">Not sent</dt>
+      <dd class:list={["adm-stat", failedCount > 0 && !sending ? "text-scarlet" : "text-ink-muted"]}>{sending ? "—" : failedCount}</dd>
+    </div>
+    <div>
+      <dt class="mono-label mb-2">Sent by</dt>
+      <dd class="text-sm">{campaign.sent_by}</dd>
+    </div>
+    <div>
+      <dt class="mono-label mb-2">Started</dt>
+      <dd class="text-sm">{fmt(campaign.created_at)}</dd>
+    </div>
+    <div>
+      <dt class="mono-label mb-2">Finished</dt>
+      <dd class="text-sm">{fmt(campaign.sent_at)}</dd>
+    </div>
+  </dl>
+
+  {campaign.error && (
+    <div class="adm-panel mb-10">
+      <p class="mono-label mb-3">Delivery errors</p>
+      <pre class="whitespace-pre-wrap font-mono text-[0.8rem] leading-relaxed text-ink">{campaign.error}</pre>
+    </div>
+  )}
+
+  <p class="mono-label mb-3">As sent</p>
+  <iframe class="adm-preview" title="Rendered campaign email" sandbox="" srcdoc={html}></iframe>
+</AdminLayout>

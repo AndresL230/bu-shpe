@@ -4,7 +4,7 @@ Project context for Claude Code sessions working on this repo. Read once at sess
 
 ## What this is
 
-Editorial-style marketing site for **Boston University's SHPE chapter**. Astro 5 static site, Tailwind v4, TypeScript strict, deployed to **Cloudflare Workers static assets** (Git-connected). Every page is a `.astro` file that composes shared components and pulls content from `src/data/*.json`. No SSR, no React island, no client-side framework.
+Editorial-style marketing site for **Boston University's SHPE chapter**. Astro 5 static site, Tailwind v4, TypeScript strict, deployed to **Cloudflare Workers static assets** (Git-connected). Every page is a `.astro` file that composes shared components and pulls content from `src/data/*.json` — except **events, subscribers and campaigns, which live in Cloudflare D1** and are edited from the hidden `/admin` portal. Pages prerender by default; event pages, `/admin`, `/api`, `/media`, `/subscribed`, `/unsubscribe` opt out with `export const prerender = false` and run on the Worker (`@astrojs/cloudflare` adapter). No React island, no client-side framework.
 
 User: chapter member (`andreslopez.23061@gmail.com`). Tone is editorial / magazine, not corporate / SaaS.
 
@@ -22,11 +22,20 @@ There are no unit tests — this is a static marketing site. **Verification = `c
 
 Git-connected **Cloudflare Workers static assets** (Worker name `bu-shpe`). Pushing to `main` on `AndresL230/bu-shpe` triggers a Cloudflare build that runs `npx wrangler deploy`; `wrangler.toml`'s `[build] command = "npm run build"` generates `./dist`, and `[assets] directory = "./dist"` uploads it. No dashboard build command is configured — the build lives in `wrangler.toml`. Live at `https://bu-shpe.andreslopez-23061.workers.dev`. Node is pinned to 22 via `.nvmrc`. **Not** Cloudflare Pages — the two config styles (`[assets]` vs `pages_build_output_dir`) are mutually exclusive; don't reintroduce `pages_build_output_dir`. `astro.config.mjs` `site:` is still the `https://shpe.bu.edu` placeholder, so built canonical URLs won't match the live workers.dev host until a real domain is set.
 
+## Admin portal + data (D1 / R2 / Resend)
+
+- **D1** `bu-shpe-db` (binding `DB`), schema in `migrations/`. Apply with `npx wrangler d1 migrations apply bu-shpe-db --local` (dev) / `--remote` (prod, before deploying schema changes). Tables: `events`, `admins` (allowlist, role owner|editor), `sessions`, `subscribers`, `campaigns`.
+- **R2** `bu-shpe-media` (binding `MEDIA`) holds uploaded event photos, served at `/media/events/...`. Legacy photos stay under `/assets/events/`.
+- **Auth:** Google OAuth popup — `/admin` → `/api/auth/google` → `/admin/callback`. `src/middleware.ts` gates `/admin/*` + `/api/admin/*` and does the CSRF same-origin check for all writes (Astro's `checkOrigin` is off on purpose so RFC 8058 one-click unsubscribe works; `/api/unsubscribe` is the only exempt write).
+- **Email:** Resend via `fetch` (`src/lib/server/email.ts`), from `EMAIL_FROM` on `bushpe.org`. Batches of 100, run in `waitUntil`.
+- **Secrets** (`.dev.vars` locally, `wrangler secret put` in prod): `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`. See `.dev.vars.example`.
+- Server-only code lives in `src/lib/server/`. Admin pages use `AdminLayout.astro` + `src/styles/admin.css` (`adm-*` classes) — keep new admin UI on those.
+
 ## File map
 
 ```
 src/
-  data/*.json             # ALL editable content (site, board, events, sponsors, conferences, volunteering)
+  data/*.json             # static editable content (site, board, sponsors, conferences, volunteering) — events are in D1
   types.ts                # SiteMeta, BoardMember, EventItem, Sponsor, Conference, VolunteeringProgram
   styles/global.css       # @theme tokens + utility classes (.display, .eyebrow, .pullquote, .rule-accent, .grain, .photo-warm, .reveal)
   layouts/Base.astro      # html shell, meta, fonts, Nav, Footer, slot. Props: title, description, ogImage.
@@ -99,7 +108,7 @@ Use as Tailwind classes: `bg-deep`, `text-ink-muted`, `border-rule`, etc.
 
 ## Architecture conventions
 
-- **JSON is the source of truth.** Roster, events, sponsors, conferences, volunteering programs, contact emails, social URLs — all in `src/data/*.json`. Never hardcode chapter content inside `.astro` files. If something needs to be editable by a non-developer, add a token or field.
+- **JSON is the source of truth** (except events/subscribers/campaigns → D1). Roster, sponsors, conferences, volunteering programs, contact emails, social URLs — all in `src/data/*.json`. Never hardcode chapter content inside `.astro` files. If something needs to be editable by a non-developer, add a token or field.
 - **No inline hex colors.** Every color goes through a `@theme` token. Adding a new hue = add it to `global.css` first.
 - **No JavaScript unless strictly necessary.** Static HTML by default. Existing inline `<script>` blocks: gallery lightbox (`Gallery.astro`), scroll-reveal toggle (none — pure CSS). That's it. Don't add a framework.
 - **Editorial spacing rhythm.** Sections are `py-24` to `py-32`. Container width `max-w-[1200px]`. Paragraph copy capped at `max-w-3xl`.

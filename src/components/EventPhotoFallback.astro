@@ -1,0 +1,25 @@
+---
+/**
+ * Typographic stand-in for an event card's photo slot when an event has no
+ * photo (admins can publish without one). Fills its parent; the parent keeps
+ * its own aspect ratio and background, so the card layout doesn't shift.
+ */
+interface Props {
+  label: string;
+  tone?: "classic" | "dossier";
+  class?: string;
+}
+
+const { label, tone = "classic", class: className } = Astro.props;
+---
+
+<div
+  class:list={["flex h-full w-full items-center justify-center p-6", className]}
+  aria-hidden="true"
+>
+  {tone === "dossier" ? (
+    <span class="font-mono text-sm uppercase tracking-[0.14em] text-ink-muted">{label}</span>
+  ) : (
+    <span class="display text-3xl md:text-4xl uppercase text-ink/15 text-center leading-none">{label}</span>
+  )}
+</div>

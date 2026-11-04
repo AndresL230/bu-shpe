@@ -79,82 +79,6 @@ body {
   color: white;
 }
 
-/* ---------- Layout guides (dev aid; toggled via [data-guides] on <html>) ---------- */
-html[data-guides="on"] section,
-html[data-guides="on"] footer {
-  outline: 2px dashed #ef4444;
-  outline-offset: -2px;
-  position: relative;
-}
-html[data-guides="on"] .max-w-\[1200px\] {
-  outline: 2px dashed #3b82f6;
-  outline-offset: -2px;
-  position: relative;
-}
-html[data-guides="on"] section::before,
-html[data-guides="on"] footer::before,
-html[data-guides="on"] .max-w-\[1200px\]::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 2px 8px;
-  color: #fff;
-  font-family: var(--font-cond);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 30;
-}
-html[data-guides="on"] section::before {
-  content: "Section";
-  background: #ef4444;
-}
-html[data-guides="on"] footer::before {
-  content: "Footer";
-  background: #ef4444;
-}
-html[data-guides="on"] .max-w-\[1200px\]::before {
-  content: "Container";
-  background: #3b82f6;
-}
-html[data-guides="on"] .guide-pad {
-  outline: 2px dashed #ef4444;
-  outline-offset: -2px;
-  position: relative;
-}
-html[data-guides="on"] .guide-content {
-  outline: 2px dashed #3b82f6;
-  outline-offset: -2px;
-  position: relative;
-}
-html[data-guides="on"] .guide-pad::before,
-html[data-guides="on"] .guide-content::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 2px 8px;
-  color: #fff;
-  font-family: var(--font-cond);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 30;
-}
-html[data-guides="on"] .guide-pad::before {
-  content: "Padding";
-  background: #ef4444;
-}
-html[data-guides="on"] .guide-content::before {
-  content: "Content";
-  background: #3b82f6;
-}
-
 /* ---------- Typography utilities (editorial) ---------- */
 .eyebrow {
   font-family: var(--font-cond);
@@ -250,7 +174,8 @@ html[data-guides="on"] .guide-content::before {
   }
 }
 
-/* ---------- A/B variant preview (classic vs dossier) — dev/preview toggle ---------- */
+/* ---------- Variant blocks: dossier is the live design (pinned on <html> in Base.astro).
+   Classic markup is kept in the variants/ components but hidden. ---------- */
 [data-variant="classic"] [data-variant-block="dossier"] { display: none; }
 [data-variant="dossier"] [data-variant-block="classic"] { display: none; }
 

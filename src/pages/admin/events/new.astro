@@ -1,0 +1,14 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EventForm from "@/components/admin/EventForm.astro";
+import { flashMessage } from "@/lib/server/event-form";
+
+export const prerender = false;
+
+const error = flashMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="New" accent="event" eyebrow="01 — Events / Draft" section="events">
+  <a slot="actions" href="/admin/events" class="btn-dossier-ghost">← All events</a>
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+  <EventForm action="/api/admin/events" submitLabel="Create event" />
+</AdminLayout>

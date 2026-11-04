@@ -8,3 +8,4 @@ dist/
 
 # Claude Code local runtime state
 .claude/
+.dev.vars

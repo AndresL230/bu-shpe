@@ -2,9 +2,16 @@
 import Base from "@/layouts/Base.astro";
 import GalleryClassic from "@/components/variants/GalleryClassic.astro";
 import GalleryDossier from "@/components/variants/GalleryDossier.astro";
+import { listPublishedEventsInCreationOrder, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+
+// Rendered on demand from D1 so newly published events appear without a rebuild.
+export const prerender = false;
+
+const events = await listPublishedEventsInCreationOrder(Astro.locals.runtime.env.DB);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base title="Gallery">
-  <div data-variant-block="classic"><GalleryClassic /></div>
-  <div data-variant-block="dossier"><GalleryDossier /></div>
+  <div data-variant-block="classic"><GalleryClassic events={events} /></div>
+  <div data-variant-block="dossier"><GalleryDossier events={events} /></div>
 </Base>

@@ -6,15 +6,17 @@ import Reveal from "@/components/Reveal.astro";
 import Icon from "@/components/Icon.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
 
-import { eventSlug } from "@/lib/events";
-
 import siteData from "@/data/site.json";
-import eventsRaw from "@/data/events.json";
 import sponsorsRaw from "@/data/sponsors.json";
 
-import type { EventItem, Sponsor } from "@/types";
+import type { Sponsor } from "@/types";
+import type { EventRecord } from "@/lib/server/events";
 
-const events = [...(eventsRaw as EventItem[])].sort((a, b) => b.date.localeCompare(a.date));
+interface Props {
+  events: EventRecord[];
+}
+
+const events = [...Astro.props.events].sort((a, b) => b.date.localeCompare(a.date));
 const recentEvents = events.slice(0, 3);
 
 const sponsors = sponsorsRaw as Sponsor[];
@@ -162,7 +164,7 @@ function formatEventDate(iso: string): string {
 
     <div class="grid grid-cols-1 md:grid-cols-3 border border-outline-soft mt-12">
       {recentEvents.map((event) => (
-        <a href={`/events/${eventSlug(event.title)}`} class="block">
+        <a href={`/events/${event.slug}`} class="block">
           <article class="border-r border-outline-soft last:border-r-0 group p-8 flex flex-col bg-surface hover:bg-surface-soft transition-colors">
             <span class="eyebrow text-accent">{event.category}</span>
             <div class="display text-5xl text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">

@@ -1,0 +1,64 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { STALL_MS, listCampaigns, type CampaignRow } from "@/lib/server/campaigns";
+
+export const prerender = false;
+
+const campaigns = await listCampaigns(Astro.locals.runtime.env.DB);
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+
+const badge = (c: CampaignRow): { cls: string; label: string } => {
+  if (c.status === "sending") {
+    const stalled = Date.now() - Date.parse(c.created_at) > STALL_MS;
+    return stalled ? { cls: "adm-badge--alert", label: "Stalled" } : { cls: "adm-badge--draft", label: "Sending" };
+  }
+  if (c.status === "sent") return { cls: "adm-badge--live", label: "Sent" };
+  if (c.status === "partial") return { cls: "adm-badge--alert", label: "Partial" };
+  return { cls: "adm-badge--alert", label: "Failed" };
+};
+---
+<AdminLayout title="Campaigns" eyebrow="03 // Dispatches" section="campaigns">
+  <Fragment slot="actions">
+    <a href="/admin/campaigns/new" class="btn-dossier">New campaign</a>
+  </Fragment>
+
+  {campaigns.length === 0 ? (
+    <div class="adm-panel max-w-2xl">
+      <p class="mono-label mb-3">No dispatches yet</p>
+      <p class="text-ink-muted">Campaigns you send to the mailing list are logged here with their delivery counts.</p>
+      <a href="/admin/campaigns/new" class="btn-dossier mt-6 inline-block">Write the first one</a>
+    </div>
+  ) : (
+    <div class="overflow-x-auto">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Sent by</th>
+            <th class="text-right">Recipients</th>
+            <th class="text-right">Delivered</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {campaigns.map((c) => {
+            const b = badge(c);
+            return (
+              <tr>
+                <td><a href={`/admin/campaigns/${c.id}`} class="font-semibold text-ink hover:text-accent">{c.subject}</a></td>
+                <td class="text-ink-muted">{c.sent_by}</td>
+                <td class="text-right font-mono">{c.recipient_count}</td>
+                <td class="text-right font-mono">{c.sent_count}</td>
+                <td><span class:list={["adm-badge", b.cls]}>{b.label}</span></td>
+                <td class="whitespace-nowrap text-ink-muted">{fmtDate(c.sent_at ?? c.created_at)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

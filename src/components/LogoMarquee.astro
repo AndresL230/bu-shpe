@@ -1,0 +1,85 @@
+---
+/**
+ * Continuously scrolling strip of partner logos (CSS-only, no JS).
+ * The list is rendered twice and the track slides -50%, so the loop is
+ * seamless. Hover/focus pauses it; prefers-reduced-motion stops it and
+ * lets the first copy wrap as a static row.
+ */
+import type { Sponsor } from "@/types";
+
+interface Props {
+  sponsors: Sponsor[];
+  label?: string;
+}
+
+const { sponsors, label = "Partners & sponsors" } = Astro.props;
+// Repeat short lists so one copy is always wider than the viewport.
+const copy = sponsors.length < 8 ? [...sponsors, ...sponsors] : sponsors;
+---
+<section class="logo-marquee border-y border-hairline bg-surface" aria-label={label}>
+  <div class="flex items-stretch">
+    <p class="hidden shrink-0 items-center border-r border-hairline px-6 mono-label md:flex lg:px-10">
+      <span class="mr-3 inline-block h-[3px] w-5 bg-accent" aria-hidden="true"></span>
+      {label}
+    </p>
+    <div class="logo-marquee__viewport relative min-w-0 flex-1 overflow-hidden">
+      <div class="logo-marquee__track flex w-max">
+        {[0, 1].map((dup) => (
+          <ul class="flex shrink-0 items-center" aria-hidden={dup === 1 ? "true" : undefined}>
+            {copy.map((s, i) => (
+              <li class:list={["flex h-24 items-center px-10 md:px-14", { "is-repeat": i >= sponsors.length }]}>
+                <a
+                  href={s.url ?? "/support"}
+                  rel="noopener"
+                  tabindex={dup === 1 ? -1 : undefined}
+                  class="logo-marquee__logo block"
+                  aria-label={s.name}
+                >
+                  <img src={s.logo} alt={s.name} class="h-10 w-auto max-w-[150px] object-contain" loading="lazy" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .logo-marquee__viewport {
+    /* Soft fade at both edges (alpha mask, not a color gradient). */
+    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
+  .logo-marquee__track {
+    animation: logo-marquee-scroll 40s linear infinite;
+  }
+  .logo-marquee:hover .logo-marquee__track,
+  .logo-marquee:focus-within .logo-marquee__track {
+    animation-play-state: paused;
+  }
+  @keyframes logo-marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  /* Editorial restraint: logos sit in grayscale, color on hover.
+     multiply drops the white box behind JPG logos on the white strip. */
+  .logo-marquee__logo img {
+    filter: grayscale(1);
+    opacity: 0.7;
+    mix-blend-mode: multiply;
+    transition: filter 0.25s ease, opacity 0.25s ease;
+  }
+  .logo-marquee__logo:hover img,
+  .logo-marquee__logo:focus-visible img {
+    filter: none;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo-marquee__track { animation: none; width: auto; }
+    .logo-marquee__track > ul { flex-wrap: wrap; justify-content: center; }
+    .logo-marquee__track > ul[aria-hidden],
+    .logo-marquee__track .is-repeat { display: none; }
+    .logo-marquee__viewport { mask-image: none; }
+  }
+</style>

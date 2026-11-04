@@ -1,0 +1,269 @@
+/*
+ * Admin portal styles. Imported only by AdminLayout.astro.
+ * Visual language = the site's "dossier" treatment: navy masthead,
+ * IBM Plex Mono labels, Barlow Condensed headlines, 2px corners,
+ * hairline rules, orange only for primary actions. No new hues — every
+ * color here is a @theme token from global.css.
+ */
+@layer components {
+  .adm-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .adm-hint {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+  }
+  .adm-input,
+  .adm-select,
+  .adm-textarea {
+    width: 100%;
+    border: 1px solid var(--color-outline-soft);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    padding: 0.65rem 0.8rem;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .adm-textarea { min-height: 9rem; line-height: 1.55; resize: vertical; }
+  .adm-input:focus,
+  .adm-select:focus,
+  .adm-textarea:focus {
+    outline: none;
+    border-color: var(--color-ink);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  }
+  .adm-input::placeholder,
+  .adm-textarea::placeholder { color: color-mix(in srgb, var(--color-ink-muted) 60%, transparent); }
+
+  /* Paper panel: white sheet with hairline border + orange corner tick. */
+  .adm-panel {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+  }
+  .adm-panel::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 28px; height: 3px;
+    background: var(--color-accent);
+  }
+
+  /* Ledger table */
+  .adm-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .adm-table thead th {
+    text-align: left;
+    padding: 0.6rem 0.9rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    border-bottom: 1px solid var(--color-ink);
+  }
+  .adm-table tbody td {
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid var(--color-hairline);
+    vertical-align: middle;
+  }
+  .adm-table tbody tr:hover { background: var(--color-tint-warm); }
+
+  /* Status badge (mono, outlined). Modifiers: --live, --draft, --muted, --alert */
+  .adm-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-card);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .adm-badge--live  { color: var(--color-link); }
+  .adm-badge--draft { color: var(--color-accent-deep); }
+  .adm-badge--muted { color: var(--color-ink-muted); }
+  .adm-badge--alert { color: var(--color-scarlet); }
+
+  /* Flash message strip. Modifiers: --ok, --error */
+  .adm-flash {
+    border-left: 3px solid var(--color-link);
+    background: var(--color-surface);
+    padding: 0.8rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+  }
+  .adm-flash--ok    { border-left-color: var(--color-link); }
+  .adm-flash--error { border-left-color: var(--color-scarlet); }
+
+  /* Small text button for row actions (Edit · Delete) */
+  .adm-link {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-link);
+  }
+  .adm-link:hover { color: var(--color-accent); }
+  .adm-link--danger { color: var(--color-scarlet); }
+
+  /* Stat figure for dashboard tiles */
+  .adm-stat {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+}
+
+/* ---------- Agent A additions: forms, chips, date toggle ---------- */
+@layer components {
+  /* Segmented radio control (date precision, filter chips) */
+  .adm-segment {
+    display: inline-flex;
+    border: 1px solid var(--color-outline-soft);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .adm-segment > label,
+  .adm-segment > a {
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    background: var(--color-surface);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .adm-segment > * + * { border-left: 1px solid var(--color-outline-soft); }
+  .adm-segment > label:hover,
+  .adm-segment > a:hover { color: var(--color-ink); background: var(--color-tint-warm); }
+  .adm-segment > label:has(input:checked),
+  .adm-segment > a[aria-current="page"] { background: var(--color-ink); color: var(--color-cream); }
+  .adm-segment input { position: absolute; opacity: 0; pointer-events: none; }
+  .adm-segment > label:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+  /* Date field: show the day or month input depending on the precision radio */
+  .adm-date:has(input[value="month"]:checked) .adm-date__day { display: none; }
+  .adm-date:not(:has(input[value="month"]:checked)) .adm-date__month { display: none; }
+
+  /* Checkbox row */
+  .adm-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+  .adm-check input {
+    margin-top: 0.2rem;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-accent);
+  }
+
+  /* File input */
+  .adm-file {
+    width: 100%;
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+  }
+  .adm-file::file-selector-button {
+    margin-right: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    padding: 0.45rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+  .adm-file::file-selector-button:hover { background: var(--color-ink); color: var(--color-cream); }
+
+  /* Danger zone <details> */
+  .adm-danger {
+    border: 1px solid color-mix(in srgb, var(--color-scarlet) 35%, transparent);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+  .adm-danger > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 0.9rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-scarlet);
+  }
+  .adm-danger > summary::-webkit-details-marker { display: none; }
+  .adm-danger[open] > summary { border-bottom: 1px solid var(--color-hairline); }
+  .btn-danger {
+    border-radius: var(--radius-card);
+    padding: 0.6rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--color-scarlet);
+    color: var(--color-surface);
+    transition: background-color 0.15s ease;
+  }
+  .btn-danger:hover { background: var(--color-ink); }
+
+  /* Two-step confirm for destructive row actions (no window.confirm). */
+  .adm-confirm { position: relative; }
+  .adm-confirm > summary { list-style: none; cursor: pointer; }
+  .adm-confirm > summary::-webkit-details-marker { display: none; }
+  .adm-confirm[open] > summary { color: var(--color-ink); }
+  .adm-confirm__panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    z-index: 10;
+    width: 18rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-ink);
+    border-radius: var(--radius-card);
+    padding: 1rem;
+    text-align: left;
+    white-space: normal;
+  }
+
+  /* Rendered-email preview frame (campaign composer + detail). */
+  .adm-preview {
+    display: block;
+    width: 100%;
+    height: 760px;
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-card);
+    background: var(--color-bg);
+  }
+}

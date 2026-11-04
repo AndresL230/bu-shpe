@@ -1,12 +1,34 @@
 name = "bu-shpe"
 compatibility_date = "2026-01-01"
+compatibility_flags = ["nodejs_compat"]
+account_id = "0bda3a2560ca48711ef7336cc421abed"
 
-# Cloudflare's Git build runs `npx wrangler deploy`, which honors this build
-# step first (generating ./dist), then uploads the [assets] directory below.
-# This makes a single `git push` build + deploy the static site — no dashboard
-# build command required.
+# Astro (@astrojs/cloudflare) emits a Worker for on-demand routes (events,
+# /admin, /api, /media) plus static assets for every prerendered page.
+# Cloudflare's Git build runs `npx wrangler deploy`, which runs [build] first.
+main = "./dist/_worker.js/index.js"
+
 [build]
 command = "npm run build"
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bu-shpe-db"
+database_id = "37e4cc47-c380-4eb6-a777-f7ea1429abce"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "bu-shpe-media"
+
+[vars]
+SITE_URL = "https://bushpe.org"
+EMAIL_FROM = "BU SHPE <news@bushpe.org>"
+EMAIL_REPLY_TO = "shpe@bu.edu"
+
+# Secrets (set with `npx wrangler secret put <NAME>`; locally in .dev.vars):
+#   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, RESEND_API_KEY
