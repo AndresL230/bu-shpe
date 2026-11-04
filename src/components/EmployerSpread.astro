@@ -1,0 +1,82 @@
+---
+/**
+ * Landing-page "where we work" spread: one column per industry, a large
+ * count over each column, then the companies as a hairline-ruled list.
+ * Data: src/data/employers.json (same source as /careers).
+ */
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import employersData from "@/data/employers.json";
+import { logoSrc, faviconSrc } from "@/lib/logos";
+import type { EmployerGroup } from "@/types";
+
+interface Props {
+  index?: string;
+}
+
+const { index } = Astro.props;
+const groups = employersData as EmployerGroup[];
+const total = groups.reduce((n, g) => n + g.companies.length, 0);
+---
+<section class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+  <div class="flex flex-wrap items-end justify-between gap-6">
+    <div>
+      <SectionIndex index={index} label="Where We Work" />
+      <h2 class="display mt-5 max-w-2xl text-3xl text-ink md:text-4xl">
+        From the classroom to the companies shaping <em class="font-serif font-normal lowercase italic tracking-normal text-accent">tomorrow</em>.
+      </h2>
+    </div>
+    <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted">
+      {total} companies · {groups.length} industries
+    </p>
+  </div>
+
+  <div class="mt-12 grid grid-cols-1 gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+    {groups.map((group) => (
+      <div>
+        <p class="mono-label">{group.industry}</p>
+        <p class="display mt-2 text-7xl leading-none text-ink" aria-hidden="true">
+          {String(group.companies.length).padStart(2, "0")}
+        </p>
+        <ul class="mt-5 border-t-2 border-ink">
+          {group.companies.map((c) => (
+            <li class="group flex h-14 items-center gap-4 border-b border-outline-soft">
+              <span class="flex h-8 w-14 shrink-0 items-center justify-center">
+                <img
+                  src={logoSrc(c)}
+                  data-fallback={c.logo ? undefined : faviconSrc(c.domain)}
+                  alt=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                  class="spread-logo max-h-8 max-w-14 object-contain mix-blend-multiply grayscale transition duration-300 group-hover:grayscale-0"
+                />
+              </span>
+              <span class="text-sm font-medium text-ink transition-colors group-hover:text-accent">{c.name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <a href="/careers" class="group mt-12 inline-flex items-center gap-2 font-sans text-base font-medium text-ink transition-colors hover:text-accent">
+    <span class="border-b border-current pb-0.5">See where we work</span>
+    <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+  </a>
+</section>
+
+<script>
+  // unavatar → favicon → hide the logo slot (the company name is always shown).
+  document.querySelectorAll<HTMLImageElement>("img.spread-logo").forEach((img) => {
+    const fail = () => {
+      const fb = img.dataset.fallback;
+      if (fb) {
+        delete img.dataset.fallback;
+        img.src = fb;
+      } else {
+        img.style.visibility = "hidden";
+      }
+    };
+    img.addEventListener("error", fail);
+    if (img.complete && img.naturalWidth === 0) fail();
+  });
+</script>

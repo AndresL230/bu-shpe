@@ -3,10 +3,10 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
 import LogoMarquee from "@/components/LogoMarquee.astro";
+import EmployerSpread from "@/components/EmployerSpread.astro";
 
 import siteData from "@/data/site.json";
 import sponsorsRaw from "@/data/sponsors.json";
-import employersData from "@/data/employers.json";
 
 import type { Sponsor } from "@/types";
 import type { EventRecord } from "@/lib/server/events";
@@ -105,9 +105,8 @@ function formatEventDate(iso: string): string {
   </div>
 </header>
 
-<!-- LOGO MARQUEES — partners, then where members work (opposite direction) -->
+<!-- PARTNER LOGO MARQUEE -->
 <LogoMarquee items={sponsors} label="Partners & sponsors" href="/support" linkText="Support the chapter" />
-<LogoMarquee items={employersData.flatMap((g) => g.companies)} label="Where our members work" href="/careers" linkText="See where we work" reverse />
 
 <!-- 01 — MISSION -->
 <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -203,7 +202,12 @@ function formatEventDate(iso: string): string {
 
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
-<!-- 04 — SPONSORS -->
+<!-- 04 — WHERE WE WORK -->
+<EmployerSpread />
+
+<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+
+<!-- 05 — SPONSORS -->
 <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
   <SectionIndex label="With Support From" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 mb-10 max-w-2xl">The partners behind the work.</h2>
