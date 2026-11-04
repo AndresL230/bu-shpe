@@ -1,0 +1,52 @@
+---
+/**
+ * Landing page after the mailing-list form posts to /api/subscribe.
+ * On-demand so it can show the error states (?error=invalid|server).
+ */
+import Base from "@/layouts/Base.astro";
+import PageHero from "@/components/PageHero.astro";
+import siteData from "@/data/site.json";
+
+export const prerender = false;
+
+const error = Astro.url.searchParams.get("error");
+const failed = error === "invalid" || error === "server";
+---
+<Base title={failed ? "Signup didn't go through" : "You're on the list"} description="BU SHPE mailing list signup.">
+  {failed ? (
+    <PageHero
+      eyebrow="Mailing list"
+      headline="That didn't quite work."
+      headlineAccent="didn't"
+      subtitle={error === "invalid"
+        ? "That email address doesn't look right. Check it and try again."
+        : "Something went wrong on our side. Give it another try in a minute."}
+      ctas={[{ href: "/join", label: "Back to the form" }]}
+    />
+  ) : (
+    <PageHero
+      eyebrow="Mailing list"
+      headline="You're in the familia."
+      headlineAccent="familia"
+      subtitle="You're on the BU SHPE mailing list. Event invites, career fair prep and chapter news will land in your inbox."
+      ctas={[
+        { href: "/events", label: "See upcoming events" },
+        { href: "/", label: "Back home", variant: "outline" },
+      ]}
+    />
+  )}
+
+  <section class="mx-auto max-w-[1200px] px-6 py-24">
+    <div class="max-w-3xl">
+      <p class="eyebrow text-ink-muted">Good to know</p>
+      <ul class="mt-6 space-y-4 text-base leading-relaxed text-ink-muted">
+        <li>Every email has an unsubscribe link at the bottom. One click and you're off the list.</li>
+        <li>We never share or sell your address.</li>
+        <li>
+          Questions? Write to <a href={`mailto:${siteData.contactEmail}`} class="text-link underline">{siteData.contactEmail}</a>,
+          or <a href={siteData.socials.instagram} class="text-link underline">DM us on Instagram</a>.
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>

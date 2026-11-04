@@ -7,6 +7,8 @@ export interface SiteMeta {
   mission: string;
   contactEmail: string;
   facultyAdvisorEmail: string;
+  /** Postal address printed in campaign email footers (CAN-SPAM). */
+  mailingAddress: string;
   region: string;
   currentBoardTerm?: string;
   calendarEmbedUrl: string;
