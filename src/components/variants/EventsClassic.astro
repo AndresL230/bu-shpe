@@ -4,11 +4,14 @@ import CtaBand from "@/components/CtaBand.astro";
 import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
-import eventsRaw from "@/data/events.json";
 
-import type { EventItem } from "@/types";
+import type { EventRecord } from "@/lib/server/events";
 
-const events = eventsRaw as EventItem[];
+interface Props {
+  events: EventRecord[];
+}
+
+const { events } = Astro.props;
 
 const today = new Date().toISOString().slice(0, 7); // yyyy-mm
 const currentYear = new Date().getFullYear();

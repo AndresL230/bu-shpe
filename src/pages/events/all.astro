@@ -2,12 +2,19 @@
 import Base from "@/layouts/Base.astro";
 import EventsAllClassic from "@/components/variants/EventsAllClassic.astro";
 import EventsAllDossier from "@/components/variants/EventsAllDossier.astro";
+import { listPublishedEventsInCreationOrder, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+
+// Rendered on demand from D1 so newly published events appear without a rebuild.
+export const prerender = false;
+
+const events = await listPublishedEventsInCreationOrder(Astro.locals.runtime.env.DB);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base
   title="All Events"
   description="The full BU SHPE event calendar — every workshop, mixer, and trip from the chapter's recent history."
 >
-  <div data-variant-block="classic"><EventsAllClassic /></div>
-  <div data-variant-block="dossier"><EventsAllDossier /></div>
+  <div data-variant-block="classic"><EventsAllClassic events={events} /></div>
+  <div data-variant-block="dossier"><EventsAllDossier events={events} /></div>
 </Base>

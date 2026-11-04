@@ -2,13 +2,20 @@
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 
-import eventsData from "@/data/events.json";
 import volunteeringData from "@/data/volunteering.json";
 import conferencesData from "@/data/conferences.json";
 import siteData from "@/data/site.json";
+import type { EventRecord } from "@/lib/server/events";
+
+interface Props {
+  events: EventRecord[];
+}
 
 const allPhotos = [
-  ...eventsData.map((e) => ({ src: e.photo, alt: e.title, group: "Events" })),
+  // Events without a photo have nothing to show in the grid.
+  ...Astro.props.events
+    .filter((e) => e.photo)
+    .map((e) => ({ src: e.photo, alt: e.title, group: "Events" })),
   ...volunteeringData.flatMap((v) =>
     v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering" }))
   ),

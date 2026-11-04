@@ -1,5 +1,12 @@
 ---
 import Landing from "@/components/Landing.astro";
+import type { EventRecord } from "@/lib/server/events";
+
+interface Props {
+  events: EventRecord[];
+}
+
+const { events } = Astro.props;
 ---
 
-<Landing />
+<Landing events={events} />

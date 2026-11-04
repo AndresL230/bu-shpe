@@ -3,15 +3,17 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
 
-import { eventSlug } from "@/lib/events";
-
 import siteData from "@/data/site.json";
-import eventsRaw from "@/data/events.json";
 import sponsorsRaw from "@/data/sponsors.json";
 
-import type { EventItem, Sponsor } from "@/types";
+import type { Sponsor } from "@/types";
+import type { EventRecord } from "@/lib/server/events";
 
-const events = [...(eventsRaw as EventItem[])].sort((a, b) => b.date.localeCompare(a.date));
+interface Props {
+  events: EventRecord[];
+}
+
+const events = [...Astro.props.events].sort((a, b) => b.date.localeCompare(a.date));
 const recentEvents = events.slice(0, 3);
 
 const sponsors = sponsorsRaw as Sponsor[];
@@ -175,7 +177,7 @@ function formatEventDate(iso: string): string {
 
   <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
     {recentEvents.map((event) => (
-      <a href={`/events/${eventSlug(event.title)}`} class="block">
+      <a href={`/events/${event.slug}`} class="block">
         <article class="bg-bg group p-8 flex flex-col h-full hover:bg-surface-soft transition-colors">
           <p class="font-mono text-sm text-accent tracking-wide uppercase">{event.category}</p>
           <div class="display text-5xl text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">

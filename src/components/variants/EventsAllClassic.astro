@@ -4,12 +4,15 @@ import CtaBand from "@/components/CtaBand.astro";
 import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
-import eventsRaw from "@/data/events.json";
 
-import type { EventItem } from "@/types";
-import { eventSlug } from "@/lib/events";
+import EventPhotoFallback from "@/components/EventPhotoFallback.astro";
+import type { EventRecord } from "@/lib/server/events";
 
-const events = eventsRaw as EventItem[];
+interface Props {
+  events: EventRecord[];
+}
+
+const { events } = Astro.props;
 
 const today = new Date().toISOString().slice(0, 7);
 
@@ -105,15 +108,17 @@ const chipInactive = "border border-rule/60 text-ink-muted hover:border-ink hove
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 gap-y-16">
           {upcoming.map((event) => (
-            <a data-event data-category={event.category} href={`/events/${eventSlug(event.title)}`} class="group flex flex-col">
+            <a data-event data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-col">
               <div class="aspect-[4/3] overflow-hidden bg-surface-soft mb-5">
-                {event.photo && (
+                {event.photo ? (
                   <img
                     src={event.photo}
                     alt={event.title}
                     class="w-full h-full object-cover transition group-hover:scale-[1.02]"
                     loading="lazy"
                   />
+                ) : (
+                  <EventPhotoFallback label={event.category} tone="classic" />
                 )}
               </div>
               <div class="flex items-baseline gap-3 mb-3">
@@ -137,15 +142,17 @@ const chipInactive = "border border-rule/60 text-ink-muted hover:border-ink hove
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 gap-y-16">
           {past.map((event) => (
-            <a data-event data-category={event.category} href={`/events/${eventSlug(event.title)}`} class="group flex flex-col">
+            <a data-event data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-col">
               <div class="aspect-[4/3] overflow-hidden bg-surface-soft mb-5">
-                {event.photo && (
+                {event.photo ? (
                   <img
                     src={event.photo}
                     alt={event.title}
                     class="w-full h-full object-cover transition group-hover:scale-[1.02]"
                     loading="lazy"
                   />
+                ) : (
+                  <EventPhotoFallback label={event.category} tone="classic" />
                 )}
               </div>
               <div class="flex items-baseline gap-3 mb-3">
