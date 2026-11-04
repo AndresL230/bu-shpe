@@ -2,6 +2,7 @@
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import SponsorGrid from "@/components/SponsorGrid.astro";
+import LogoMarquee from "@/components/LogoMarquee.astro";
 
 import siteData from "@/data/site.json";
 import sponsorsRaw from "@/data/sponsors.json";
@@ -102,6 +103,9 @@ function formatEventDate(iso: string): string {
     </div>
   </div>
 </header>
+
+<!-- PARTNER LOGO MARQUEE -->
+<LogoMarquee sponsors={sponsors} />
 
 <!-- 01 — MISSION -->
 <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
