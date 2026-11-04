@@ -244,10 +244,12 @@ export async function countByStatus(db: D1Database): Promise<{ subscribed: numbe
   return out;
 }
 
-export async function activeSubscribers(db: D1Database): Promise<Pick<SubscriberRow, "email" | "unsubscribe_token">[]> {
+type ActiveSubscriber = Pick<SubscriberRow, "email" | "unsubscribe_token" | "first_name" | "last_name">;
+
+export async function activeSubscribers(db: D1Database): Promise<ActiveSubscriber[]> {
   const { results } = await db
-    .prepare("SELECT email, unsubscribe_token FROM subscribers WHERE status = 'subscribed' ORDER BY id")
-    .all<Pick<SubscriberRow, "email" | "unsubscribe_token">>();
+    .prepare("SELECT email, unsubscribe_token, first_name, last_name FROM subscribers WHERE status = 'subscribed' ORDER BY id")
+    .all<ActiveSubscriber>();
   return results;
 }
 

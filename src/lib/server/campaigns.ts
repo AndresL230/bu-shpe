@@ -24,7 +24,7 @@
  * leaves an accurate partial count (the detail page flags stalled sends).
  */
 import { chunk, emailConfig, sendBatch, unsubscribeHeaders, type OutgoingEmail } from "./email";
-import { personalize, renderCampaign, unsubscribePageUrl } from "./email-template";
+import { personalize, personalizeSubject, renderCampaign, unsubscribePageUrl } from "./email-template";
 import { activeSubscribers } from "./subscribers";
 
 export interface CampaignRow {
@@ -110,10 +110,11 @@ export async function startCampaign(env: SendEnv, input: { subject: string; body
       const batches = chunk(recipients);
       for (let i = 0; i < batches.length; i++) {
         const msgs: OutgoingEmail[] = batches[i].map((r) => {
-          const p = personalize(tpl, unsubscribePageUrl(site, r.unsubscribe_token));
+          const vars = { first_name: r.first_name, last_name: r.last_name, email: r.email };
+          const p = personalize(tpl, unsubscribePageUrl(site, r.unsubscribe_token), vars);
           return {
             to: r.email,
-            subject: input.subject,
+            subject: personalizeSubject(input.subject, vars),
             html: p.html,
             text: p.text,
             headers: unsubscribeHeaders(site, r.unsubscribe_token, cfg.replyTo),

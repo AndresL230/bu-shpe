@@ -12,7 +12,7 @@
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import { BODY_MAX, SUBJECT_MAX, startCampaign } from "@/lib/server/campaigns";
 import { EmailConfigError, emailConfig, emailConfigured, sendEmail } from "@/lib/server/email";
-import { personalize, renderCampaign, unsubscribePageUrl } from "@/lib/server/email-template";
+import { personalize, personalizeSubject, previewVars, renderCampaign, unsubscribePageUrl } from "@/lib/server/email-template";
 import { countByStatus } from "@/lib/server/subscribers";
 
 export const prerender = false;
@@ -41,8 +41,10 @@ if (Astro.request.method === "POST") {
     } else {
       try {
         const cfg = emailConfig(env);
-        const r = personalize(renderCampaign(subject, body, site), unsubscribePageUrl(site, "test-preview"));
-        const res = await sendEmail(cfg, { to: admin.email, subject: `[Test] ${subject}`, html: r.html, text: r.text });
+        const vars = previewVars(admin);
+        const testSubject = personalizeSubject(subject, vars);
+        const r = personalize(renderCampaign(testSubject, body, site), unsubscribePageUrl(site, "test-preview"), vars);
+        const res = await sendEmail(cfg, { to: admin.email, subject: `[Test] ${testSubject}`, html: r.html, text: r.text });
         flash = res.ok
           ? { ok: true, text: `Test sent to ${admin.email}. Check your inbox (and spam) before sending to the list.` }
           : { ok: false, text: `Resend rejected the test: ${res.error}` };
@@ -67,7 +69,8 @@ if (Astro.request.method === "POST") {
 
 const recipients = (await countByStatus(env.DB)).subscribed;
 const canSend = emailConfigured(env);
-const preview = personalize(renderCampaign(subject || "Untitled dispatch", body, site), "#").html;
+const sample = previewVars(admin);
+const preview = personalize(renderCampaign(personalizeSubject(subject || "Untitled dispatch", sample), body, site), "#", sample).html;
 const recipientLabel = `${recipients} subscriber${recipients === 1 ? "" : "s"}`;
 ---
 <AdminLayout title={step === "review" ? "Confirm" : "New"} accent={step === "review" ? "the send" : "campaign"} eyebrow="03 // Compose" section="campaigns">
@@ -117,10 +120,15 @@ const recipientLabel = `${recipients} subscriber${recipients === 1 ? "" : "s"}`;
         </div>
         <div>
           <label for="body" class="adm-label">Body</label>
-          <textarea id="body" name="body" maxlength={BODY_MAX} required class="adm-textarea min-h-[22rem]" placeholder={"Hola familia,\n\nOur first GBM is this **Thursday at 6pm** in PHO 206.\n\n- Free food\n- Meet the e-board\n\nRSVP on [Instagram](https://www.instagram.com/shpe.bostonu/)."}>{body}</textarea>
+          <textarea id="body" name="body" maxlength={BODY_MAX} required class="adm-textarea min-h-[22rem]" placeholder={"Hola {{first_name|familia}},\n\nOur first GBM is this **Thursday at 6pm** in PHO 206.\n\n- Free food\n- Meet the e-board\n\nRSVP on [Instagram](https://www.instagram.com/shpe.bostonu/)."}>{body}</textarea>
           <p class="adm-hint">
             Blank line = new paragraph · <code>**bold**</code> · <code>[label](https://…)</code> · lines starting <code>- </code> become bullets.
             The SHPE masthead, sign-off and unsubscribe footer are added for you.
+          </p>
+          <p class="adm-hint">
+            Personalize the subject or body with <code>{"{{first_name}}"}</code> · <code>{"{{last_name}}"}</code> · <code>{"{{full_name}}"}</code> · <code>{"{{email}}"}</code>.
+            Add a fallback for people who didn't give a name: <code>{"Hola {{first_name|familia}},"}</code>.
+            The preview fills them in with your own name.
           </p>
         </div>
         <div class="mt-8 flex flex-wrap items-center gap-3 border-t border-hairline pt-6">

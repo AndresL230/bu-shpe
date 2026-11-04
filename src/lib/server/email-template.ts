@@ -195,11 +195,60 @@ export function renderCampaign(subject: string, body: string, siteUrl: string): 
   return { html, text, placeholder };
 }
 
-export function personalize(r: RenderedCampaign, unsubscribeUrl: string): { html: string; text: string } {
-  return {
-    html: r.html.split(r.placeholder).join(escapeHtml(unsubscribeUrl)),
-    text: r.text.split(r.placeholder).join(unsubscribeUrl),
+/** Per-recipient values for merge tags. Missing names are null/empty. */
+export interface MergeVars {
+  first_name?: string | null;
+  last_name?: string | null;
+  email?: string | null;
+}
+
+/** Tags authors can use in the subject and body. */
+export const MERGE_TAGS = ["first_name", "last_name", "full_name", "email"] as const;
+
+/**
+ * Replaces {{first_name}}, {{last_name}}, {{full_name}}, {{email}} with the
+ * recipient's values. `{{first_name|there}}` falls back to "there" when the
+ * value is empty. Unknown tags are left as typed so typos are visible in the
+ * preview. In HTML mode the value is escaped; the fallback text is already
+ * escaped because the body went through the markdown renderer.
+ */
+export function applyMergeTags(s: string, vars: MergeVars, mode: "html" | "text"): string {
+  const first = (vars.first_name ?? "").trim();
+  const last = (vars.last_name ?? "").trim();
+  const values: Record<string, string> = {
+    first_name: first,
+    last_name: last,
+    full_name: [first, last].filter(Boolean).join(" "),
+    email: (vars.email ?? "").trim(),
   };
+  return s.replace(/\{\{\s*([a-z_]+)\s*(?:\|([^}]*))?\}\}/g, (match, key: string, fallback?: string) => {
+    if (!(key in values)) return match;
+    const v = values[key];
+    if (v) return mode === "html" ? escapeHtml(v) : v;
+    return (fallback ?? "").trim();
+  });
+}
+
+export function personalize(
+  r: RenderedCampaign,
+  unsubscribeUrl: string,
+  vars: MergeVars = {},
+): { html: string; text: string } {
+  return {
+    html: applyMergeTags(r.html.split(r.placeholder).join(escapeHtml(unsubscribeUrl)), vars, "html"),
+    text: applyMergeTags(r.text.split(r.placeholder).join(unsubscribeUrl), vars, "text"),
+  };
+}
+
+/** Subject lines are plain text (Resend encodes them). */
+export function personalizeSubject(subject: string, vars: MergeVars): string {
+  return applyMergeTags(subject, vars, "text").replace(/\s+/g, " ").trim();
+}
+
+/** Sample values for previews: the signed-in admin's own name, so authors see real output. */
+export function previewVars(admin?: { name: string | null; email: string } | null): MergeVars {
+  const [first = "", ...rest] = (admin?.name ?? "").trim().split(/\s+/);
+  return { first_name: first || null, last_name: rest.join(" ") || null, email: admin?.email ?? null };
 }
 
 /** Footer link target: the confirm page, so link scanners can't unsubscribe anyone. */
