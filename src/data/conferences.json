@@ -1,10 +1,38 @@
 [
   {
+    "year": 2026,
+    "city": "Indianapolis, IN",
+    "region": "National Convention",
+    "description": "October 28–31, under the convention's “STEM for the Bold” banner. The delegation suited up for the convention floor, lined up behind the giant FAMILIA letters, and closed a night in Indianapolis over deep-dish pizza.",
+    "photos": [
+      "/assets/conferences/national-convention-2026-indianapolis-familia-sign.jpg"
+    ],
+    "headcount": 0
+  },
+  {
+    "year": 2025,
+    "city": "Philadelphia, PA",
+    "region": "National Convention",
+    "description": "BU SHPE members joined the national familia in Philadelphia for the convention's career fair, workshops and networking.",
+    "photos": [],
+    "headcount": 0
+  },
+  {
+    "year": 2024,
+    "city": "Anaheim, CA",
+    "region": "National Convention",
+    "description": "BU SHPE members traveled to Anaheim for the convention's career fair, workshops and networking.",
+    "photos": [],
+    "headcount": 0
+  },
+  {
     "year": 2023,
     "city": "Salt Lake City, UT",
     "region": "National Convention",
     "description": "Members received interviews and offers, attended professional-growth workshops, and deepened bonds within the BU-SHPE familia.",
-    "photos": ["/assets/conferences/national-convention-2023-slc.jpeg"],
+    "photos": [
+      "/assets/conferences/national-convention-2023-slc.jpeg"
+    ],
     "headcount": 0,
     "outcomes": [
       "National STEM career fair — 150+ recruiters",
@@ -16,11 +44,46 @@
     "city": "Charlotte, NC",
     "region": "National Convention",
     "description": "Two-day career fair, technical workshops, and onsite interviews with the country's largest gathering of Hispanic STEM professionals.",
-    "photos": ["/assets/conferences/national-convention-2022-charlotte.jpg"],
+    "photos": [
+      "/assets/conferences/national-convention-2022-charlotte.jpg"
+    ],
     "headcount": 0,
     "outcomes": [
       "Two-day national career fair",
       "Technical workshops + onsite interviews"
     ]
+  },
+  {
+    "year": 2021,
+    "city": "Orlando, FL",
+    "region": "National Convention",
+    "description": "November 10–14 at the Orange County Convention Center, the first in-person nationals after SHPE's fully virtual 2020 convention. A masked delegation lined up behind the FAMILIA letters and worked the career fair floor.",
+    "photos": [
+      "/media/events/archive/national-convention-2021/01.webp"
+    ],
+    "headcount": 0
+  },
+  {
+    "year": 2019,
+    "city": "Phoenix, AZ",
+    "region": "National Convention",
+    "description": "October 30 – November 3 at the Phoenix Convention Center. The delegation flew out together, lined up at the FAMILIA letters, and came home with a podium finish in the Cyber Security Challenge.",
+    "photos": [
+      "/media/events/archive/national-convention-2019/04.webp"
+    ],
+    "headcount": 0,
+    "outcomes": [
+      "Cyber Security Challenge — 2nd place ($500)"
+    ]
+  },
+  {
+    "year": 2018,
+    "city": "Cleveland, OH",
+    "region": "National Convention",
+    "description": "November 7–11 at the Huntington Convention Center, under the theme “Better Together.” The delegation posed in business attire behind the FAMILIA letters.",
+    "photos": [
+      "/media/events/archive/jen-unlabeled/00.webp"
+    ],
+    "headcount": 0
   }
 ]
