@@ -32,7 +32,7 @@ const badge = stalled
 
 const sentFlash = Astro.url.searchParams.get("flash");
 ---
-<AdminLayout title={campaign.subject} eyebrow={`03 // Campaign ${String(campaign.id).padStart(3, "0")}`} section="campaigns">
+<AdminLayout title={campaign.subject} eyebrow={`04 // Campaign ${String(campaign.id).padStart(3, "0")}`} section="campaigns">
   {sending && <meta slot="head" http-equiv="refresh" content="3" />}
   <Fragment slot="actions">
     <a href="/admin/campaigns" class="btn-dossier-ghost">All campaigns</a>

@@ -73,7 +73,7 @@ const sample = previewVars(admin);
 const preview = personalize(renderCampaign(personalizeSubject(subject || "Untitled dispatch", sample), body, site), "#", sample).html;
 const recipientLabel = `${recipients} subscriber${recipients === 1 ? "" : "s"}`;
 ---
-<AdminLayout title={step === "review" ? "Confirm" : "New"} accent={step === "review" ? "the send" : "campaign"} eyebrow="03 // Compose" section="campaigns">
+<AdminLayout title={step === "review" ? "Confirm" : "New"} accent={step === "review" ? "the send" : "campaign"} eyebrow="04 // Compose" section="campaigns">
   <Fragment slot="actions">
     <a href="/admin/campaigns" class="btn-dossier-ghost">All campaigns</a>
   </Fragment>

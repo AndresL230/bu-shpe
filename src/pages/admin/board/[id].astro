@@ -1,0 +1,25 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import BoardMemberForm from "@/components/admin/BoardMemberForm.astro";
+import { getBoardMember, listTerms } from "@/lib/server/board";
+import { boardMessage } from "@/lib/server/board-form";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const id = Number(Astro.params.id);
+const member = Number.isInteger(id) && id > 0 ? await getBoardMember(db, id) : null;
+if (!member) return Astro.redirect("/admin/board?error=not_found", 303);
+const terms = await listTerms(db);
+
+const ok = boardMessage(Astro.url.searchParams.get("ok"));
+const error = boardMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title={member.name} eyebrow={`02 — Board / ${member.term}`} section="board">
+  <a slot="actions" href={`/admin/board?term=${encodeURIComponent(member.term)}`} class="btn-dossier-ghost">← Roster</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <BoardMemberForm action={`/api/admin/board/${member.id}`} member={member} term={member.term} terms={terms} submitLabel="Save" />
+</AdminLayout>

@@ -10,7 +10,6 @@ export interface SiteMeta {
   /** Postal address printed in campaign email footers (CAN-SPAM). */
   mailingAddress: string;
   region: string;
-  currentBoardTerm?: string;
   calendarEmbedUrl: string;
   donateUrl: string;
   sponsorshipPacketUrl: string;

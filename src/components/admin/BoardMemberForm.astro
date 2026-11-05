@@ -1,0 +1,123 @@
+---
+/**
+ * Create/edit form for one e-board member. Plain multipart POST; the API
+ * route validates and redirects back with ?ok= / ?error=.
+ */
+import type { BoardRecord } from "@/lib/server/board";
+import { PLACEHOLDER_PHOTO } from "@/lib/server/board";
+
+interface Props {
+  action: string;
+  member?: BoardRecord;
+  /** Default academic year for a new member. */
+  term: string;
+  /** Existing years, offered as suggestions in the year field. */
+  terms: string[];
+  submitLabel: string;
+  /** Compact layout for the sidebar "add" panel. */
+  compact?: boolean;
+}
+
+const { action, member, term, terms, submitLabel, compact = false } = Astro.props;
+const uid = member ? `m${member.id}` : "new";
+const hasPhoto = member && member.photo !== PLACEHOLDER_PHOTO;
+---
+<form method="post" action={action} enctype="multipart/form-data" class:list={["grid gap-5", !compact && "lg:grid-cols-[1fr_280px] lg:gap-8"]}>
+  <input type="hidden" name="action" value={member ? "update" : "add"} />
+  <div class:list={["grid content-start gap-5", !compact && "adm-panel"]}>
+    {compact && <p class="mono-label">Add a member</p>}
+    <div class:list={["grid gap-5", !compact && "md:grid-cols-2"]}>
+      <div>
+        <label class="adm-label" for={`${uid}-name`}>Name</label>
+        <input id={`${uid}-name`} name="name" class="adm-input" required maxlength="120" value={member?.name ?? ""} autocomplete="off" />
+      </div>
+      <div>
+        <label class="adm-label" for={`${uid}-role`}>Position</label>
+        <input id={`${uid}-role`} name="role" class="adm-input" required maxlength="120" value={member?.role ?? ""} placeholder="e.g. Treasurer" autocomplete="off" />
+      </div>
+    </div>
+    <div class:list={["grid gap-5", !compact && "md:grid-cols-2"]}>
+      <div>
+        <label class="adm-label" for={`${uid}-term`}>Academic year</label>
+        <input id={`${uid}-term`} name="term" class="adm-input font-mono" required value={member?.term ?? term} list={`${uid}-terms`} placeholder="2026–2027" autocomplete="off" />
+        <datalist id={`${uid}-terms`}>{terms.map((t) => <option value={t} />)}</datalist>
+      </div>
+      {!compact && (
+        <div>
+          <label class="adm-label" for={`${uid}-sort`}>Order</label>
+          <input id={`${uid}-sort`} name="sort" type="number" class="adm-input font-mono" value={member?.sort ?? ""} />
+          <p class="adm-hint">Lower shows first. The arrows on the roster also reorder.</p>
+        </div>
+      )}
+    </div>
+    {!compact && (
+      <>
+        <div class="grid gap-5 md:grid-cols-3">
+          <div>
+            <label class="adm-label" for={`${uid}-major`}>Major</label>
+            <input id={`${uid}-major`} name="major" class="adm-input" maxlength="120" value={member?.major ?? ""} placeholder="Mechanical Engineering" />
+          </div>
+          <div>
+            <label class="adm-label" for={`${uid}-year`}>Class</label>
+            <input id={`${uid}-year`} name="class_year" class="adm-input" maxlength="40" value={member?.year ?? ""} placeholder="2028" />
+          </div>
+          <div>
+            <label class="adm-label" for={`${uid}-home`}>Hometown</label>
+            <input id={`${uid}-home`} name="hometown" class="adm-input" maxlength="120" value={member?.hometown ?? ""} placeholder="Miami, FL" />
+          </div>
+        </div>
+        <div>
+          <label class="adm-label" for={`${uid}-bio`}>Quote / bio</label>
+          <textarea id={`${uid}-bio`} name="bio" class="adm-textarea min-h-24" maxlength="600">{member?.bio ?? ""}</textarea>
+          <p class="adm-hint">Optional. Shown in italics under the name. Blank fields are hidden on the site.</p>
+        </div>
+      </>
+    )}
+    {compact && (
+      <>
+        <button type="submit" class="btn-dossier">{submitLabel}</button>
+        <p class="adm-hint">Add the major, photo and bio from Edit afterwards.</p>
+      </>
+    )}
+  </div>
+
+  {!compact && (
+    <div class="grid content-start gap-6">
+      <div class="adm-panel grid gap-4">
+        <p class="adm-label mb-0">Headshot</p>
+        <div class="aspect-[4/5] w-full overflow-hidden bg-surface-soft">
+          <img src={member?.photo ?? PLACEHOLDER_PHOTO} alt="" class="h-full w-full object-cover" data-photo-preview />
+        </div>
+        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/avif" class="adm-file" data-photo-input />
+        <p class="adm-hint">Portrait (4:5) crops best. Uploading replaces the current one.</p>
+      </div>
+      <div class="adm-panel grid gap-4">
+        <label class="adm-check">
+          <input type="checkbox" name="is_advisor" checked={member?.isAdvisor ?? false} />
+          <span>Faculty advisor<span class="block text-xs text-ink-muted">Shown in its own section, not the officer grid.</span></span>
+        </label>
+        <button type="submit" class="btn-dossier w-full">{submitLabel}</button>
+        {hasPhoto && <button type="submit" form={`${uid}-rmphoto`} class="adm-link adm-link--danger justify-self-start">Remove photo</button>}
+      </div>
+    </div>
+  )}
+</form>
+{member && hasPhoto && (
+  <form id={`${uid}-rmphoto`} method="post" action={action} class="hidden"><input type="hidden" name="action" value="remove_photo" /></form>
+)}
+
+<script>
+  import { shrinkOnSubmit } from "@/lib/client/shrink-images";
+  const input = document.querySelector<HTMLInputElement>("[data-photo-input]");
+  const form = input?.closest("form");
+  if (input && form) shrinkOnSubmit(form, input);
+  const preview = document.querySelector<HTMLImageElement>("[data-photo-preview]");
+  let objectUrl: string | null = null;
+  input?.addEventListener("change", () => {
+    const file = input.files?.[0];
+    if (!file || !preview) return;
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    preview.src = objectUrl;
+  });
+</script>

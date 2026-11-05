@@ -3,7 +3,7 @@ import { isServableKey } from "@/lib/server/media";
 
 export const prerender = false;
 
-/** Streams an R2 object (events/*, gallery/*) with long-lived immutable caching. */
+/** Streams an R2 object (events/*, gallery/*, board/*) with long-lived immutable caching. */
 export const GET: APIRoute = async ({ params, locals, request }) => {
   const key = params.key ?? "";
   if (!isServableKey(key)) return new Response("Not found", { status: 404 });

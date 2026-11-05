@@ -4,7 +4,7 @@
  */
 import { randomToken } from "@/lib/server/auth";
 
-export const MEDIA_PREFIXES = ["events/", "gallery/"] as const;
+export const MEDIA_PREFIXES = ["events/", "gallery/", "board/"] as const;
 export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 
 const IMAGE_TYPES: Record<string, string> = {
@@ -47,4 +47,14 @@ export async function deleteMediaPath(bucket: R2Bucket, path: string | null | un
   const key = path.slice("/media/".length);
   if (!isServableKey(key)) return;
   await bucket.delete(key);
+}
+
+/** Stores an e-board headshot; returns its public path (/media/board/<term-start>/<random>.<ext>). */
+export async function putBoardPhoto(bucket: R2Bucket, file: File, term: string): Promise<string> {
+  const ext = IMAGE_TYPES[file.type];
+  const key = `board/${term.slice(0, 4)}/${randomToken(12)}.${ext}`;
+  await bucket.put(key, await file.arrayBuffer(), {
+    httpMetadata: { contentType: file.type, cacheControl: "public, max-age=31536000, immutable" },
+  });
+  return `/media/${key}`;
 }
