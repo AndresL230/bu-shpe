@@ -1,0 +1,112 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import BoardMemberForm from "@/components/admin/BoardMemberForm.astro";
+import { listBoard, listTerms, normalizeTerm, publicTerm, termFor } from "@/lib/server/board";
+import { boardMessage } from "@/lib/server/board-form";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const terms = await listTerms(db);
+const live = await publicTerm(db);
+const requested = normalizeTerm(Astro.url.searchParams.get("term") ?? "");
+const term = requested ?? terms[0] ?? termFor();
+const members = await listBoard(db, term);
+const officers = members.filter((m) => !m.isAdvisor);
+const advisors = members.filter((m) => m.isAdvisor);
+const allTerms = terms.includes(term) ? terms : [term, ...terms];
+
+// Suggest the year after the newest one for "start a new year".
+const newest = terms[0] ?? termFor();
+const nextTerm = `${Number(newest.slice(0, 4)) + 1}–${Number(newest.slice(0, 4)) + 2}`;
+const isLive = term === live;
+
+const ok = boardMessage(Astro.url.searchParams.get("ok"));
+const error = boardMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="E-board" accent="roster" eyebrow="02 — Board" section="board">
+  <a slot="actions" href={`/about/board${isLive ? "" : `?term=${encodeURIComponent(term)}`}`} class="btn-dossier-ghost" target="_blank" rel="noopener">View page ↗</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <nav class="adm-segment mb-6" aria-label="Academic year">
+    {allTerms.map((t) => (
+      <a href={`/admin/board?term=${encodeURIComponent(t)}`} aria-current={t === term ? "page" : undefined}>
+        {t}{t === live && <span class="opacity-60"> · on site</span>}
+      </a>
+    ))}
+  </nav>
+
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div class="min-w-0">
+      {members.length === 0 ? (
+        <div class="adm-panel">
+          <p class="mono-label mb-2">Empty</p>
+          <p class="text-ink-muted">No one is listed for {term} yet. Add people on the right, or copy last year's roles below.</p>
+        </div>
+      ) : (
+        <table class="adm-table adm-table--stack">
+          <thead>
+            <tr>
+              <th class="w-12"></th>
+              <th>Position</th>
+              <th>Name</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...officers, ...advisors].map((m) => {
+              const group = m.isAdvisor ? advisors : officers;
+              const i = group.indexOf(m);
+              return (
+                <tr>
+                  <td data-label="" class="max-sm:hidden!">
+                    <img src={m.photo} alt="" class="h-12 w-10 bg-surface-soft object-cover" loading="lazy" />
+                  </td>
+                  <td data-label="" class="font-mono text-xs uppercase tracking-[0.06em] text-accent">{m.role}</td>
+                  <td data-label="">
+                    <a href={`/admin/board/${m.id}`} class:list={["font-semibold hover:text-accent", m.name === "TBD" ? "text-ink-muted" : "text-ink"]}>{m.name}</a>
+                    {m.major && <span class="block text-xs text-ink-muted">{m.major}{m.year && ` · ${m.year}`}</span>}
+                  </td>
+                  <td data-label="" class="adm-cell-actions whitespace-nowrap text-right">
+                    <form method="post" action={`/api/admin/board/${m.id}`} class="inline">
+                      <button name="action" value="up" class="adm-link px-1 disabled:opacity-25" disabled={i === 0} aria-label={`Move ${m.name} up`}>↑</button>
+                      <button name="action" value="down" class="adm-link px-1 disabled:opacity-25" disabled={i === group.length - 1} aria-label={`Move ${m.name} down`}>↓</button>
+                    </form>
+                    <a href={`/admin/board/${m.id}`} class="adm-link ml-3">Edit</a>
+                    <details class="adm-confirm ml-3 inline-block">
+                      <summary class="adm-link adm-link--danger">Remove</summary>
+                      <form method="post" action={`/api/admin/board/${m.id}`} class="adm-confirm__panel adm-confirm__panel--sm grid gap-3">
+                        <p class="text-sm text-ink">Remove {m.name} from {term}?</p>
+                        <button name="action" value="delete" class="btn-danger justify-self-start px-3 py-1.5 text-[0.65rem]">Yes, remove</button>
+                      </form>
+                    </details>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+
+      <form method="post" action="/api/admin/board" class="adm-panel mt-10 grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+        <input type="hidden" name="action" value="copy" />
+        <input type="hidden" name="from" value={terms[0] ?? ""} />
+        <p class="mono-label sm:col-span-3">Start a new academic year</p>
+        <p class="text-sm text-ink-muted sm:col-span-2">
+          Copies the positions{terms[0] ? ` from ${terms[0]}` : ""} with names set to TBD, plus the advisor.
+          The site keeps showing {live ?? "the current board"} until you fill in at least one name for the new year.
+        </p>
+        <div class="flex gap-3 sm:col-span-3">
+          <input name="to" class="adm-input max-w-[12rem] font-mono" value={nextTerm} aria-label="New academic year" required />
+          <button type="submit" class="btn-dossier-ghost" disabled={!terms.length}>Start {nextTerm.slice(2)}</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="adm-panel content-start">
+      <BoardMemberForm action="/api/admin/board" term={term} terms={allTerms} submitLabel="Add to board" compact />
+    </div>
+  </div>
+</AdminLayout>

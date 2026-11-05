@@ -3,12 +3,18 @@ import OrangeTick from "@/components/OrangeTick.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import Reveal from "@/components/Reveal.astro";
 import type { BoardMember } from "@/types";
-import boardData from "@/data/board.json";
 import siteData from "@/data/site.json";
 
-const allMembers = boardData as BoardMember[];
-const officers = allMembers.filter((m) => m.role !== "Faculty Advisor");
-const advisor = allMembers.find((m) => m.role === "Faculty Advisor");
+interface Props {
+  members: (BoardMember & { isAdvisor: boolean })[];
+  /** Academic year shown, e.g. "2026–2027". */
+  term: string;
+  /** Every year on record, newest first. */
+  terms: string[];
+}
+const { members: allMembers, term } = Astro.props;
+const officers = allMembers.filter((m) => !m.isAdvisor);
+const advisor = allMembers.find((m) => m.isAdvisor);
 
 const visionItems = [
   "Fostering a sense of community for Hispanic engineers on campus.",
@@ -40,7 +46,7 @@ const visionItems = [
       <div class="border border-cream/30 p-6">
         <p class="eyebrow text-accent mb-2">Elected Term</p>
         <p class="display text-4xl md:text-5xl text-cream">
-          {siteData.currentBoardTerm}
+          {term}
         </p>
       </div>
     </div>

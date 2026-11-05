@@ -36,7 +36,7 @@ const ok = okKey ? MESSAGES[okKey] : null;
 const error = errKey ? (MESSAGES[errKey === "role" ? "role_invalid" : errKey] ?? null) : null;
 const soleOwner = admins.filter((a) => a.role === "owner").length === 1;
 ---
-<AdminLayout title="Admin" accent="access" eyebrow="04 — Admins / Owner only" section="admins">
+<AdminLayout title="Admin" accent="access" eyebrow="05 — Admins / Owner only" section="admins">
   {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
   {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
 

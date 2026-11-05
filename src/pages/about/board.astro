@@ -2,9 +2,22 @@
 import Base from "@/layouts/Base.astro";
 import BoardClassic from "@/components/variants/BoardClassic.astro";
 import BoardDossier from "@/components/variants/BoardDossier.astro";
+import { listBoard, listTerms, normalizeTerm, publicTerm } from "@/lib/server/board";
+
+// The roster lives in D1 (edited at /admin/board), so this page renders per request.
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const current = await publicTerm(db);
+// Years newer than the live one are still being filled in; keep them off the public page.
+const terms = (await listTerms(db)).filter((t) => !current || t <= current);
+const requested = normalizeTerm(Astro.url.searchParams.get("term") ?? "");
+const term = requested && terms.includes(requested) ? requested : current ?? terms[0] ?? "";
+const members = term ? await listBoard(db, term) : [];
+const props = { members, term, terms };
 ---
 
-<Base title="Board">
-  <div data-variant-block="classic"><BoardClassic /></div>
-  <div data-variant-block="dossier"><BoardDossier /></div>
+<Base title={term && term !== terms[0] ? `Board ${term}` : "Board"}>
+  <div data-variant-block="classic"><BoardClassic {...props} /></div>
+  <div data-variant-block="dossier"><BoardDossier {...props} /></div>
 </Base>

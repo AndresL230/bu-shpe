@@ -2,15 +2,27 @@
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import type { BoardMember } from "@/types";
-import boardData from "@/data/board.json";
 import siteData from "@/data/site.json";
 
-const allMembers = boardData as BoardMember[];
-const officers = allMembers.filter((m) => m.role !== "Faculty Advisor");
-const advisor = allMembers.find((m) => m.role === "Faculty Advisor");
+interface Props {
+  members: (BoardMember & { isAdvisor: boolean })[];
+  /** Academic year shown, e.g. "2026–2027". */
+  term: string;
+  /** Every year on record, newest first. */
+  terms: string[];
+}
+const { members: allMembers, term, terms } = Astro.props;
+const officers = allMembers.filter((m) => !m.isAdvisor);
+const advisor = allMembers.find((m) => m.isAdvisor);
 
 // Short form of the term for the banner watermark, e.g. "2025–2026" -> "25–26"
-const termShort = siteData.currentBoardTerm.replace(/\d{4}/g, (y) => y.slice(-2));
+const termShort = term.replace(/\d{4}/g, (y) => y.slice(-2));
+
+/** "Class of 2028 · Miami, FL", skipping blanks and old "—"/"TBD" fillers. */
+const details = (m: BoardMember) =>
+  [m.year, m.hometown].filter((v) => v && v !== "—" && v !== "TBD").join(" · ");
+const isLatest = term === terms[0];
+const pastTerms = terms.filter((t) => t !== term);
 
 const visionItems = [
   "Fostering a sense of community for Hispanic engineers on campus.",
@@ -23,7 +35,7 @@ const visionItems = [
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
-      Leadership · Term {siteData.currentBoardTerm}
+      Leadership · Term {term}
     </p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       Meet the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">board</em>.
@@ -46,29 +58,44 @@ const visionItems = [
   <SectionIndex label="Roster" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">The officer corps.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
-    Elected each year to steer events, outreach, and finances — one seat per portfolio.
+    {isLatest
+      ? "Elected each year to steer events, outreach, and finances — one seat per portfolio."
+      : `The ${term} board. `}
+    {!isLatest && <a href="/about/board" class="text-accent underline underline-offset-4">See the current board.</a>}
   </p>
 
   <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
     {officers.map((member) => (
       <div class="bg-bg p-5 sm:p-7 flex flex-row gap-5 sm:flex-col sm:gap-0">
         <div class="w-24 shrink-0 self-start sm:w-auto sm:self-auto aspect-[4/5] bg-surface-soft overflow-hidden sm:mb-5">
-          <img src={member.photo} alt={member.name} class="w-full h-full object-cover" loading="lazy" />
+          <img src={member.photo} alt={member.name === "TBD" ? "" : member.name} class="w-full h-full object-cover" loading="lazy" />
         </div>
         <div class="min-w-0 flex flex-1 flex-col">
           <p class="font-mono text-xs sm:text-sm text-accent tracking-wide uppercase mb-2 sm:mb-3">{member.role}</p>
           <h3 class="display text-2xl md:text-3xl text-ink">{member.name}</h3>
-          <p class="font-serif italic text-ink-muted mt-2 sm:mt-3">"{member.bio}"</p>
-          <div class="mt-auto pt-4 sm:pt-6">
-            <p class="font-mono text-xs text-ink tracking-wide uppercase">{member.major}</p>
-            <p class="font-mono text-xs text-ink-muted tracking-wide uppercase mt-1">
-              {member.year} · {member.hometown}
-            </p>
-          </div>
+          {member.bio && <p class="font-serif italic text-ink-muted mt-2 sm:mt-3">"{member.bio}"</p>}
+          {(member.major || details(member)) && (
+            <div class="mt-auto pt-4 sm:pt-6">
+              {member.major && <p class="font-mono text-xs text-ink tracking-wide uppercase">{member.major}</p>}
+              {details(member) && <p class="font-mono text-xs text-ink-muted tracking-wide uppercase mt-1">{details(member)}</p>}
+            </div>
+          )}
         </div>
       </div>
     ))}
   </div>
+  {officers.length === 0 && (
+    <p class="mt-10 font-mono text-sm uppercase tracking-[0.12em] text-ink-muted">Roster coming soon.</p>
+  )}
+
+  {pastTerms.length > 0 && (
+    <nav aria-label="Past boards" class="mt-10 flex flex-wrap items-baseline gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.12em]">
+      <span class="text-ink-muted">{isLatest ? "Past boards" : "Other years"}</span>
+      {pastTerms.map((t) => (
+        <a href={t === terms[0] ? "/about/board" : `/about/board?term=${encodeURIComponent(t)}`} class="text-link hover:text-accent">{t}</a>
+      ))}
+    </nav>
+  )}
 </section>
 
 {advisor && (
@@ -92,13 +119,13 @@ const visionItems = [
           <div class="min-w-0 flex flex-col">
             <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{advisor.role}</p>
             <h3 class="display text-2xl md:text-3xl text-ink">{advisor.name}</h3>
-            <p class="font-serif italic text-ink-muted mt-3">"{advisor.bio}"</p>
-            <div class="mt-6 pt-6 border-t border-outline-soft">
-              <p class="font-mono text-xs text-ink tracking-wide uppercase">{advisor.major}</p>
-              <p class="font-mono text-xs text-ink-muted tracking-wide uppercase mt-1">
-                {advisor.year} · {advisor.hometown}
-              </p>
-            </div>
+            {advisor.bio && <p class="font-serif italic text-ink-muted mt-3">"{advisor.bio}"</p>}
+            {(advisor.major || details(advisor)) && (
+              <div class="mt-6 pt-6 border-t border-outline-soft">
+                {advisor.major && <p class="font-mono text-xs text-ink tracking-wide uppercase">{advisor.major}</p>}
+                {details(advisor) && <p class="font-mono text-xs text-ink-muted tracking-wide uppercase mt-1">{details(advisor)}</p>}
+              </div>
+            )}
           </div>
         </div>
       </div>
