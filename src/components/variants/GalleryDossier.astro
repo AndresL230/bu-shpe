@@ -1,6 +1,7 @@
 ---
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
+import PhotoViewer from "@/components/PhotoViewer.astro";
 
 import volunteeringData from "@/data/volunteering.json";
 import conferencesData from "@/data/conferences.json";
@@ -48,14 +49,14 @@ const allFilters = ["All", "Events", "Volunteering", "Conferences"] as const;
 const filters = allFilters.filter((label) => label === "All" || counts[label] >= CHIP_MIN);
 
 const chipBase =
-  "inline-flex items-center font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 border transition-colors";
+  "inline-flex shrink-0 items-center whitespace-nowrap font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 min-h-11 md:min-h-0 border transition-colors";
 const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:text-ink";
 ---
 
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
       Photo Archive · {counts.All} frames on file
     </p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
@@ -83,7 +84,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   </p>
 
   <!-- Mono filter chips -->
-  <nav aria-label="Filter gallery by category" class="mt-10 flex flex-wrap gap-3">
+  <nav aria-label="Filter gallery by category" class="-mx-6 mt-10 flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
     {filters.map((label) => {
       const value = label === "All" ? "" : label;
       const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
@@ -110,43 +111,33 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
     <p class="pullquote mx-auto max-w-md mt-3">Check back soon.</p>
   </div>
 
-  <!-- Masonry grid -->
-  <div class="mt-12 gap-3 [column-count:1] sm:[column-count:2] lg:[column-count:3]" id="gallery-grid-d">
+  <!-- Contact sheet: fixed-aspect frames, so loading never shifts the layout -->
+  <div class="mt-12 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3" id="gallery-grid-d" data-viewer-group>
     {allPhotos.map((p, i) => (
       <button
         type="button"
-        class="group mb-3 block w-full break-inside-avoid overflow-hidden border border-outline-soft transition focus:outline-none focus:ring-2 focus:ring-accent"
+        class="group block aspect-[4/3] w-full overflow-hidden border border-outline-soft bg-surface-soft focus:outline-none focus:ring-2 focus:ring-accent"
         data-gallery-index-d={i}
         data-category={p.group}
+        data-viewer-src={p.src}
+        data-viewer-alt={p.alt}
       >
         <img
           src={p.src}
           alt={p.alt}
           loading="lazy"
-          class="w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+          decoding="async"
+          data-fade
+          class="h-full w-full object-cover group-hover:scale-[1.03] [transition:opacity_0.4s_ease,transform_0.5s_ease]"
         />
       </button>
     ))}
   </div>
 </section>
 
-<!-- Dossier lightbox (dossier-unique ids) -->
-<dialog
-  id="gallery-lightbox-d"
-  aria-label="Photo lightbox"
-  aria-modal="true"
-  class="m-0 max-h-dvh max-w-screen-md p-0 backdrop:bg-deep/90 open:flex"
->
-  <button
-    type="button"
-    id="lightbox-close-d"
-    class="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-ink"
-    aria-label="Close"
-  >×</button>
-  <img id="lightbox-image-d" alt="" class="max-h-dvh w-full object-contain" />
-</dialog>
+<PhotoViewer />
 
-<script is:inline define:vars={{ photos: allPhotos }}>
+<script is:inline>
   (function () {
     var root = document.getElementById("gallery-dossier-root");
     if (!root) return;
@@ -205,20 +196,6 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       applyFilter(p.get("cat"));
     });
 
-    // Lightbox (scoped to dossier subtree)
-    var dlg = document.getElementById("gallery-lightbox-d");
-    var img = document.getElementById("lightbox-image-d");
-    var close = document.getElementById("lightbox-close-d");
-    items.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var i = Number(btn.getAttribute("data-gallery-index-d"));
-        img.src = photos[i].src;
-        img.alt = photos[i].alt;
-        dlg.showModal();
-      });
-    });
-    if (close) close.addEventListener("click", function () { dlg.close(); });
-    if (dlg) dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
   })();
 </script>
 
