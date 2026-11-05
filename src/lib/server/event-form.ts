@@ -11,6 +11,9 @@ export const FLASH_MESSAGES = {
   created: "Event created.",
   updated: "Changes saved.",
   deleted: "Event deleted.",
+  photos_added: "Photos added to the roll.",
+  photo_removed: "Photo removed.",
+  cover_set: "Cover photo updated.",
   // errors
   title: "Give the event a title (160 characters max).",
   date: "Pick a valid date — a full date, or a month for month-only events.",
@@ -24,6 +27,8 @@ export const FLASH_MESSAGES = {
   photo_required: "Published events need a photo — upload one or save as a draft.",
   upload_failed: "The photo upload failed. Try again.",
   not_found: "That event no longer exists.",
+  photos_none: "Choose at least one photo to upload.",
+  photos_many: "Upload at most 12 photos at a time (40 per event).",
   confirm: "Type DELETE to confirm.",
   server: "Something went wrong saving the event. Try again.",
 } as const;

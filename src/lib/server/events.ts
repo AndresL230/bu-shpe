@@ -243,3 +243,43 @@ export async function listPublishedEventPhotos(db: D1Database): Promise<Map<numb
   }
   return byEvent;
 }
+
+export const MAX_ROLL_PHOTOS = 40;
+
+export async function getEventPhoto(db: D1Database, eventId: number, photoId: number): Promise<EventPhoto | null> {
+  const r = await db
+    .prepare("SELECT * FROM event_photos WHERE id = ? AND event_id = ?")
+    .bind(photoId, eventId)
+    .first<EventPhotoRow>();
+  return r ? toPhoto(r) : null;
+}
+
+/** Appends photos to the end of an event's roll. */
+export async function addEventPhotos(db: D1Database, eventId: number, urls: string[]): Promise<void> {
+  if (!urls.length) return;
+  const max = await db
+    .prepare("SELECT COALESCE(MAX(sort), 0) AS m FROM event_photos WHERE event_id = ?")
+    .bind(eventId)
+    .first<{ m: number }>();
+  const start = (max?.m ?? 0) + 1;
+  await db.batch(
+    urls.map((url, i) =>
+      db.prepare("INSERT OR IGNORE INTO event_photos (event_id, url, sort) VALUES (?, ?, ?)").bind(eventId, url, start + i),
+    ),
+  );
+}
+
+export async function deleteEventPhoto(db: D1Database, photoId: number): Promise<void> {
+  await db.prepare("DELETE FROM event_photos WHERE id = ?").bind(photoId).run();
+}
+
+/** Swaps a roll photo with the cover: the old cover (if any) takes the roll photo's slot. */
+export async function swapCoverWithRollPhoto(db: D1Database, eventId: number, photo: EventPhoto, oldCover: string): Promise<void> {
+  const now = "strftime('%Y-%m-%dT%H:%M:%fZ','now')";
+  await db.batch([
+    db.prepare(`UPDATE events SET photo = ?, updated_at = ${now} WHERE id = ?`).bind(photo.url, eventId),
+    oldCover
+      ? db.prepare("UPDATE event_photos SET url = ?, taken_at = NULL WHERE id = ?").bind(oldCover, photo.id)
+      : db.prepare("DELETE FROM event_photos WHERE id = ?").bind(photo.id),
+  ]);
+}
