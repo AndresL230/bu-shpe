@@ -1,10 +1,12 @@
 ---
 /**
- * Landing-page "where we work" spread: one column per industry, a large
- * count over each column, then the companies as a hairline-ruled list.
+ * Landing-page "where we work" spread: one column per industry, its count
+ * (a large numeral on phones, a mono "· 5" beside the industry at md+), then
+ * the companies as a hairline-ruled list.
  * Data: src/data/employers.json (same source as /careers).
  */
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import Icon from "@/components/Icon.astro";
 import employersData from "@/data/employers.json";
 import { logoSrc, faviconSrc } from "@/lib/logos";
 import type { EmployerGroup } from "@/types";
@@ -34,22 +36,22 @@ const total = groups.reduce((n, g) => n + g.companies.length, 0);
     {groups.map((group) => (
       <div>
         <div class="flex items-end justify-between gap-4 sm:block">
-          <p class="mono-label">{group.industry}</p>
-          <p class="display text-4xl leading-none text-ink sm:mt-2 sm:text-7xl" aria-hidden="true">
+          <p class="mono-label">{group.industry}<span class="hidden md:inline text-ink"> · {group.companies.length}</span></p>
+          <p class="display text-4xl leading-none text-ink sm:mt-2 sm:text-7xl md:hidden" aria-hidden="true">
             {String(group.companies.length).padStart(2, "0")}
           </p>
         </div>
-        <ul class="mt-3 grid grid-cols-2 gap-x-4 border-t-2 border-ink sm:mt-5 sm:grid-cols-1 sm:gap-x-0">
+        <ul class="mt-3 grid grid-cols-2 gap-x-4 border-t-2 border-ink sm:mt-5 sm:grid-cols-1 sm:gap-x-0 md:mt-3">
           {group.companies.map((c) => (
             <li class="group flex h-12 items-center gap-2.5 border-b border-outline-soft sm:h-14 sm:gap-4">
-              <span class="flex h-7 w-10 shrink-0 items-center justify-center sm:h-8 sm:w-14">
+              <span class="flex h-7 w-10 shrink-0 items-center justify-center sm:h-8 sm:w-14 md:h-6 md:w-16">
                 <img
                   src={logoSrc(c)}
                   data-fallback={c.logo ? undefined : faviconSrc(c.domain)}
                   alt=""
                   loading="lazy"
                   referrerpolicy="no-referrer"
-                  class="spread-logo max-h-7 max-w-10 sm:max-h-8 sm:max-w-14 object-contain mix-blend-multiply grayscale transition duration-300 group-hover:grayscale-0"
+                  class="spread-logo max-h-7 max-w-10 sm:max-h-8 sm:max-w-14 md:max-h-6 md:max-w-16 object-contain mix-blend-multiply grayscale transition duration-300 group-hover:grayscale-0"
                 />
               </span>
               <span class="text-[13px] leading-tight font-medium text-ink transition-colors sm:text-sm group-hover:text-accent">{c.name}</span>
@@ -62,7 +64,8 @@ const total = groups.reduce((n, g) => n + g.companies.length, 0);
 
   <a href="/careers" class="group mt-10 inline-flex min-h-11 items-center gap-2 sm:mt-12 md:min-h-0 font-sans text-base font-medium text-ink transition-colors hover:text-accent">
     <span class="border-b border-current pb-0.5">See where we work</span>
-    <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+    <span aria-hidden="true" class="transition-transform group-hover:translate-x-1 md:hidden">→</span>
+    <Icon name="arrow-forward" class="hidden md:block w-4 h-4 transition-transform group-hover:translate-x-1" />
   </a>
 </section>
 

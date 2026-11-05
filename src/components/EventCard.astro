@@ -1,28 +1,47 @@
 ---
-import type { EventItem } from "@/types";
-interface Props { event: EventItem }
-const { event } = Astro.props;
+/**
+ * The dossier event card: photo on top (4:3), mono date stamp + category,
+ * title, summary. Used by /events/all and by the home logbook at md+.
+ * Phones (<640px) on /events/all get a compact row: square thumbnail beside
+ * the text, no thumbnail slot when the event has no photo.
+ * Extra attributes (data-*) pass through to the link, for the /events/all filter.
+ */
+import type { HTMLAttributes } from "astro/types";
+import EventPhotoFallback from "@/components/EventPhotoFallback.astro";
+import type { EventRecord } from "@/lib/server/events";
+import { formatEventStamp } from "@/lib/events";
 
-const dateLabel = new Date(event.date + (event.date.length === 7 ? "-01" : "")).toLocaleDateString("en-US", {
-  month: "short",
-  year: "numeric",
-});
+interface Props extends Omit<HTMLAttributes<"a">, "href"> {
+  event: EventRecord;
+}
+
+const { event, class: className, ...attrs } = Astro.props as Props;
+
+// Backfilled events carry a generated placeholder summary
+// ("From the chapter attendance records · Fall 2024."); cards skip it.
+const FILLER_SUMMARY = /^From the chapter (attendance records|photo archive) · /;
+const summary = FILLER_SUMMARY.test(event.description) ? "" : event.description;
 ---
-<article class="group flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]">
-  <div class="aspect-[4/3] overflow-hidden photo-warm">
-    <img
-      src={event.photo}
-      alt={event.title}
-      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-      loading="lazy"
-    />
+<a {...attrs} href={`/events/${event.slug}`} class:list={["group flex flex-row gap-4 bg-bg py-4 sm:flex-col sm:gap-0 sm:p-6", className]}>
+  {/* Phones: no thumbnail slot for photo-less events — the fallback only repeats the category */}
+  <div class:list={["w-20 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5", !event.photo && "hidden sm:block"]}>
+    {event.photo ? (
+      <img
+        src={event.photo}
+        alt={event.title}
+        class="w-full h-full object-cover transition group-hover:scale-[1.02]"
+        loading="lazy"
+      />
+    ) : (
+      <EventPhotoFallback label={event.category} tone="dossier" />
+    )}
   </div>
-  <div class="flex flex-1 flex-col gap-3 p-6">
-    <div class="flex items-center justify-between">
-      <span class="eyebrow text-accent">{event.category}</span>
-      <time class="text-xs text-ink-muted">{dateLabel}</time>
+  <div class="min-w-0">
+    <div class="flex flex-wrap items-baseline gap-x-3 mb-1 sm:mb-3">
+      <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatEventStamp(event.date)}</span>
+      <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
     </div>
-    <h3 class="display text-2xl leading-tight">{event.title}</h3>
-    <p class="text-sm leading-relaxed text-ink-muted">{event.description}</p>
+    <h3 class="display text-xl md:text-2xl text-ink leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
+    {summary && <p class="mt-2 text-sm text-ink-muted leading-relaxed line-clamp-2 sm:line-clamp-none">{summary}</p>}
   </div>
-</article>
+</a>

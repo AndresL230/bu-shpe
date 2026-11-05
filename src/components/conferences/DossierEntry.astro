@@ -6,7 +6,9 @@ const idx = String(index + 1).padStart(2, "0");
 // Phones: only the newest entry (index 0) keeps the full plate. Every later
 // entry collapses to a compact row — square thumb left, text right — so the
 // log reads as an index rather than eight stacked full-width cards.
-// Desktop (md+) is the same layout for every entry.
+// Desktop (md+) is the same layout for every entry; the year orders the log,
+// so the 01–08 index is phones-only, and a photo-less entry gets a slim
+// year slab instead of a full 16:10 placeholder.
 const compact = index > 0;
 const hasMeta = (conf.headcount != null && conf.headcount > 0) || (conf.outcomes?.length ?? 0) > 0;
 ---
@@ -17,7 +19,7 @@ const hasMeta = (conf.headcount != null && conf.headcount > 0) || (conf.outcomes
         <img src={conf.photos[0]} alt={`SHPE convention ${conf.year} in ${conf.city}`} class="w-full h-full object-cover" loading="lazy" />
       </div>
     ) : (
-      <div class:list={["blueprint aspect-[16/10] border border-outline-soft bg-surface-soft flex flex-col items-center justify-center gap-2", compact ? "max-md:aspect-square max-md:gap-1" : "max-md:aspect-[16/6]"]}>
+      <div class:list={["blueprint aspect-[16/10] md:aspect-auto md:py-8 border border-outline-soft bg-surface-soft flex flex-col items-center justify-center gap-2", compact ? "max-md:aspect-square max-md:gap-1" : "max-md:aspect-[16/6]"]}>
         <span class:list={["display text-5xl text-ink/15 leading-none", compact && "max-md:text-3xl"]} aria-hidden="true">{conf.year}</span>
         {compact ? (
           <span class="mono-label"><span class="md:hidden">No photos</span><span class="max-md:hidden">No photos on file</span></span>
@@ -29,7 +31,7 @@ const hasMeta = (conf.headcount != null && conf.headcount > 0) || (conf.outcomes
   </div>
   <div class="md:col-span-7">
     <div class:list={["flex items-center gap-3 mb-3", compact && "max-md:mb-1.5"]}>
-      <span class="mono-label text-ink">{idx}</span>
+      <span class="mono-label text-ink md:hidden">{idx}</span>
       <span class:list={["font-mono text-accent text-sm tracking-[0.12em] uppercase", compact && "max-md:text-xs"]}>{compact ? (
         <><span class="md:hidden">{conf.year}</span><span class="max-md:hidden">{conf.region ?? "National Convention"} · {conf.year}</span></>
       ) : (

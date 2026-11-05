@@ -59,7 +59,9 @@ const yearCount = new Map(years.map((y) => [y, allPhotos.filter((p) => p.year ==
 // Phones preview only the first ~PREVIEW frames; the rest sit in a <details>
 // ("Show all N frames"), which md+ always shows (see <style>). A year cut
 // mid-way is cut on a multiple of 6 frames, so its first half ends on a full
-// row at 2 or 3 columns and md+ reads the two halves as one seamless grid.
+// row at 2 or 3 columns. Its second half renders into the same grid as
+// .gallery-tail frames (hidden on phones until "Show all" opens), so any
+// column count — 4 at lg — reads the year as one seamless grid.
 const PREVIEW = 24;
 const ROW = 6;
 type Block = { year: string; photos: Frame[]; continued: boolean };
@@ -79,16 +81,17 @@ for (const year of years) {
 }
 // Frame indices run across head + tail in display order.
 const indexOf = new Map([...head, ...tail].flatMap((b) => b.photos).map((p, i) => [p, i]));
+// A continued year's second half, keyed by year, drawn inside its first half's grid.
+const continuation = new Map(tail.filter((b) => b.continued).map((b) => [b.year, b.photos]));
+const restTail = tail.filter((b) => !b.continued);
 
 const yearLabel = (y: string) => y || "Undated";
 const frameLabel = (n: number) => `${n} ${n === 1 ? "frame" : "frames"}`;
 const blockCls = "mt-12 first:mt-0 md:mt-16";
-const headerCls = "flex items-baseline justify-between gap-4 border-b border-outline-soft pb-3";
+// md+: the year header pins under the fixed 72px nav while its frames scroll.
+const headerCls = "flex items-baseline justify-between gap-4 border-b border-outline-soft pb-3 md:sticky md:top-[72px] md:z-10 md:bg-bg md:pt-4";
 // Phones: 2-up so frames stay legible; the preview keeps the wall short.
-const gridCls = "grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-2 md:grid-cols-2 md:gap-3 lg:grid-cols-3";
-// A continued year's second half: no header, and one grid gap above so md+
-// can't tell it from the first half.
-const contCls = "mt-1 sm:mt-2 md:mt-3";
+const gridCls = "grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-2 md:grid-cols-3 md:gap-2 lg:grid-cols-4";
 const frameCls =
   "group block aspect-[4/3] w-full overflow-hidden border border-outline-soft bg-surface-soft focus:outline-none focus:ring-2 focus:ring-accent";
 const imgCls = "h-full w-full object-cover group-hover:scale-[1.03] [transition:opacity_0.4s_ease,transform_0.5s_ease]";
@@ -113,8 +116,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">
       Photo Archive · {counts.All} frames on file
     </p>
@@ -126,9 +129,6 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
     </p>
   </div>
 
-  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
-    <span class="display text-[200px] lg:text-[280px] leading-none text-cream translate-y-1/4 inline-block">{counts.All}</span>
-  </div>
 </header>
 
 <!-- 01 — ARCHIVE -->
@@ -184,6 +184,11 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
               <img src={p.src} alt={p.alt} loading="lazy" decoding="async" data-fade class={imgCls} />
             </button>
           ))}
+          {(continuation.get(b.year) ?? []).map((p) => (
+            <button type="button" class:list={[frameCls, "gallery-tail"]} data-gallery-index-d={indexOf.get(p)} data-category={p.group} data-year-d={p.year} data-viewer-src={p.src} data-viewer-alt={p.alt}>
+              <img src={p.src} alt={p.alt} loading="lazy" decoding="async" data-fade class={imgCls} />
+            </button>
+          ))}
         </div>
       </div>
     ))}
@@ -194,15 +199,13 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
           <span>Show all <span data-more-count-d>{allPhotos.length}</span> frames</span>
           <span aria-hidden="true" class="w-4 text-center text-lg leading-none text-accent">+</span>
         </summary>
-        {tail.map((b) => (
-          <div data-year-group-d class={b.continued ? contCls : blockCls}>
-            {!b.continued && (
-              <h3 class={headerCls}>
-                <span class="display text-2xl md:text-3xl text-ink leading-none">{yearLabel(b.year)}</span>
-                <span class="mono-label" data-year-count-d={b.year}>{frameLabel(yearCount.get(b.year) ?? 0)}</span>
-              </h3>
-            )}
-            <div class:list={[gridCls, !b.continued && "mt-4 md:mt-5"]}>
+        {restTail.map((b) => (
+          <div data-year-group-d class={blockCls}>
+            <h3 class={headerCls}>
+              <span class="display text-2xl md:text-3xl text-ink leading-none">{yearLabel(b.year)}</span>
+              <span class="mono-label" data-year-count-d={b.year}>{frameLabel(yearCount.get(b.year) ?? 0)}</span>
+            </h3>
+            <div class:list={[gridCls, "mt-4 md:mt-5"]}>
               {b.photos.map((p) => (
                 <button type="button" class={frameCls} data-gallery-index-d={indexOf.get(p)} data-category={p.group} data-year-d={p.year} data-viewer-src={p.src} data-viewer-alt={p.alt}>
                   <img src={p.src} alt={p.alt} loading="lazy" decoding="async" data-fade class={imgCls} />
@@ -267,7 +270,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       });
       var strandedHeader = false;
       root.querySelectorAll("[data-year-group-d]").forEach(function (g) {
-        var own = g.querySelectorAll("[data-gallery-index-d]:not([hidden])").length;
+        var own = g.querySelectorAll("[data-gallery-index-d]:not([hidden]):not(.gallery-tail)").length;
         var countEl = g.querySelector("[data-year-count-d]");
         var n = countEl ? yearN[countEl.getAttribute("data-year-count-d")] : own;
         g.hidden = n === 0;
@@ -278,7 +281,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       // preview would be too thin to stand alone, hide it when nothing is below.
       var more = root.querySelector("[data-more-d]");
       if (more) {
-        var below = more.querySelectorAll("[data-gallery-index-d]:not([hidden])").length;
+        var below = more.querySelectorAll("[data-gallery-index-d]:not([hidden])").length
+          + root.querySelectorAll(".gallery-tail:not([hidden])").length;
         var total = root.querySelectorAll("[data-gallery-index-d]:not([hidden])").length;
         var preview = Number(more.getAttribute("data-preview-d")) || 0;
         more.hidden = below === 0;
@@ -319,6 +323,10 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       .gallery-more::details-content { content-visibility: visible; display: block; }
       .gallery-more-summary { display: none; }
     }
+  }
+  /* Phones: a split year's second half waits for "Show all", like the rest. */
+  @media (max-width: 47.98rem) {
+    #gallery-grid-d:not(:has(> .gallery-more[open])) .gallery-tail { display: none; }
   }
 </style>
 

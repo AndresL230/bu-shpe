@@ -1,12 +1,26 @@
 ---
+/**
+ * Chapter social links. Default: a row of small chips.
+ * `ledger`: chips on phones; md+ swaps to large hairline ledger rows
+ * (network name, destination host, arrow), the same pattern as the /support
+ * path rows. Used by the /join "Channels" section.
+ */
 import siteData from "@/data/site.json";
+import Icon from "@/components/Icon.astro";
+
+interface Props {
+  ledger?: boolean;
+}
+const { ledger = false } = Astro.props as Props;
+
 const items = [
   { href: siteData.socials.instagram, label: "Instagram" },
   { href: siteData.socials.linkedin,  label: "LinkedIn" },
   { href: siteData.socials.facebook,  label: "Facebook" },
 ];
+const host = (href: string) => new URL(href).hostname.replace(/^www\./, "");
 ---
-<ul class="flex flex-wrap gap-3">
+<ul class:list={["flex flex-wrap gap-3", ledger && "md:hidden"]}>
   {items.map(({ href, label }) => (
     <li>
       <a
@@ -17,3 +31,20 @@ const items = [
     </li>
   ))}
 </ul>
+{ledger && (
+  <ul class="max-md:hidden border-t border-outline-soft">
+    {items.map(({ href, label }) => (
+      <li>
+        <a
+          href={href}
+          rel="noopener"
+          class="group grid grid-cols-[1fr_auto_auto] items-baseline gap-8 border-b border-outline-soft py-7"
+        >
+          <span class="display text-3xl leading-none text-ink transition-colors group-hover:text-accent lg:text-4xl">{label}</span>
+          <span class="font-mono text-sm tracking-wide text-ink-muted">{host(href)}</span>
+          <span class="text-accent" aria-hidden="true"><Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
+        </a>
+      </li>
+    ))}
+  </ul>
+)}
