@@ -5,17 +5,22 @@ import CtaBand from "@/components/CtaBand.astro";
 import volunteeringData from "@/data/volunteering.json";
 import conferencesData from "@/data/conferences.json";
 import siteData from "@/data/site.json";
-import type { EventRecord } from "@/lib/server/events";
+import type { EventPhoto, EventRecord } from "@/lib/server/events";
 
 interface Props {
   events: EventRecord[];
+  /** Extra photos per event id (event_photos), shown after each event's cover. */
+  extraPhotos?: Map<number, EventPhoto[]>;
 }
 
 const allPhotos = [
   // Events without a photo have nothing to show in the grid.
   ...Astro.props.events
     .filter((e) => e.photo)
-    .map((e) => ({ src: e.photo, alt: e.title, group: "Events" })),
+    .flatMap((e) => [
+      { src: e.photo, alt: e.title, group: "Events" },
+      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events" })),
+    ]),
   ...volunteeringData.flatMap((v) =>
     v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering" }))
   ),

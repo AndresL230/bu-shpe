@@ -1,7 +1,7 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import { STALL_MS, getCampaign } from "@/lib/server/campaigns";
-import { personalize, renderCampaign } from "@/lib/server/email-template";
+import { personalize, personalizeSubject, previewVars, renderCampaign } from "@/lib/server/email-template";
 
 export const prerender = false;
 
@@ -10,7 +10,8 @@ const campaign = Number.isInteger(id) && id > 0 ? await getCampaign(Astro.locals
 if (!campaign) return new Response("Campaign not found", { status: 404 });
 
 const site = Astro.locals.runtime.env.SITE_URL || Astro.url.origin;
-const { html } = personalize(renderCampaign(campaign.subject, campaign.body, site), "#");
+const vars = previewVars(Astro.locals.admin);
+const { html } = personalize(renderCampaign(personalizeSubject(campaign.subject, vars), campaign.body, site), "#", vars);
 
 const stalled = campaign.status === "sending" && Date.now() - Date.parse(campaign.created_at) > STALL_MS;
 const sending = campaign.status === "sending" && !stalled;

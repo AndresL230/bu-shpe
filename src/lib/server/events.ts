@@ -191,3 +191,55 @@ export async function updateEvent(db: D1Database, id: number, input: EventInput,
 export async function deleteEvent(db: D1Database, id: number): Promise<void> {
   await db.prepare("DELETE FROM events WHERE id = ?").bind(id).run();
 }
+
+/* ---------- Extra event photos (migrations/0003) ---------- */
+
+export interface EventPhoto {
+  id: number;
+  eventId: number;
+  url: string;
+  sort: number;
+  takenAt: string | null;
+}
+
+interface EventPhotoRow {
+  id: number;
+  event_id: number;
+  url: string;
+  sort: number;
+  taken_at: string | null;
+}
+
+const toPhoto = (r: EventPhotoRow): EventPhoto => ({
+  id: r.id,
+  eventId: r.event_id,
+  url: r.url,
+  sort: r.sort,
+  takenAt: r.taken_at,
+});
+
+/** An event's extra photos, in display order (the cover is events.photo, not here). */
+export async function listEventPhotos(db: D1Database, eventId: number): Promise<EventPhoto[]> {
+  const { results } = await db
+    .prepare("SELECT * FROM event_photos WHERE event_id = ? ORDER BY sort, id")
+    .bind(eventId)
+    .all<EventPhotoRow>();
+  return results.map(toPhoto);
+}
+
+/** Extra photos of every published event, grouped by event id (for /gallery). */
+export async function listPublishedEventPhotos(db: D1Database): Promise<Map<number, EventPhoto[]>> {
+  const { results } = await db
+    .prepare(
+      `SELECT p.* FROM event_photos p JOIN events e ON e.id = p.event_id
+        WHERE e.published = 1 ORDER BY p.event_id, p.sort, p.id`,
+    )
+    .all<EventPhotoRow>();
+  const byEvent = new Map<number, EventPhoto[]>();
+  for (const r of results) {
+    const list = byEvent.get(r.event_id) ?? [];
+    list.push(toPhoto(r));
+    byEvent.set(r.event_id, list);
+  }
+  return byEvent;
+}

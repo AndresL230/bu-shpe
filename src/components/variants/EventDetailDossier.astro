@@ -1,6 +1,7 @@
 ---
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
+import Gallery from "@/components/Gallery.astro";
 
 import siteData from "@/data/site.json";
 
@@ -10,9 +11,12 @@ interface Props {
   event: EventItem;
   displayDate: string;
   upcoming: boolean;
+  /** Extra photos beyond the cover (event_photos table). */
+  photos?: { url: string }[];
 }
 
-const { event, displayDate, upcoming } = Astro.props as Props;
+const { event, displayDate, upcoming, photos = [] } = Astro.props as Props;
+const roll = photos.map((p, i) => ({ src: p.url, alt: `${event.title}, photo ${i + 2}` }));
 
 const copy = event.body ?? event.description;
 const paragraphs = copy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
@@ -100,6 +104,17 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
 
   </div>
 </section>
+
+{roll.length > 0 && (
+  <!-- 02 — PHOTO ROLL : extra photos from the event, lightbox via Gallery -->
+  <section class="max-w-[1200px] mx-auto px-6 pb-20 md:pb-28">
+    <div class="flex items-end justify-between gap-6 mb-8">
+      <SectionIndex index="02" label="Photo Roll" />
+      <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted">{roll.length + (event.photo ? 1 : 0)} frames</p>
+    </div>
+    <Gallery photos={roll} />
+  </section>
+)}
 
 <!-- CTA -->
 <CtaBand
