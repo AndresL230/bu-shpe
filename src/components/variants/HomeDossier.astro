@@ -50,14 +50,14 @@ const pillars = [
 
 <!-- HERO — split: dossier text panel + campus photo -->
 <header class="relative w-full bg-bg blueprint overflow-hidden">
-  <!-- md+: an even split of the window; text starts and the photo ends on the shared container edges -->
-  <div class="grid grid-cols-1 md:min-h-[calc(100vh-72px)] md:grid-cols-2">
+  <!-- md+: an 5:6 split of the window, photo-heavy; text starts and the photo ends on the shared container edges -->
+  <div class="grid grid-cols-1 md:min-h-[calc(100vh-72px)] md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
   <!-- LEFT — text / CTA panel -->
   <div class="flex items-center px-6 md:pl-[max(1.5rem,calc((100vw-1152px)/2))] md:pr-12 pt-12 pb-10 md:py-12 relative z-10">
     <div class="max-w-[672px] w-full">
       <p class="font-mono text-ink-muted text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Boston University · SHPE Region 4</p>
       <div class="w-8 h-[3px] bg-accent mb-6"></div>
-      <h1 class="display text-[2.5rem] sm:text-5xl md:text-6xl xl:text-7xl text-ink leading-[1.02]">
+      <h1 class="display text-[2.5rem] sm:text-5xl md:text-5xl lg:text-6xl text-ink leading-[1.02]">
         SHPE Boston University — building the next generation of Hispanic engineers, <em class="font-serif italic font-normal lowercase tracking-normal text-accent">together</em>.
       </h1>
       <p class="mt-6 md:mt-7 text-ink-muted md:text-lg">¡Bienvenidos a la familia! {siteData.mission}</p>
