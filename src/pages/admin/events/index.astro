@@ -54,7 +54,7 @@ const error = flashMessage(Astro.url.searchParams.get("error"));
     </div>
   ) : (
     <div class="overflow-x-auto">
-      <table class="adm-table">
+      <table class="adm-table adm-table--stack">
         <thead>
           <tr>
             <th>Date</th>
@@ -70,21 +70,21 @@ const error = flashMessage(Astro.url.searchParams.get("error"));
             const upcoming = isUpcoming(e.date);
             return (
               <tr>
-                <td class="whitespace-nowrap font-mono text-xs text-ink-muted">
+                <td data-label="Date" class="whitespace-nowrap font-mono text-xs text-ink-muted">
                   {formatEventDate(e.date, { withDay: true })}
                 </td>
-                <td>
+                <td data-label="">
                   <a href={`/admin/events/${e.id}`} class="font-semibold text-ink hover:text-accent">{e.title}</a>
                   {e.location && <span class="block text-xs text-ink-muted">{e.location}</span>}
                 </td>
-                <td class="whitespace-nowrap text-ink-muted">{e.category}</td>
-                <td>
+                <td data-label="Category" class="whitespace-nowrap text-ink-muted">{e.category}</td>
+                <td data-label="Status">
                   {e.published
                     ? <span class:list={["adm-badge", upcoming ? "adm-badge--live" : "adm-badge--muted"]}>{upcoming ? "Upcoming" : "Published"}</span>
                     : <span class="adm-badge adm-badge--draft">Draft</span>}
                 </td>
-                <td class="font-mono text-xs">{e.featured ? <span class="text-accent">★ Yes</span> : <span class="text-ink-muted">—</span>}</td>
-                <td class="whitespace-nowrap text-right">
+                <td data-label="Featured" class:list={["font-mono text-xs", !e.featured && "max-sm:hidden!"]}>{e.featured ? <span class="text-accent">★ Yes</span> : <span class="text-ink-muted">—</span>}</td>
+                <td data-label="" class="adm-cell-actions whitespace-nowrap text-right">
                   <a href={`/admin/events/${e.id}`} class="adm-link">Edit</a>
                   {e.published && (
                     <a href={`/events/${e.slug}`} class="adm-link ml-4" target="_blank" rel="noopener">View ↗</a>

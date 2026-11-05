@@ -42,7 +42,7 @@ const soleOwner = admins.filter((a) => a.role === "owner").length === 1;
 
   <div class="grid gap-10 lg:grid-cols-[1fr_300px]">
     <div class="overflow-x-auto">
-      <table class="adm-table">
+      <table class="adm-table adm-table--stack">
         <thead>
           <tr>
             <th>Account</th>
@@ -57,12 +57,12 @@ const soleOwner = admins.filter((a) => a.role === "owner").length === 1;
             const lastOwner = a.role === "owner" && soleOwner;
             return (
               <tr>
-                <td>
+                <td data-label="">
                   <span class="font-semibold text-ink">{a.name ?? "—"}</span>
                   {isMe && <span class="adm-badge adm-badge--muted ml-2">You</span>}
                   <span class="block font-mono text-xs text-ink-muted">{a.email}</span>
                 </td>
-                <td>
+                <td data-label="Role">
                   {isMe || lastOwner ? (
                     <span class:list={["adm-badge", a.role === "owner" ? "adm-badge--live" : "adm-badge--muted"]}>{a.role}</span>
                   ) : (
@@ -77,10 +77,10 @@ const soleOwner = admins.filter((a) => a.role === "owner").length === 1;
                     </form>
                   )}
                 </td>
-                <td class="whitespace-nowrap font-mono text-xs text-ink-muted">
+                <td data-label="Last sign-in" class="whitespace-nowrap font-mono text-xs text-ink-muted">
                   {a.last_sign_in ? a.last_sign_in.slice(0, 10) : "Never"}
                 </td>
-                <td class="text-right">
+                <td data-label="" class="adm-cell-actions text-right">
                   {isMe || lastOwner ? (
                     <span class="font-mono text-xs text-ink-muted">—</span>
                   ) : (

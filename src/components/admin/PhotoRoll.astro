@@ -1,0 +1,85 @@
+---
+/**
+ * Event edit page: the event's photo roll (event_photos). Upload several
+ * photos at once (shrunk in the browser first), make one the cover, or
+ * remove one. Posts to /api/admin/events/[id]/photos[/photoId].
+ */
+import type { EventPhoto } from "@/lib/server/events";
+import { MAX_ROLL_PHOTOS } from "@/lib/server/events";
+
+interface Props {
+  eventId: number;
+  cover: string;
+  photos: EventPhoto[];
+}
+const { eventId, cover, photos } = Astro.props;
+const base = `/api/admin/events/${eventId}/photos`;
+const full = photos.length >= MAX_ROLL_PHOTOS;
+---
+<section id="photos" class="mt-12 scroll-mt-6" aria-labelledby="roll-heading">
+  <div class="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-ink pb-3">
+    <h2 id="roll-heading" class="display text-2xl text-ink">Photo roll</h2>
+    <p class="mono-label">{photos.length} / {MAX_ROLL_PHOTOS} photos · shown on the event page + gallery</p>
+  </div>
+
+  <form method="post" action={base} enctype="multipart/form-data" class="adm-panel mb-8 grid gap-4" data-roll-form>
+    <div>
+      <label class="adm-label" for="roll-files">Add photos</label>
+      <input
+        id="roll-files"
+        type="file"
+        name="photos"
+        accept="image/*"
+        multiple
+        class="adm-file"
+        disabled={full}
+        data-roll-input
+      />
+      <p class="adm-hint">
+        Up to 12 at a time, straight from your phone's camera roll. Large photos are resized before uploading.
+        {!cover && " The first one becomes the cover."}
+      </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-4">
+      <button type="submit" class="btn-dossier" disabled={full}>Upload</button>
+      <p class="mono-label" role="status" data-roll-status></p>
+    </div>
+  </form>
+
+  {photos.length === 0 ? (
+    <p class="text-sm text-ink-muted">No extra photos yet. The cover alone is shown on the event page.</p>
+  ) : (
+    <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {photos.map((p, i) => (
+        <li class="border border-hairline bg-surface">
+          <a href={p.url} target="_blank" rel="noopener" class="block aspect-[4/3] overflow-hidden bg-surface-soft">
+            <img src={p.url} alt={`Roll photo ${i + 1}`} loading="lazy" class="h-full w-full object-cover" />
+          </a>
+          <div class="flex flex-wrap items-center justify-between gap-x-3 px-3 py-1">
+            <form method="post" action={`${base}/${p.id}`}>
+              <input type="hidden" name="action" value="cover" />
+              <button type="submit" class="adm-link whitespace-nowrap py-2">Make cover</button>
+            </form>
+            <details class="adm-confirm">
+              <summary class="adm-link adm-link--danger whitespace-nowrap py-2">Remove</summary>
+              <div class="adm-confirm__panel adm-confirm__panel--sm">
+                <p class="mb-3 text-sm text-ink">Remove this photo from the roll? It's deleted from storage.</p>
+                <form method="post" action={`${base}/${p.id}`}>
+                  <input type="hidden" name="action" value="remove" />
+                  <button type="submit" class="btn-danger">Remove photo</button>
+                </form>
+              </div>
+            </details>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+<script>
+  import { shrinkOnSubmit } from "@/lib/client/shrink-images";
+  const form = document.querySelector<HTMLFormElement>("[data-roll-form]");
+  const input = document.querySelector<HTMLInputElement>("[data-roll-input]");
+  if (form && input) shrinkOnSubmit(form, input, document.querySelector<HTMLElement>("[data-roll-status]"));
+</script>

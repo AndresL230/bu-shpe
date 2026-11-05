@@ -126,7 +126,10 @@ const published = event ? event.published : true;
 </form>
 
 <script>
+  import { shrinkOnSubmit } from "@/lib/client/shrink-images";
   const input = document.querySelector<HTMLInputElement>("[data-photo-input]");
+  const eventForm = input?.closest("form");
+  if (input && eventForm) shrinkOnSubmit(eventForm, input);
   const preview = document.querySelector<HTMLImageElement>("[data-photo-preview]");
   const empty = document.querySelector<HTMLElement>("[data-photo-empty]");
   let objectUrl: string | null = null;

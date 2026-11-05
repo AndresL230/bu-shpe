@@ -48,21 +48,22 @@ const restUpcoming = upcoming.slice(1);
 
 // Archive mosaic: 6 most-recent past events, tiled asymmetrically (md+).
 // Pattern tiles a 4-col grid into a clean rectangle: big 2×2, then wides + squares.
+// Phones (2-col): first and last tiles run full width, the four between pair up.
 const recordTiles = past.slice(0, 6);
 const mosaicSpans = [
-  "md:col-span-2 md:row-span-2",
+  "col-span-2 md:row-span-2",
   "md:col-span-2",
   "",
   "",
   "md:col-span-2",
-  "md:col-span-2",
+  "col-span-2",
 ];
 ---
 
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Chapter Calendar · {currentYear}</p>
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {currentYear}</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       Events &amp; <em class="font-serif italic font-normal lowercase tracking-normal text-accent">opportunities</em>.
     </h1>
@@ -147,7 +148,7 @@ const mosaicSpans = [
               class="group flex items-stretch bg-bg transition-colors hover:bg-surface-soft"
             >
               {event.photo && (
-                <div class="relative w-40 shrink-0 overflow-hidden photo-warm bg-surface-soft sm:w-48">
+                <div class="relative w-28 shrink-0 overflow-hidden photo-warm bg-surface-soft sm:w-48">
                   <img
                     src={event.photo}
                     alt={event.title}
@@ -156,7 +157,7 @@ const mosaicSpans = [
                   />
                 </div>
               )}
-              <div class="flex flex-col p-7 md:p-8">
+              <div class="min-w-0 flex flex-col p-5 sm:p-7 md:p-8">
                 <p class="font-mono text-sm tracking-wide uppercase text-accent">{dateLabel(event.date)}</p>
                 <p class="mono-label mt-1">{event.category}</p>
                 <h3 class="display text-2xl text-ink mt-3 leading-tight transition-colors group-hover:text-accent">{event.title}</h3>
@@ -200,7 +201,7 @@ const mosaicSpans = [
           <span class="mono-label absolute left-0 top-0 z-10 bg-deep px-3 py-1.5 text-cream">
             {dateLabel(event.date)}
           </span>
-          <div class="absolute inset-x-0 bottom-0 z-10 bg-deep/85 px-4 py-3">
+          <div class="absolute inset-x-0 bottom-0 z-10 bg-deep/85 px-3 py-2.5 sm:px-4 sm:py-3">
             <p class="mono-label text-accent">{event.category}</p>
             <h3 class="display text-base md:text-lg text-cream leading-tight mt-0.5 line-clamp-2">{event.title}</h3>
           </div>

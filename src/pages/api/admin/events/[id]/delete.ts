@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { deleteEvent, getEventById } from "@/lib/server/events";
+import { deleteEvent, getEventById, listEventPhotos } from "@/lib/server/events";
 import { deleteMediaPath } from "@/lib/server/media";
 
 export const prerender = false;
@@ -17,9 +17,11 @@ export const POST: APIRoute = async ({ params, request, locals, redirect }) => {
     return redirect(`/admin/events/${id}?error=confirm#delete`, 303);
   }
 
+  const roll = await listEventPhotos(env.DB, id);
   await deleteEvent(env.DB, id);
+  await env.DB.prepare("DELETE FROM event_photos WHERE event_id = ?").bind(id).run(); // in case FKs are off
   try {
-    await deleteMediaPath(env.MEDIA, existing.photo);
+    await Promise.all([existing.photo, ...roll.map((p) => p.url)].map((u) => deleteMediaPath(env.MEDIA, u)));
   } catch (err) {
     console.error("photo cleanup failed:", err);
   }

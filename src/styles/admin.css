@@ -267,3 +267,69 @@
     background: var(--color-bg);
   }
 }
+
+/* ---------- Phones ---------- */
+@layer components {
+  .adm-tabs { scrollbar-width: none; }
+  .adm-tabs::-webkit-scrollbar { display: none; }
+
+  .adm-confirm__panel { max-width: calc(100vw - 2rem); }
+  .adm-confirm__panel--sm { width: 15rem; }
+
+  /* Segmented filters scroll sideways instead of overflowing. */
+  .adm-segment { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .adm-segment > label,
+  .adm-segment > a { white-space: nowrap; }
+
+  @media (max-width: 639px) {
+    /* 16px stops iOS Safari from zooming into a focused field. */
+    .adm-input,
+    .adm-select,
+    .adm-textarea { font-size: 16px; }
+    .adm-panel { padding: 1.25rem; }
+    .adm-stat { font-size: 2.25rem; }
+    .adm-preview { height: 560px; }
+    .adm-segment > label,
+    .adm-segment > a { padding: 0.65rem 0.8rem; }
+    .adm-file { font-size: 0.85rem; }
+    .adm-file::file-selector-button { padding: 0.7rem 0.9rem; }
+
+    /*
+     * Ledger tables become stacked cards. Each <td data-label="…"> shows its
+     * column name; cells with data-label="" (title, actions) span the card.
+     */
+    .adm-table--stack thead { display: none; }
+    .adm-table--stack,
+    .adm-table--stack tbody,
+    .adm-table--stack tr,
+    .adm-table--stack td { display: block; width: 100%; }
+    .adm-table--stack tr {
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--color-hairline);
+    }
+    .adm-table--stack tbody tr:hover { background: transparent; }
+    .adm-table--stack tbody td {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.2rem 0;
+      border: 0;
+      text-align: left;
+      white-space: normal;
+    }
+    .adm-table--stack tbody td[data-label]:not([data-label=""])::before {
+      content: attr(data-label);
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-ink-muted);
+    }
+    .adm-table--stack tbody td[data-label=""] { display: block; }
+    .adm-table--stack tbody td.adm-cell-actions { padding-top: 0.6rem; }
+    .adm-table--stack tbody td.adm-cell-actions .adm-link { display: inline-block; padding: 0.4rem 0; }
+  }
+}

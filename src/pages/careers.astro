@@ -42,7 +42,7 @@ const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
       <SectionIndex index={String(gi + 1).padStart(2, "0")} label={group.industry} />
       <div class="mt-8 grid grid-cols-2 border-l border-t border-outline-soft sm:grid-cols-3 lg:grid-cols-4">
         {group.companies.map((company) => (
-          <div class="group flex aspect-[4/3] flex-col items-center justify-center gap-4 border-b border-r border-outline-soft bg-bg p-6 text-center transition-colors hover:bg-surface-soft">
+          <div class="group flex min-h-[9.5rem] sm:min-h-0 sm:aspect-[4/3] flex-col items-center justify-center gap-3 sm:gap-4 border-b border-r border-outline-soft bg-bg p-4 sm:p-6 text-center transition-colors hover:bg-surface-soft">
             <img
               src={logoSrc(company)}
               data-fallback={company.logo ? undefined : faviconSrc(company.domain)}

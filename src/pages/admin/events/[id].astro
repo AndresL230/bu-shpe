@@ -1,7 +1,8 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import EventForm from "@/components/admin/EventForm.astro";
-import { getEventById } from "@/lib/server/events";
+import PhotoRoll from "@/components/admin/PhotoRoll.astro";
+import { getEventById, listEventPhotos } from "@/lib/server/events";
 import { flashMessage } from "@/lib/server/event-form";
 
 export const prerender = false;
@@ -9,6 +10,7 @@ export const prerender = false;
 const id = Number(Astro.params.id);
 const event = Number.isInteger(id) && id > 0 ? await getEventById(Astro.locals.runtime.env.DB, id) : null;
 if (!event) return Astro.redirect("/admin/events?error=not_found", 302);
+const photos = await listEventPhotos(Astro.locals.runtime.env.DB, event.id);
 
 const ok = flashMessage(Astro.url.searchParams.get("ok"));
 const errorCode = Astro.url.searchParams.get("error");
@@ -27,12 +29,14 @@ const error = flashMessage(errorCode);
 
   <EventForm action={`/api/admin/events/${event.id}`} event={event} submitLabel="Save changes" />
 
+  <PhotoRoll eventId={event.id} cover={event.photo} photos={photos} />
+
   <details id="delete" class="adm-danger mt-12 max-w-xl" open={errorCode === "confirm"}>
     <summary>Delete this event</summary>
     <form method="post" action={`/api/admin/events/${event.id}/delete`} class="grid gap-4 p-5">
       <p class="text-sm leading-relaxed text-ink-muted">
         Removes “{event.title}” from the site and the archive permanently.
-        {event.photo.startsWith("/media/") && " Its uploaded photo is deleted too."}
+        {(event.photo.startsWith("/media/") || photos.length > 0) && " Its uploaded photos are deleted too."}
         This can't be undone — unpublish it instead if you might want it back.
       </p>
       <div>

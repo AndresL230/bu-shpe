@@ -12,7 +12,7 @@ const gov = governanceData as GovernanceData;
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">About · Governance</p>
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">About · Governance</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       How the chapter <em class="font-serif italic font-normal lowercase tracking-normal text-accent">runs</em>.
     </h1>
@@ -22,15 +22,15 @@ const gov = governanceData as GovernanceData;
     <div class="mt-9 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs tracking-[0.14em] uppercase text-cream/60">
       <span>{gov.document.articleCount} articles</span>
       <span>9 officers</span>
-      <span>5+ meetings / semester</span>
-      <span>{gov.document.edition}</span>
+      <span class="whitespace-nowrap">5+ meetings / semester</span>
+      <span class="whitespace-nowrap">{gov.document.edition}</span>
     </div>
   </div>
 </header>
 
 <!-- 01 — THE CHARTER -->
 <section id="constitution" class="scroll-mt-24 max-w-[1200px] mx-auto px-6 py-20 md:py-28">
-  <a href="/about" class="group inline-flex items-center gap-2 font-mono text-sm text-ink-muted hover:text-ink transition-colors mb-8 tracking-wide uppercase">
+  <a href="/about" class="group inline-flex items-center gap-2 font-mono text-sm text-ink-muted hover:text-ink transition-colors min-h-11 -mt-3 mb-5 md:min-h-0 md:mt-0 md:mb-8 tracking-wide uppercase">
     <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
     <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to about</span>
   </a>
@@ -42,8 +42,8 @@ const gov = governanceData as GovernanceData;
 
   <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
     {gov.articles.map((article) => (
-      <div class="bg-bg p-7">
-        <p class="font-mono text-xs text-ink-muted mb-4">Art. {article.number}</p>
+      <div class="bg-bg p-5 sm:p-7">
+        <p class="font-mono text-xs text-ink-muted mb-2 sm:mb-4">Art. {article.number}</p>
         <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{article.title}</p>
         <p class="text-ink text-sm leading-relaxed">{article.summary}</p>
       </div>
@@ -73,8 +73,8 @@ const gov = governanceData as GovernanceData;
 
   <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
     {gov.officers.map((officer, i) => (
-      <div class="bg-bg p-7">
-        <p class="font-mono text-xs text-ink-muted mb-4">{String(i + 1).padStart(2, "0")}</p>
+      <div class="bg-bg p-5 sm:p-7">
+        <p class="font-mono text-xs text-ink-muted mb-2 sm:mb-4">{String(i + 1).padStart(2, "0")}</p>
         <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{officer.role}</p>
         <p class="text-ink text-sm leading-relaxed">{officer.duty}</p>
       </div>
@@ -101,7 +101,7 @@ const gov = governanceData as GovernanceData;
   <div class="md:col-span-7">
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
       {gov.process.map((item) => (
-        <div class="bg-bg p-7">
+        <div class="bg-bg p-5 sm:p-7">
           <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{item.label}</p>
           <p class="text-ink text-sm leading-relaxed">{item.detail}</p>
         </div>
@@ -122,7 +122,7 @@ const gov = governanceData as GovernanceData;
   </div>
   <div class="md:col-span-7">
     <div class="grid grid-cols-1 gap-px bg-outline-soft border border-outline-soft">
-      <div class="bg-bg p-7">
+      <div class="bg-bg p-5 sm:p-7">
         <p class="text-ink leading-relaxed">{gov.advisor.bio}</p>
         <ul class="mt-6 flex flex-col gap-2">
           {gov.advisor.duties.map((duty) => (

@@ -71,27 +71,40 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
         class="block h-7 w-auto"
       />
     </a>
-    <details class="relative">
+    <details class="mobile-menu group relative">
       <summary
         class="grid h-11 w-11 cursor-pointer place-items-center rounded-[var(--radius-card)] border border-cream/40 text-cream list-none [&::-webkit-details-marker]:hidden"
-        aria-label="Open menu"
+        aria-label="Menu"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="group-open:hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16"/>
         </svg>
+        <svg class="hidden group-open:block" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
       </summary>
-      <div class="fixed inset-0 top-[72px] z-30 grid place-items-center bg-bg/98 backdrop-blur">
-        <nav aria-label="Mobile" class="px-8 text-center">
-          <ul class="flex flex-col gap-6">
+      <!-- Full-screen sheet under the 72px bar. Scrolls on its own when the
+           list is taller than the viewport (landscape / short phones); the
+           inner column is centred with my-auto so it never clips at the top. -->
+      <div class="fixed inset-x-0 bottom-0 top-[72px] z-30 flex flex-col overflow-y-auto overscroll-contain bg-bg">
+        <nav aria-label="Mobile" class="my-auto px-8 py-10 text-center">
+          <ul class="flex flex-col gap-2">
             {links.map(({ href, label }) => (
               <li>
-                <a href={href} class="display text-3xl text-ink hover:text-accent">{label}</a>
+                <a
+                  href={href}
+                  aria-current={currentPath === href ? "page" : undefined}
+                  class:list={[
+                    "display inline-block py-2 text-3xl hover:text-accent",
+                    currentPath === href ? "text-accent" : "text-ink",
+                  ]}
+                >{label}</a>
               </li>
             ))}
             <li>
               <a
                 href="/join"
-                class="group mt-4 inline-flex items-center gap-2 btn-dossier"
+                class="group mt-6 inline-flex items-center gap-2 btn-dossier"
               >
                 Join SHPE
                 <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -165,6 +178,11 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 </header>
 
 <style>
+  /* Lock the page behind the open mobile menu so only the sheet scrolls. */
+  :global(html:has(#site-nav details.mobile-menu[open])) {
+    overflow: hidden;
+  }
+
   .nav-link {
     position: relative;
     padding-bottom: 4px;
@@ -260,6 +278,24 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
     transform: translateX(2px);                 /* nudge right */
   }
 </style>
+
+<script is:inline>
+  // Mobile menu is a native <details>; add the two behaviours it lacks:
+  // Escape closes it, and it never stays open after resizing up to lg.
+  (function () {
+    var menu = document.querySelector("#site-nav details.mobile-menu");
+    if (!menu) return;
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.open) {
+        menu.open = false;
+        menu.querySelector("summary").focus();
+      }
+    });
+    window.matchMedia("(min-width: 64rem)").addEventListener("change", function (e) {
+      if (e.matches) menu.open = false;
+    });
+  })();
+</script>
 
 <!-- Push content below fixed nav -->
 <div class="h-[72px]" aria-hidden="true"></div>

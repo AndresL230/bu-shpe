@@ -149,7 +149,7 @@ const fullName = (r: { first_name: string | null; last_name: string | null }) =>
     </div>
   ) : (
     <div class="overflow-x-auto">
-      <table class="adm-table">
+      <table class="adm-table adm-table--stack">
         <thead>
           <tr>
             <th>Name</th>
@@ -163,17 +163,17 @@ const fullName = (r: { first_name: string | null; last_name: string | null }) =>
         <tbody>
           {rows.map((r) => (
             <tr>
-              <td>{fullName(r) || <span class="text-ink-muted">—</span>}</td>
-              <td class="font-mono text-[0.8rem]">{r.email}</td>
-              <td>
+              <td data-label="">{fullName(r) || <span class="text-ink-muted">—</span>}</td>
+              <td data-label="" class="break-all font-mono text-[0.8rem]">{r.email}</td>
+              <td data-label="Status">
                 {r.status === "subscribed"
                   ? <span class="adm-badge adm-badge--live">Subscribed</span>
                   : <span class="adm-badge adm-badge--muted">Opted out</span>}
               </td>
-              <td class="mono-label">{r.source}</td>
-              <td class="whitespace-nowrap text-ink-muted">{fmtDate(r.created_at)}</td>
-              <td>
-                <div class="flex items-start justify-end gap-4">
+              <td data-label="Source" class="mono-label">{r.source}</td>
+              <td data-label="Joined" class="whitespace-nowrap text-ink-muted">{fmtDate(r.created_at)}</td>
+              <td data-label="" class="adm-cell-actions">
+                <div class="flex items-start gap-6 sm:justify-end sm:gap-4">
                   <form method="post" action="/api/admin/subscribers/update">
                     <input type="hidden" name="id" value={r.id} />
                     <input type="hidden" name="email" value={r.email} />
