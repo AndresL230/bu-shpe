@@ -50,27 +50,29 @@ const visibleNav = nav.filter((n) => !n.ownerOnly || admin?.role === "owner");
   <body class="min-h-dvh bg-bg text-ink antialiased">
     <!-- Masthead -->
     <header class="bg-deep text-cream">
-      <div class="mx-auto flex max-w-[1400px] items-center justify-between gap-6 px-6 py-4">
-        <a href="/admin/dashboard" class="flex items-center gap-5">
+      <div class="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-3 sm:gap-6 sm:px-6 sm:py-4">
+        <a href="/admin/dashboard" class="flex shrink-0 items-center gap-5">
           <img
             src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
             alt="SHPE Boston University"
-            class="h-9 w-auto"
+            class="h-8 w-auto sm:h-9"
           />
           <span class="hidden border-l border-cream/25 pl-5 mono-label text-cream/80 sm:inline">
             Admin // Control room
           </span>
         </a>
-        <div class="flex items-center gap-4">
-          <a href="/" class="mono-label text-cream/70 hover:text-accent" target="_blank" rel="noopener">View site ↗</a>
+        <div class="flex items-center gap-3 sm:gap-4">
+          <a href="/" class="mono-label whitespace-nowrap py-2 text-cream/70 hover:text-accent" target="_blank" rel="noopener">
+            <span class="hidden sm:inline">View site</span><span class="sm:hidden">Site</span> ↗
+          </a>
           {admin && (
-            <div class="flex items-center gap-3 border-l border-cream/25 pl-4">
+            <div class="flex items-center gap-3 border-l border-cream/25 pl-3 sm:pl-4">
               {admin.picture && (
                 <img src={admin.picture} alt="" class="h-7 w-7 rounded-full" referrerpolicy="no-referrer" />
               )}
               <span class="hidden text-sm text-cream/90 md:inline">{admin.name ?? admin.email}</span>
               <form method="post" action="/api/auth/logout">
-                <button type="submit" class="mono-label text-cream/70 hover:text-accent">Sign out</button>
+                <button type="submit" class="mono-label whitespace-nowrap py-2 text-cream/70 hover:text-accent">Sign out</button>
               </form>
             </div>
           )}
@@ -78,11 +80,11 @@ const visibleNav = nav.filter((n) => !n.ownerOnly || admin?.role === "owner");
       </div>
     </header>
 
-    <div class="mx-auto grid max-w-[1400px] gap-10 px-6 py-10 lg:grid-cols-[200px_1fr]">
-      <!-- Section index -->
-      <nav aria-label="Admin sections" class="lg:sticky lg:top-10 lg:self-start">
-        <p class="mono-label mb-4">Index</p>
-        <ul class="flex gap-1 overflow-x-auto border-b border-hairline pb-2 lg:block lg:border-b-0 lg:border-l lg:pb-0">
+    <div class="mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-10 lg:py-10">
+      <!-- Section index: a swipeable tab row on phones, a sticky rail on desktop -->
+      <nav aria-label="Admin sections" class="min-w-0 lg:sticky lg:top-10 lg:self-start">
+        <p class="mono-label mb-4 hidden lg:block">Index</p>
+        <ul class="adm-tabs -mx-4 flex gap-1 overflow-x-auto border-b border-hairline px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:block lg:overflow-visible lg:border-b-0 lg:border-l lg:px-0">
           {visibleNav.map((n) => {
             const active = n.key === section;
             return (
@@ -91,10 +93,10 @@ const visibleNav = nav.filter((n) => !n.ownerOnly || admin?.role === "owner");
                   href={n.href}
                   aria-current={active ? "page" : undefined}
                   class:list={[
-                    "flex items-baseline gap-3 whitespace-nowrap px-3 py-2 text-sm transition-colors lg:-ml-px lg:border-l-2",
+                    "-mb-px flex items-baseline gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-sm transition-colors lg:mb-0 lg:-ml-px lg:gap-3 lg:border-b-0 lg:border-l-2 lg:py-2",
                     active
-                      ? "lg:border-accent font-semibold text-ink"
-                      : "lg:border-transparent text-ink-muted hover:text-ink hover:lg:border-rule",
+                      ? "border-accent font-semibold text-ink"
+                      : "border-transparent text-ink-muted hover:text-ink hover:lg:border-rule",
                   ]}
                 >
                   <span class="font-mono text-[0.68rem] text-ink-muted">{n.index}</span>
@@ -108,10 +110,10 @@ const visibleNav = nav.filter((n) => !n.ownerOnly || admin?.role === "owner");
 
       <!-- Work area -->
       <main id="main" class="min-w-0">
-        <div class="mb-10 flex flex-wrap items-end justify-between gap-6 border-b border-ink pb-6">
-          <div>
+        <div class="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-ink pb-5 lg:mb-10 lg:gap-6 lg:pb-6">
+          <div class="min-w-0">
             {eyebrow && <p class="mono-label mb-2">{eyebrow}</p>}
-            <h1 class="display text-4xl text-ink md:text-5xl">
+            <h1 class="display break-words text-3xl text-ink sm:text-4xl md:text-5xl">
               {title}
               {accent && (
                 <em class="font-serif font-normal lowercase italic tracking-normal text-accent"> {accent}</em>
