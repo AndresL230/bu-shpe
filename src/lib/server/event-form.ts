@@ -87,8 +87,9 @@ export function parseEventForm(fd: FormData): { ok: true; value: ParsedEventForm
   if (photoPath && !/^\/(assets|media)\/[\w\-./]+$/.test(photoPath)) return { ok: false, error: "photo_path" };
   if (photoPath.includes("..")) return { ok: false, error: "photo_path" };
 
+  // Events without a photo may be published: the site shows a typographic
+  // stand-in (EventPhotoFallback) until someone adds one.
   const published = fd.get("published") === "on";
-  if (published && !upload && !photoPath) return { ok: false, error: "photo_required" };
 
   return {
     ok: true,

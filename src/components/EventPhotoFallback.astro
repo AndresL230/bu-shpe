@@ -14,11 +14,11 @@ const { label, tone = "classic", class: className } = Astro.props;
 ---
 
 <div
-  class:list={["flex h-full w-full items-center justify-center p-6", className]}
+  class:list={["flex h-full w-full items-center justify-center p-2 sm:p-6", className]}
   aria-hidden="true"
 >
   {tone === "dossier" ? (
-    <span class="font-mono text-sm uppercase tracking-[0.14em] text-ink-muted">{label}</span>
+    <span class="max-w-full text-center font-mono text-[0.55rem] uppercase tracking-[0.06em] text-ink-muted sm:text-sm sm:tracking-[0.14em]">{label}</span>
   ) : (
     <span class="display text-3xl md:text-4xl uppercase text-ink/15 text-center leading-none">{label}</span>
   )}
