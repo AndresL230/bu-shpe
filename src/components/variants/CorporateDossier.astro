@@ -2,6 +2,7 @@
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import ContactModal from "@/components/ContactModal.astro";
+import Icon from "@/components/Icon.astro";
 import type { Sponsor } from "@/types";
 import supportData from "@/data/support.json";
 import sponsorsData from "@/data/sponsors.json";
@@ -137,17 +138,17 @@ const benefitTiles = [
       Two ways to start the conversation.
     </h3>
     <div class="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
-      <a href={siteData.sponsorshipPacketUrl} target="_blank" rel="noopener" class="group inline-flex items-center justify-center gap-2 btn-dossier max-sm:px-4 max-sm:text-[0.8rem] max-sm:tracking-[0.06em]">
+      <a href={siteData.sponsorshipPacketUrl} target="_blank" rel="noopener" class="group inline-flex items-center justify-center gap-2 btn-dossier max-sm:w-full max-sm:px-4 max-sm:text-[0.8rem] max-sm:tracking-[0.06em]">
         Download the Sponsorship Packet
-        <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </a>
       <button type="button" data-open-modal-d="corporate-d" class="group inline-flex items-center justify-center gap-2 btn-dossier-ghost max-sm:min-h-11 max-sm:border-0 max-sm:p-0 max-sm:font-sans max-sm:text-base max-sm:font-medium max-sm:normal-case max-sm:tracking-normal max-sm:hover:bg-transparent max-sm:hover:text-accent">
         <span class="max-sm:border-b max-sm:border-current max-sm:pb-0.5">Become a Partner</span>
-        <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+        <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </button>
     </div>
     <p class="mt-6 text-sm text-ink-muted">
-      Prefer email? <a href={`mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry`} class="text-ink underline underline-offset-2 hover:text-accent">{siteData.contactEmail}</a>
+      Prefer email? <a href={`mailto:${siteData.contactEmail}?subject=Sponsorship%20Inquiry`} class="text-ink underline underline-offset-2 hover:text-accent max-md:inline-block max-md:py-3 max-md:-my-3">{siteData.contactEmail}</a>
     </p>
   </div>
 </section>
@@ -178,11 +179,11 @@ const benefitTiles = [
         href={s.url}
         target="_blank"
         rel="noopener"
-        class="group flex items-center justify-center border-b border-r border-outline-soft bg-bg p-5 sm:p-7 aspect-[2/1] sm:aspect-[4/3] max-sm:last:odd:col-span-2 max-sm:last:odd:aspect-[4/1] transition-colors hover:bg-surface-soft max-sm:flex-col max-sm:gap-2.5 max-sm:bg-surface max-sm:p-4"
+        class="group flex items-center justify-center border-b border-r border-outline-soft bg-bg p-5 sm:p-7 max-sm:h-24 sm:aspect-[4/3] max-sm:last:odd:col-span-2 transition-colors hover:bg-surface-soft max-sm:flex-col max-sm:gap-2.5 max-sm:p-3"
         aria-label={s.name}
       >
-        <img src={s.logo} alt={s.name} loading="lazy" class="max-h-10 sm:max-h-12 w-auto max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100 max-sm:h-8 max-sm:max-w-[96px] max-sm:mix-blend-multiply max-sm:opacity-100" />
-        {/* Phones: name label under the mark, matching /support + /careers */}
+        <img src={s.logo} alt={s.name} loading="lazy" class="max-h-10 sm:max-h-12 w-auto max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100 max-sm:h-9 max-sm:max-w-[104px] max-sm:mix-blend-multiply max-sm:opacity-100" />
+        {/* Phones: same cell as EmployerCell on /support + /careers (h-24, 36px logo box, name under) */}
         <span class="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-muted sm:hidden">{s.name}</span>
       </a>
     ))}

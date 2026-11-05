@@ -18,6 +18,8 @@ interface Props {
 // show it once, filed under Conferences.
 const conferenceSrcs = new Set(conferencesData.flatMap((c) => c.photos));
 const seenSrcs = new Set<string>();
+// `year` files each frame under a year header: the event's date, or the
+// convention year. Volunteering programs carry no date, so they file as "".
 const allPhotos = [
   // Events without a photo have nothing to show in the grid. Newest event
   // first (props arrive in creation order); ties keep creation order.
@@ -25,17 +27,18 @@ const allPhotos = [
     .filter((e) => e.photo)
     .sort((a, b) => b.date.localeCompare(a.date))
     .flatMap((e) => [
-      { src: e.photo, alt: e.title, group: "Events" },
-      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events" })),
+      { src: e.photo, alt: e.title, group: "Events", year: e.date.slice(0, 4) },
+      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events", year: e.date.slice(0, 4) })),
     ]),
   ...volunteeringData.flatMap((v) =>
-    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering" }))
+    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering", year: "" }))
   ),
   ...conferencesData.flatMap((c) =>
     c.photos.map((src) => ({
       src,
       alt: `${c.region ?? "Conference"} ${c.year} — ${c.city}`,
       group: "Conferences",
+      year: String(c.year),
     }))
   ),
 ].filter((p) => {
@@ -44,6 +47,51 @@ const allPhotos = [
   seenSrcs.add(p.src);
   return true;
 });
+type Frame = (typeof allPhotos)[number];
+
+// Year groups, newest first; undated frames close the archive. Within a year,
+// frames keep the order above (events newest-first, then conventions).
+const years = [...new Set(allPhotos.map((p) => p.year))].sort((a, b) =>
+  !a ? 1 : !b ? -1 : b.localeCompare(a)
+);
+const yearCount = new Map(years.map((y) => [y, allPhotos.filter((p) => p.year === y).length]));
+
+// Phones preview only the first ~PREVIEW frames; the rest sit in a <details>
+// ("Show all N frames"), which md+ always shows (see <style>). A year cut
+// mid-way is cut on a multiple of 6 frames, so its first half ends on a full
+// row at 2 or 3 columns and md+ reads the two halves as one seamless grid.
+const PREVIEW = 24;
+const ROW = 6;
+type Block = { year: string; photos: Frame[]; continued: boolean };
+const head: Block[] = [];
+const tail: Block[] = [];
+let budget = PREVIEW;
+let overflowed = false;
+for (const year of years) {
+  const photos = allPhotos.filter((p) => p.year === year);
+  const take = overflowed ? 0 : budget >= photos.length ? photos.length : Math.max(0, Math.round(budget / ROW) * ROW);
+  if (take > 0) head.push({ year, photos: photos.slice(0, take), continued: false });
+  if (take < photos.length) {
+    tail.push({ year, photos: photos.slice(take), continued: take > 0 });
+    overflowed = true;
+  }
+  budget -= take;
+}
+// Frame indices run across head + tail in display order.
+const indexOf = new Map([...head, ...tail].flatMap((b) => b.photos).map((p, i) => [p, i]));
+
+const yearLabel = (y: string) => y || "Undated";
+const frameLabel = (n: number) => `${n} ${n === 1 ? "frame" : "frames"}`;
+const blockCls = "mt-12 first:mt-0 md:mt-16";
+const headerCls = "flex items-baseline justify-between gap-4 border-b border-outline-soft pb-3";
+// Phones: 2-up so frames stay legible; the preview keeps the wall short.
+const gridCls = "grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-2 md:grid-cols-2 md:gap-3 lg:grid-cols-3";
+// A continued year's second half: no header, and one grid gap above so md+
+// can't tell it from the first half.
+const contCls = "mt-1 sm:mt-2 md:mt-3";
+const frameCls =
+  "group block aspect-[4/3] w-full overflow-hidden border border-outline-soft bg-surface-soft focus:outline-none focus:ring-2 focus:ring-accent";
+const imgCls = "h-full w-full object-cover group-hover:scale-[1.03] [transition:opacity_0.4s_ease,transform_0.5s_ease]";
 
 // Per-category counts for the manifest strip
 const counts = {
@@ -122,28 +170,49 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
     <p class="pullquote mx-auto max-w-md mt-3">Check back soon.</p>
   </div>
 
-  <!-- Contact sheet: fixed-aspect frames, so loading never shifts the layout -->
-  <!-- Phones: a tight 3-up contact sheet so 300+ frames don't scroll forever -->
-  <div class="mt-8 grid grid-cols-3 gap-1 sm:gap-2 md:mt-12 md:grid-cols-2 md:gap-3 lg:grid-cols-3" id="gallery-grid-d" data-viewer-group>
-    {allPhotos.map((p, i) => (
-      <button
-        type="button"
-        class="group block aspect-[4/3] w-full overflow-hidden border border-outline-soft bg-surface-soft focus:outline-none focus:ring-2 focus:ring-accent"
-        data-gallery-index-d={i}
-        data-category={p.group}
-        data-viewer-src={p.src}
-        data-viewer-alt={p.alt}
-      >
-        <img
-          src={p.src}
-          alt={p.alt}
-          loading="lazy"
-          decoding="async"
-          data-fade
-          class="h-full w-full object-cover group-hover:scale-[1.03] [transition:opacity_0.4s_ease,transform_0.5s_ease]"
-        />
-      </button>
+  <!-- Contact sheet, filed by year: fixed-aspect frames, so loading never shifts the layout -->
+  <div class="mt-10 md:mt-14" id="gallery-grid-d" data-viewer-group>
+    {head.map((b) => (
+      <div data-year-group-d class={blockCls}>
+        <h3 class={headerCls}>
+          <span class="display text-2xl md:text-3xl text-ink leading-none">{yearLabel(b.year)}</span>
+          <span class="mono-label" data-year-count-d={b.year}>{frameLabel(yearCount.get(b.year) ?? 0)}</span>
+        </h3>
+        <div class:list={[gridCls, "mt-4 md:mt-5"]}>
+          {b.photos.map((p) => (
+            <button type="button" class={frameCls} data-gallery-index-d={indexOf.get(p)} data-category={p.group} data-year-d={p.year} data-viewer-src={p.src} data-viewer-alt={p.alt}>
+              <img src={p.src} alt={p.alt} loading="lazy" decoding="async" data-fade class={imgCls} />
+            </button>
+          ))}
+        </div>
+      </div>
     ))}
+
+    {tail.length > 0 && (
+      <details data-more-d data-preview-d={PREVIEW} class="gallery-more group/more">
+        <summary class="gallery-more-summary mt-8 flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 border-y border-outline-soft font-mono text-xs uppercase tracking-[0.14em] text-ink group-open/more:hidden [&::-webkit-details-marker]:hidden">
+          <span>Show all <span data-more-count-d>{allPhotos.length}</span> frames</span>
+          <span aria-hidden="true" class="w-4 text-center text-lg leading-none text-accent">+</span>
+        </summary>
+        {tail.map((b) => (
+          <div data-year-group-d class={b.continued ? contCls : blockCls}>
+            {!b.continued && (
+              <h3 class={headerCls}>
+                <span class="display text-2xl md:text-3xl text-ink leading-none">{yearLabel(b.year)}</span>
+                <span class="mono-label" data-year-count-d={b.year}>{frameLabel(yearCount.get(b.year) ?? 0)}</span>
+              </h3>
+            )}
+            <div class:list={[gridCls, !b.continued && "mt-4 md:mt-5"]}>
+              {b.photos.map((p) => (
+                <button type="button" class={frameCls} data-gallery-index-d={indexOf.get(p)} data-category={p.group} data-year-d={p.year} data-viewer-src={p.src} data-viewer-alt={p.alt}>
+                  <img src={p.src} alt={p.alt} loading="lazy" decoding="async" data-fade class={imgCls} />
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </details>
+    )}
   </div>
 </section>
 
@@ -186,6 +255,37 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
         if (matches) anyVisible = true;
       });
       if (emptyState) emptyState.hidden = anyVisible;
+
+      // Year groups: recount each year; hide the years (and continued halves)
+      // with nothing left in them.
+      var yearN = {};
+      root.querySelectorAll("[data-year-count-d]").forEach(function (el) {
+        var y = el.getAttribute("data-year-count-d");
+        var n = root.querySelectorAll('[data-year-d="' + y + '"]:not([hidden])').length;
+        yearN[y] = n;
+        el.textContent = n + (n === 1 ? " frame" : " frames");
+      });
+      var strandedHeader = false;
+      root.querySelectorAll("[data-year-group-d]").forEach(function (g) {
+        var own = g.querySelectorAll("[data-gallery-index-d]:not([hidden])").length;
+        var countEl = g.querySelector("[data-year-count-d]");
+        var n = countEl ? yearN[countEl.getAttribute("data-year-count-d")] : own;
+        g.hidden = n === 0;
+        // A year whose matches all sit in its collapsed second half.
+        if (countEl && own === 0 && n > 0) strandedHeader = true;
+      });
+      // Phones' "Show all" row: count the filtered set; open it when the
+      // preview would be too thin to stand alone, hide it when nothing is below.
+      var more = root.querySelector("[data-more-d]");
+      if (more) {
+        var below = more.querySelectorAll("[data-gallery-index-d]:not([hidden])").length;
+        var total = root.querySelectorAll("[data-gallery-index-d]:not([hidden])").length;
+        var preview = Number(more.getAttribute("data-preview-d")) || 0;
+        more.hidden = below === 0;
+        if (below > 0 && (strandedHeader || total - below < preview / 2)) more.open = true;
+        var moreCount = more.querySelector("[data-more-count-d]");
+        if (moreCount) moreCount.textContent = total;
+      }
     }
 
     var params = new URLSearchParams(location.search);
@@ -210,6 +310,17 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 
   })();
 </script>
+
+<style>
+  /* md+: the archive is never collapsed — show the <details> body, drop its row.
+     Browsers without ::details-content keep the row, so nothing is unreachable. */
+  @media (min-width: 48rem) {
+    @supports selector(::details-content) {
+      .gallery-more::details-content { content-visibility: visible; display: block; }
+      .gallery-more-summary { display: none; }
+    }
+  }
+</style>
 
 <!-- CTA -->
 <CtaBand

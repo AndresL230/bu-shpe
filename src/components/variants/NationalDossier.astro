@@ -18,7 +18,8 @@ const national = nationalData as NationalData;
     <p class="mt-7 text-cream/80 max-w-xl text-lg">
       Founded in Los Angeles in 1974, the Society of Hispanic Professional Engineers grew from one city department into a national familia of professional and student chapters.
     </p>
-    <div class="mt-8 md:mt-9 flex flex-wrap gap-x-6 md:gap-x-10 gap-y-3 font-mono text-xs tracking-[0.14em] uppercase text-cream/60">
+    <!-- Phones: stacked fact rows (every fact here is too long to pair up); md+: one wrapping line. -->
+    <div class="mt-8 md:mt-9 grid grid-cols-1 gap-x-6 gap-y-2.5 md:flex md:flex-wrap md:gap-x-10 md:gap-y-3 font-mono text-xs tracking-[0.14em] uppercase text-cream/60">
       <span>Est. {national.founded}</span>
       <span>{national.foundedCity}</span>
       <span>Chapters nationwide</span>

@@ -8,7 +8,7 @@ import Base from "@/layouts/Base.astro";
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import employersData from "@/data/employers.json";
-import { logoSrc, faviconSrc } from "@/lib/logos";
+import EmployerCell from "@/components/EmployerCell.astro";
 import type { EmployerGroup } from "@/types";
 
 const groups = employersData as EmployerGroup[];
@@ -28,10 +28,11 @@ const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
       <p class="mt-7 max-w-xl text-lg text-cream/80">
         BU SHPE members and alumni have gone on to internships and careers at companies shaping the future of engineering, technology, and science.
       </p>
-      <div class="mt-9 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs uppercase tracking-[0.14em] text-cream/60">
+      <!-- Phones: two-column fact grid (long facts take a full row); md+: one wrapping line. -->
+      <div class="mt-8 md:mt-9 grid grid-cols-2 gap-x-6 gap-y-2.5 md:flex md:flex-wrap md:gap-x-10 md:gap-y-3 font-mono text-xs uppercase tracking-[0.14em] text-cream/60">
         <span>{companyCount} companies</span>
         <span>{groups.length} industries</span>
-        <span>Internships · Co-ops · Full-time</span>
+        <span class="max-md:col-span-2">Internships · Co-ops · Full-time</span>
       </div>
     </div>
   </header>
@@ -41,19 +42,7 @@ const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
     <section class:list={["mx-auto max-w-[1200px] px-6", gi === 0 ? "pt-16 md:pt-28" : "pt-12 md:pt-20", gi === groups.length - 1 && "pb-16 md:pb-28"]}>
       <SectionIndex index={String(gi + 1).padStart(2, "0")} label={group.industry} />
       <div class="mt-6 md:mt-8 grid grid-cols-2 border-l border-t border-outline-soft sm:grid-cols-3 lg:grid-cols-4">
-        {group.companies.map((company) => (
-          <div class="group flex min-h-[7.5rem] max-sm:last:odd:col-span-2 max-sm:last:odd:[&>img]:max-w-[35%] sm:min-h-0 sm:aspect-[4/3] flex-col items-center justify-center gap-3 sm:gap-4 border-b border-r border-outline-soft bg-bg p-4 sm:p-6 text-center transition-colors hover:bg-surface-soft">
-            <img
-              src={logoSrc(company)}
-              data-fallback={company.logo ? undefined : faviconSrc(company.domain)}
-              alt={company.name}
-              loading="lazy"
-              referrerpolicy="no-referrer"
-              class="careers-logo mix-blend-multiply max-h-14 max-sm:h-14 w-auto max-w-[70%] object-contain transition-transform duration-300 group-hover:scale-105"
-            />
-            <span class="careers-name font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-muted">{company.name}</span>
-          </div>
-        ))}
+        {group.companies.map((company) => <EmployerCell company={company} variant="careers" />)}
       </div>
     </section>
   ))}
@@ -67,20 +56,3 @@ const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
   />
 </Base>
 
-<script>
-  // Logo fallback: unavatar → favicon → hide the image (the name label stays).
-  document.querySelectorAll<HTMLImageElement>("img.careers-logo").forEach((img) => {
-    const fail = () => {
-      const fb = img.dataset.fallback;
-      if (fb) {
-        delete img.dataset.fallback;
-        img.src = fb;
-      } else {
-        img.style.display = "none";
-        img.nextElementSibling?.classList.add("display", "text-xl", "text-ink");
-      }
-    };
-    img.addEventListener("error", fail);
-    if (img.complete && img.naturalWidth === 0) fail();
-  });
-</script>

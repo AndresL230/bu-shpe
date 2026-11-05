@@ -1,6 +1,7 @@
 ---
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
 
 import volunteeringData from "@/data/volunteering.json";
 import siteData from "@/data/site.json";
@@ -44,16 +45,17 @@ import siteData from "@/data/site.json";
           ]}
         >
           {program.photos.length >= 2 ? (
-            <div class="grid grid-cols-2 gap-px bg-outline-soft h-full">
+            /* Phones: one 16:9 slot like every other card (second photo is desktop-only) */
+            <div class="grid grid-cols-2 max-md:grid-cols-1 gap-px bg-outline-soft h-full">
               <div class="photo-warm overflow-hidden">
                 <img
                   src={program.photos[0]}
                   alt={`${program.name} — photo 1`}
-                  class="w-full h-full object-cover aspect-[4/3]"
+                  class="w-full h-full object-cover aspect-[16/9] md:aspect-[4/3]"
                   loading="lazy"
                 />
               </div>
-              <div class="photo-warm overflow-hidden">
+              <div class="photo-warm overflow-hidden max-md:hidden">
                 <img
                   src={program.photos[1]}
                   alt={`${program.name} — photo 2`}
@@ -72,11 +74,17 @@ import siteData from "@/data/site.json";
               />
             </div>
           ) : (
-            <div class="bg-deep blueprint-deep p-12 h-full min-h-[14rem] hidden md:flex flex-col justify-center">
-              <p class="pullquote text-cream! text-left leading-snug">
-                "{program.description.split(".")[0]}."
-              </p>
-            </div>
+            <>
+              <div class="bg-deep blueprint-deep p-12 h-full min-h-[14rem] hidden md:flex flex-col justify-center">
+                <p class="pullquote text-cream! text-left leading-snug">
+                  "{program.description.split(".")[0]}."
+                </p>
+              </div>
+              {/* Phones: no photo — a navy title card fills the same media slot */}
+              <div class="md:hidden relative overflow-hidden bg-deep blueprint-deep aspect-[16/7]" aria-hidden="true">
+                <span class="absolute right-5 -bottom-6 display text-[10rem] leading-none text-cream/10 tabular-nums select-none">{String(index + 1).padStart(2, "0")}</span>
+              </div>
+            </>
           )}
         </div>
 
@@ -155,9 +163,10 @@ import siteData from "@/data/site.json";
     </div>
     <a
       href={`mailto:${siteData.contactEmail}?subject=Volunteer%20Idea`}
-      class="mt-5 inline-flex min-h-11 items-end md:mt-8 md:inline-block md:min-h-0 font-mono text-sm text-ink-muted tracking-wide uppercase border-b border-outline-soft hover:text-accent hover:border-accent transition-colors pb-1"
+      class="group mt-5 inline-flex min-h-11 items-center gap-2 md:mt-8 md:min-h-0 font-mono text-sm text-ink-muted tracking-wide uppercase hover:text-accent transition-colors"
     >
-      Send us your idea →
+      <span class="border-b border-outline-soft group-hover:border-accent transition-colors pb-1">Send us your idea</span>
+      <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
     </a>
   </div>
 </section>

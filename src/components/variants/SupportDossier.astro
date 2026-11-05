@@ -2,6 +2,8 @@
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import StatCountUp from "@/components/conferences/StatCountUp.astro";
 import CtaBand from "@/components/CtaBand.astro";
+import EmployerCell from "@/components/EmployerCell.astro";
+import Icon from "@/components/Icon.astro";
 import supportData from "@/data/support.json";
 import siteData from "@/data/site.json";
 import employersData from "@/data/employers.json";
@@ -34,20 +36,12 @@ const paths: PathRow[] = [
   },
 ];
 
-// Same logo resolution strategy as EmployersSection, kept dossier-local so the
-// fallback script below can scope itself to the .employer-logo-d class.
-// (Don't write the literal script tag in this comment — vite's dep scanner
-// does a raw-text scan and chokes on it.)
-const logoSrc = (c: { domain?: string; logo?: string }) =>
-  c.logo ?? (c.domain ? `https://unavatar.io/${c.domain}?fallback=false` : "");
-const faviconSrc = (domain?: string) =>
-  domain ? `https://www.google.com/s2/favicons?sz=128&domain=${domain}` : "";
 ---
 
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">Boston University · <span class="whitespace-nowrap">Backers &amp; Benefactors</span></p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">Boston University<span class="max-md:hidden"> ·</span> <span class="whitespace-nowrap max-md:block">Backers &amp; Benefactors</span></p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl max-md:text-balance">
       The people behind the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">mission</em>.
     </h1>
@@ -100,7 +94,7 @@ const faviconSrc = (domain?: string) =>
           {p.title}
         </h3>
         <p class="leading-relaxed text-ink-muted md:col-span-6">{p.descriptor}</p>
-        <span class="text-accent max-md:absolute max-md:right-0 max-md:top-[4.1rem] md:col-span-1 md:flex md:justify-end" aria-hidden="true">→</span>
+        <span class="text-accent max-md:absolute max-md:right-0 max-md:top-[4.5rem] md:col-span-1 md:flex md:justify-end md:translate-y-1" aria-hidden="true"><Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
       </a>
     ))}
   </div>
@@ -120,24 +114,7 @@ const faviconSrc = (domain?: string) =>
     <div class="mt-10 md:mt-12">
       <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-4 md:mb-5">{group.industry}</p>
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 border-l border-t border-outline-soft">
-        {group.companies.map((company) => (
-          <div class="group flex aspect-[2/1] sm:aspect-[4/3] max-sm:last:odd:col-span-2 max-sm:last:odd:aspect-[4/1] items-center justify-center border-b border-r border-outline-soft bg-bg p-4 sm:p-6 text-center transition-colors hover:bg-surface-soft max-sm:flex-col max-sm:gap-2.5 max-sm:bg-surface">
-            <img
-              src={logoSrc(company)}
-              data-fallback={faviconSrc(company.domain)}
-              alt={company.name}
-              loading="lazy"
-              referrerpolicy="no-referrer"
-              class="employer-logo-d max-h-11 sm:max-h-16 w-auto max-w-[72%] object-contain transition-transform duration-300 group-hover:scale-105 max-sm:h-8 max-sm:max-w-[96px] max-sm:mix-blend-multiply"
-            />
-            <span
-              class="display text-base tracking-wide text-ink max-sm:hidden!"
-              style="display:none"
-            >{company.name}</span>
-            {/* Phones: always-on name label (icon-only marks read unlabeled otherwise) */}
-            <span class="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-muted sm:hidden">{company.name}</span>
-          </div>
-        ))}
+        {group.companies.map((company) => <EmployerCell company={company} variant="support" />)}
       </div>
     </div>
   ))}
@@ -152,22 +129,3 @@ const faviconSrc = (domain?: string) =>
   secondaryCta={{ label: "Follow on Instagram", href: siteData.socials.instagram }}
 />
 
-<script is:inline>
-  (function () {
-    function fallback(img) {
-      var fb = img.getAttribute("data-fallback");
-      if (fb) {
-        img.removeAttribute("data-fallback");
-        img.src = fb;
-      } else {
-        img.style.display = "none";
-        var label = img.nextElementSibling;
-        if (label) label.style.display = "block";
-      }
-    }
-    document.querySelectorAll("img.employer-logo-d").forEach(function (img) {
-      img.addEventListener("error", function () { fallback(img); });
-      if (img.complete && img.naturalWidth === 0) fallback(img);
-    });
-  })();
-</script>

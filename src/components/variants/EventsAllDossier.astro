@@ -44,7 +44,7 @@ for (const e of past) {
 const FILLER_SUMMARY = /^From the chapter (attendance records|photo archive) · /;
 const summaryOf = (e: EventRecord) => (FILLER_SUMMARY.test(e.description) ? "" : e.description);
 
-const chipBase = "inline-flex shrink-0 items-center whitespace-nowrap font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 min-h-11 md:min-h-0 border transition-colors";
+const chipBase = "snap-start inline-flex shrink-0 items-center whitespace-nowrap font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 min-h-11 md:min-h-0 border transition-colors";
 const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:text-ink";
 ---
 
@@ -73,8 +73,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       <span aria-hidden="true">←</span>
       <span class="border-b border-current pb-0.5">Back to events</span>
     </a>
-    <!-- Phones: chips wrap onto as many lines as they need; md+: right-aligned -->
-    <div class="flex flex-wrap gap-2 items-center md:justify-end">
+    <!-- Phones: one row that scrolls sideways (the clipped next chip is the cue); md+: wraps, right-aligned -->
+    <div class="flex flex-wrap gap-2 items-center md:justify-end max-md:flex-nowrap max-md:overflow-x-auto max-md:-mx-6 max-md:px-6 max-md:snap-x max-md:scroll-px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <span class="hidden md:inline shrink-0 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted mr-2">Filter</span>
 
       <a

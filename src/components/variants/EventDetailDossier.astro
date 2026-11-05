@@ -53,7 +53,7 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
       class="group inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-ink-muted hover:text-ink transition-colors min-h-11 -mt-3 mb-7 md:min-h-0 md:mt-0 md:mb-10"
     >
       <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
-      <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to the calendar</span>
+      <span class="border-b border-transparent max-md:border-current group-hover:border-current pb-0.5">Back to the calendar</span>
     </a>
 
     <SectionIndex index="01" label="Brief" />
@@ -63,10 +63,11 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
       {event.title}
     </h2>
 
-    <p class="font-mono text-sm tracking-[0.12em] uppercase mt-4 mb-8 md:mt-0 md:mb-12">
+    <!-- Phones: one item per line, no separators, so nothing orphans -->
+    <p class="font-mono text-sm tracking-[0.12em] uppercase mt-4 mb-8 max-sm:flex max-sm:flex-col max-sm:gap-y-1 md:mt-0 md:mb-12">
       {metaLine.map((part, i) => (
         <span class={i === 0 ? "text-accent" : "text-ink-muted"}>
-          {i > 0 && <span class="text-ink-muted"> · </span>}{part}
+          {i > 0 && <span class="text-ink-muted max-sm:hidden"> · </span>}{part}
         </span>
       ))}
     </p>

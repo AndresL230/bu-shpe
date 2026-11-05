@@ -34,9 +34,10 @@ const howto = [
   <!-- 01 — ARCHIVE LOG -->
   <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="01" label="The Log" />
-    <div class="mt-12 space-y-16 md:space-y-24">
+    <!-- Phones: entry 01 full plate, then hairline-ruled compact rows (see DossierEntry). -->
+    <div class="mt-12 md:space-y-24">
       {delegations.map((conf, i) => (
-        <Reveal>
+        <Reveal class={i === 0 ? "max-md:pb-12" : "max-md:py-6 max-md:border-t max-md:border-outline-soft"}>
           <DossierEntry conf={conf} index={i} />
         </Reveal>
       ))}
@@ -57,9 +58,10 @@ const howto = [
   <!-- 03 — HOW IT WORKS -->
   <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="03" label="How It Works" />
-    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
+    <!-- Phones: open hairline rows (no side borders, no inset); md+: the boxed grid. -->
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft max-md:border-x-0 max-md:border-b-0">
       {howto.map((h, i) => (
-        <div class="bg-bg p-5 md:p-7 flex flex-wrap items-baseline gap-x-3 md:block">
+        <div class="bg-bg py-5 md:p-7 flex flex-wrap items-baseline gap-x-3 md:block">
           <p class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</p>
           <p class="display text-2xl text-ink md:mt-2">{h.t}</p>
           <p class="basis-full mt-2 text-ink-muted text-sm">{h.d}</p>

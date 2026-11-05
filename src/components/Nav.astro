@@ -2,7 +2,7 @@
 import siteData from "@/data/site.json";
 import Icon from "@/components/Icon.astro";
 
-type SubLink = { href: string; label: string };
+type SubLink = { href: string; label: string; mobileLabel?: string };
 type NavLink = { href: string; label: string; submenu?: SubLink[] };
 
 const links: NavLink[] = [
@@ -11,8 +11,8 @@ const links: NavLink[] = [
     label: "About",
     submenu: [
       { href: "/about",                          label: "all of about" },
-      { href: "/about/national",                 label: "shpe nationals" },
-      { href: "/about/board",                    label: "e-board" },
+      { href: "/about/national",                 label: "shpe nationals", mobileLabel: "SHPE Nationals" },
+      { href: "/about/board",                    label: "e-board", mobileLabel: "E-Board" },
       { href: "/about/governance",               label: "governance" },
       { href: "/careers",                        label: "where we work" },
     ],
@@ -91,7 +91,9 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           <ul class="border-t border-outline-soft">
             {links.map(({ href, label, submenu }) => {
               // "all of …" entries just repeat the parent link — skip them here.
+              // A lone sub-link (Gallery › events) isn't worth a row of its own.
               const subs = (submenu ?? []).filter((s) => s.href !== href);
+              const shownSubs = subs.length > 1 ? subs : [];
               const active = currentPath === href || currentPath.startsWith(`${href}/`);
               return (
                 <li class="border-b border-outline-soft py-3">
@@ -104,11 +106,11 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
                     ]}
                   >
                     {label}
-                    <span class="font-mono text-base text-ink-muted/60" aria-hidden="true">→</span>
+                    <span class="font-mono text-base text-ink-muted" aria-hidden="true">→</span>
                   </a>
-                  {subs.length > 0 && (
+                  {shownSubs.length > 0 && (
                     <ul class="-mt-1 flex flex-wrap gap-x-5">
-                      {subs.map((s) => (
+                      {shownSubs.map((s) => (
                         <li>
                           <a
                             href={s.href}
@@ -117,7 +119,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
                               "inline-flex min-h-10 items-center text-sm hover:text-accent",
                               currentPath === s.href ? "text-accent" : "text-ink-muted",
                             ]}
-                          >{s.label}</a>
+                          ><span class="first-letter:uppercase">{s.mobileLabel ?? s.label}</span></a>
                         </li>
                       ))}
                     </ul>
