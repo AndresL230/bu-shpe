@@ -50,8 +50,8 @@ const pillars = [
 
 <!-- HERO — split: dossier text panel + campus photo -->
 <header class="relative w-full bg-bg blueprint overflow-hidden">
-  <!-- md+: text keeps the shared container's left edge; the photo bleeds to the window's right edge -->
-  <div class="grid grid-cols-1 md:min-h-[calc(100vh-72px)] md:grid-cols-[7fr_5fr]">
+  <!-- md+: an even split of the window; text starts and the photo ends on the shared container edges -->
+  <div class="grid grid-cols-1 md:min-h-[calc(100vh-72px)] md:grid-cols-2">
   <!-- LEFT — text / CTA panel -->
   <div class="flex items-center px-6 md:pl-[max(1.5rem,calc((100vw-1152px)/2))] md:pr-12 pt-12 pb-10 md:py-12 relative z-10">
     <div class="max-w-[672px] w-full">
@@ -81,8 +81,8 @@ const pillars = [
   </div>
 
   <!-- RIGHT — campus photo, dossier-framed -->
-  <div class="relative flex flex-col px-6 pb-12 md:py-12 md:px-0">
-    <div class="photo-warm relative w-full aspect-[16/10] md:aspect-auto md:flex-1 md:min-h-[280px] overflow-hidden border border-outline-soft md:border-r-0">
+  <div class="relative flex flex-col px-6 pb-12 md:py-12 md:pl-0 md:pr-[max(1.5rem,calc((100vw-1152px)/2))]">
+    <div class="photo-warm relative w-full aspect-[16/10] md:aspect-auto md:flex-1 md:min-h-[280px] overflow-hidden border border-outline-soft">
       <img
         src="/assets/campus/Boston-University-Center-For-Computing-Data-Sciences-Building-Located-Near-The-Charles-River-In-Boston-Massachusetts-USA.jpg"
         alt="The Charles River with BU's Center for Computing & Data Sciences and the Boston skyline"
