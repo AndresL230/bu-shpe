@@ -34,7 +34,7 @@ const state: "invalid" | "confirm" | "done" = !row ? "invalid" : row.status === 
         headlineAccent="so soon"
         subtitle={`Confirm below and ${row.email} will stop receiving BU SHPE emails.`}
       />
-      <section class="mx-auto max-w-[1200px] px-6 py-24">
+      <section class="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
         <form method="post" action="/api/unsubscribe" class="flex flex-wrap items-center gap-4">
           <input type="hidden" name="token" value={token} />
           <button type="submit" class="btn-dossier">Unsubscribe me</button>
@@ -52,7 +52,7 @@ const state: "invalid" | "confirm" | "done" = !row ? "invalid" : row.status === 
         headlineAccent="unsubscribed"
         subtitle={`${row.email} won't get any more BU SHPE emails. Hasta pronto.`}
       />
-      <section class="mx-auto max-w-[1200px] px-6 py-24">
+      <section class="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
         <p class="max-w-3xl text-base leading-relaxed text-ink-muted">
           Changed your mind? You can rejoin anytime from the <a href="/join" class="text-link underline">join page</a>.
         </p>

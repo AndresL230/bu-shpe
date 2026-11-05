@@ -39,12 +39,12 @@ const parts = headlineAccent && headline.includes(headlineAccent)
     })()
   : null;
 ---
-<section class="grain relative isolate bg-deep py-24 md:py-32 px-6">
+<section class="grain relative isolate bg-deep py-16 md:py-32 px-6">
   <div class="mx-auto max-w-[1200px]">
 
     <header class="flex flex-col gap-4">
       <span class="block h-[3px] w-12 bg-accent"></span>
-      <p class="eyebrow text-cream/70">{eyebrow}</p>
+      <p class="eyebrow text-cream/70!">{eyebrow}</p>
     </header>
 
     <div class="mt-8 max-w-3xl">
@@ -78,7 +78,7 @@ const parts = headlineAccent && headline.includes(headlineAccent)
 
     {(meta || metaRight) && (
       <footer class="mt-10 flex flex-col items-start justify-between gap-3 border-t border-cream/30 pt-6 text-xs text-cream/70 md:flex-row md:items-center">
-        {meta && <p class="eyebrow text-cream/70">{meta}</p>}
+        {meta && <p class="eyebrow text-cream/70!">{meta}</p>}
         {metaRight && (
           <p class="font-cond uppercase tracking-[0.18em] text-cream/70">
             {metaRight}

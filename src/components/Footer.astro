@@ -5,12 +5,15 @@ const quickLinks = [
   { href: "/about", label: "About" },
   { href: "/about/board", label: "E-Board" },
   { href: "/events", label: "Events" },
+  { href: "/conferences", label: "Conferences" },
+  { href: "/volunteering", label: "Volunteering" },
+  { href: "/gallery", label: "Gallery" },
   { href: "/support", label: "Support" },
   { href: "/join", label: "Join Us" },
 ];
 ---
 <footer class="bg-deep text-cream">
-  <div class="mx-auto grid max-w-[1200px] gap-12 px-6 py-16 md:grid-cols-3">
+  <div class="mx-auto grid max-w-[1200px] gap-10 px-6 py-14 md:gap-12 md:py-16 md:grid-cols-3">
     <div>
       <img
         src="/assets/logos/SHPE_logo_horiz_Boston-University_DKBG.png"
@@ -23,14 +26,14 @@ const quickLinks = [
       </p>
       <a
         href={siteData.socials.shpe}
-        class="eyebrow mt-4 md:mt-6 inline-block py-2.5 md:py-0 text-cream/60 hover:text-accent"
+        class="eyebrow mt-4 md:mt-6 inline-block py-2.5 md:py-0 text-cream/70! hover:text-accent!"
         rel="noopener"
       >Part of SHPE National →</a>
     </div>
 
     <div>
-      <p class="eyebrow text-cream/60">Explore</p>
-      <ul class="mt-2 md:mt-4 md:space-y-2">
+      <p class="eyebrow text-cream/70!">Explore</p>
+      <ul class="mt-2 grid grid-cols-2 gap-x-6 md:mt-4 md:block md:space-y-2">
         {quickLinks.map(l => (
           <li><a href={l.href} class="inline-block py-2.5 md:py-0 text-cream hover:text-accent transition-colors">{l.label}</a></li>
         ))}
@@ -38,13 +41,13 @@ const quickLinks = [
     </div>
 
     <div>
-      <p class="eyebrow text-cream/60">Contact</p>
+      <p class="eyebrow text-cream/70!">Contact</p>
       <ul class="mt-2 md:mt-4 md:space-y-2 text-cream">
         <li><a href={`mailto:${siteData.contactEmail}`} class="inline-block py-2.5 md:py-0 hover:text-accent">{siteData.contactEmail}</a></li>
         <li class="text-cream/70 text-sm">Faculty Advisor: <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="inline-block py-2.5 md:py-0 hover:text-accent">{siteData.facultyAdvisorEmail}</a></li>
       </ul>
 
-      <p class="eyebrow mt-8 text-cream/60">Follow</p>
+      <p class="eyebrow mt-8 text-cream/70!">Follow</p>
       <ul class="mt-2 md:mt-4 flex flex-wrap gap-x-6 md:gap-4">
         <li><a href={siteData.socials.instagram} aria-label="Instagram" class="inline-block py-2.5 md:py-0 hover:text-accent" rel="noopener">Instagram</a></li>
         <li><a href={siteData.socials.linkedin} aria-label="LinkedIn" class="inline-block py-2.5 md:py-0 hover:text-accent" rel="noopener">LinkedIn</a></li>

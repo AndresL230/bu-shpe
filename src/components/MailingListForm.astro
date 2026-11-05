@@ -5,7 +5,7 @@ import Icon from "@/components/Icon.astro";
 <form
   method="post"
   action="/api/subscribe"
-  class="relative grid gap-3 md:grid-cols-[1fr_1fr_2fr_auto]"
+  class="relative grid grid-cols-2 gap-3 lg:grid-cols-[1fr_1fr_2fr_auto]"
 >
   <!-- Honeypot: hidden from people and assistive tech; bots that fill it are dropped silently. -->
   <div aria-hidden="true" class="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
@@ -30,7 +30,7 @@ import Icon from "@/components/Icon.astro";
       class="w-full rounded-[var(--radius-card)] border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none"
     />
   </div>
-  <div class="relative">
+  <div class="relative col-span-2 lg:col-span-1">
     <label for="ml-email" class="sr-only">Email address</label>
     <input
       id="ml-email"
@@ -41,7 +41,7 @@ import Icon from "@/components/Icon.astro";
   </div>
   <button
     type="submit"
-    class="group inline-flex items-center gap-2 btn-dossier"
+    class="group col-span-2 inline-flex items-center justify-center gap-2 btn-dossier lg:col-span-1 lg:justify-start"
   >
     Sign Up
     <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />

@@ -9,6 +9,7 @@ import sponsorsRaw from "@/data/sponsors.json";
 
 import type { Sponsor } from "@/types";
 import type { EventRecord } from "@/lib/server/events";
+import { formatEventStamp } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
@@ -43,44 +44,30 @@ const pillars = [
   },
 ];
 
-const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"] as const;
-
-function formatEventDate(iso: string): string {
-  // ISO is either "yyyy-mm" or "yyyy-mm-dd".
-  const parts = iso.split("-");
-  const year = parts[0];
-  const monthIdx = Number(parts[1]) - 1;
-  const month = MONTHS[monthIdx] ?? "";
-  if (parts.length >= 3) {
-    return `${parts[2].padStart(2, "0")} ${month}`;
-  }
-  const yy = year.slice(-2);
-  return `${month} ${yy}`;
-}
 ---
 
 <!-- HERO — split: dossier text panel + campus photo -->
-<header class="relative w-full bg-bg blueprint grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-72px)] overflow-hidden">
+<header class="relative w-full bg-bg blueprint grid grid-cols-1 md:grid-cols-2 md:min-h-[calc(100vh-72px)] overflow-hidden">
   <!-- LEFT — text / CTA panel -->
-  <div class="flex items-center px-6 md:px-12 lg:px-16 xl:px-24 py-16 md:py-12 relative z-10">
+  <div class="flex items-center px-6 md:px-12 lg:px-16 xl:px-24 pt-12 pb-10 md:py-12 relative z-10">
     <div class="max-w-[672px] w-full">
-      <p class="font-mono text-ink-muted text-sm tracking-[0.18em] uppercase mb-5 text-balance">Boston University · SHPE Region 4</p>
+      <p class="font-mono text-ink-muted text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Boston University · SHPE Region 4</p>
       <div class="w-8 h-[3px] bg-accent mb-6"></div>
-      <h1 class="display text-5xl md:text-6xl lg:text-7xl text-ink leading-[1.02]">
+      <h1 class="display text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl text-ink leading-[1.02]">
         SHPE Boston University — building the next generation of Hispanic engineers, <em class="font-serif italic font-normal lowercase tracking-normal text-accent">together</em>.
       </h1>
-      <p class="mt-7 text-ink-muted text-lg">¡Bienvenidos a la familia! {siteData.mission}</p>
-      <div class="mt-9 flex flex-wrap items-center gap-6">
+      <p class="mt-6 md:mt-7 text-ink-muted md:text-lg">¡Bienvenidos a la familia! {siteData.mission}</p>
+      <div class="mt-8 md:mt-9 flex flex-wrap items-center gap-6">
         <a
           href="/about"
-          class="group inline-flex items-center gap-2 btn-dossier"
+          class="group inline-flex items-center gap-2 btn-dossier max-sm:w-full max-sm:justify-center"
         >
           Explore Chapter
           <span aria-hidden="true">→</span>
         </a>
         <a
           href="/events"
-          class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink transition-colors hover:text-accent"
+          class="group inline-flex min-h-11 items-center gap-2 font-sans text-base font-medium text-ink transition-colors hover:text-accent md:min-h-0"
         >
           <span class="border-b border-current pb-0.5">View Events</span>
           <span aria-hidden="true">→</span>
@@ -90,8 +77,8 @@ function formatEventDate(iso: string): string {
   </div>
 
   <!-- RIGHT — campus photo, dossier-framed -->
-  <div class="relative flex flex-col px-6 pb-16 md:py-12 md:pr-12 lg:pr-16 xl:pr-24 md:pl-0">
-    <div class="photo-warm relative w-full flex-1 min-h-[280px] overflow-hidden border border-outline-soft">
+  <div class="relative flex flex-col px-6 pb-12 md:py-12 md:pr-12 lg:pr-16 xl:pr-24 md:pl-0">
+    <div class="photo-warm relative w-full aspect-[16/10] md:aspect-auto md:flex-1 md:min-h-[280px] overflow-hidden border border-outline-soft">
       <img
         src="/assets/campus/Boston-University-Center-For-Computing-Data-Sciences-Building-Located-Near-The-Charles-River-In-Boston-Massachusetts-USA.jpg"
         alt="The Charles River with BU's Center for Computing & Data Sciences and the Boston skyline"
@@ -108,7 +95,7 @@ function formatEventDate(iso: string): string {
 <LogoMarquee items={sponsors} label="Partners & sponsors" href="/support" linkText="Support the chapter" />
 
 <!-- 01 — MISSION -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12">
   <div class="md:col-span-5">
     <SectionIndex label="Mission" accent="scarlet" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">Paving a pathway for Hispanic brilliance in STEM.</h2>
@@ -128,17 +115,17 @@ function formatEventDate(iso: string): string {
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 02 — THE PILLARS -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <SectionIndex label="The Pillars" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Three things we do, year in and year out.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
     Conferences, service, and professional development — the load-bearing work of the chapter.
   </p>
 
-  <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+  <div class="mt-10 -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 pb-2 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-px md:bg-outline-soft md:border md:border-outline-soft">
     {pillars.map((pillar) => (
-      <div class="bg-bg p-7 flex flex-col">
-        <div class="photo-warm relative aspect-[3/2] overflow-hidden bg-surface-soft mb-5 -mt-1">
+      <div class="bg-bg w-[82%] shrink-0 snap-start border border-outline-soft flex flex-col md:w-auto md:border-0 md:p-7">
+        <div class="photo-warm relative aspect-[3/2] overflow-hidden bg-surface-soft md:mb-5 md:-mt-1">
           <img
             src={pillar.image}
             alt={pillar.imageAlt}
@@ -146,6 +133,7 @@ function formatEventDate(iso: string): string {
             loading="lazy"
           />
         </div>
+        <div class="flex flex-col flex-grow p-5 md:p-0">
         <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{pillar.label}</p>
         <p class="text-ink-muted text-sm flex-grow">{pillar.body}</p>
         <ul class="mt-5 space-y-1.5">
@@ -156,15 +144,17 @@ function formatEventDate(iso: string): string {
             </li>
           ))}
         </ul>
+        </div>
       </div>
     ))}
   </div>
+  <p class="mt-4 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted md:hidden" aria-hidden="true">Swipe →</p>
 </section>
 
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — RECENT EVENTS -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <div class="flex items-end justify-between gap-6">
     <div>
       <SectionIndex label="Recent Events" />
@@ -172,7 +162,7 @@ function formatEventDate(iso: string): string {
     </div>
     <a
       href="/events"
-      class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors shrink-0"
+      class="group inline-flex min-h-11 items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors shrink-0 md:min-h-0"
     >
       <span class="border-b border-current pb-0.5">View all</span>
       <span aria-hidden="true">→</span>
@@ -182,14 +172,14 @@ function formatEventDate(iso: string): string {
   <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
     {recentEvents.map((event) => (
       <a href={`/events/${event.slug}`} class="block">
-        <article class="bg-bg group p-8 flex flex-col h-full hover:bg-surface-soft transition-colors">
-          <p class="font-mono text-sm text-accent tracking-wide uppercase">{event.category}</p>
-          <div class="display text-5xl text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">
-            {formatEventDate(event.date)}
+        <article class="bg-bg group p-6 md:p-8 flex flex-col h-full hover:bg-surface-soft transition-colors">
+          <p class="font-mono text-sm text-accent tracking-wide uppercase"><span class="md:hidden">{formatEventStamp(event.date)} · </span>{event.category}</p>
+          <div class="hidden md:block display text-4xl lg:text-5xl whitespace-nowrap text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">
+            {formatEventStamp(event.date)}
           </div>
-          <h3 class="display text-2xl text-ink mb-4 group-hover:text-accent transition">{event.title}</h3>
-          <p class="text-ink-muted text-sm flex-grow mb-8">{event.description}</p>
-          <div class="border-t border-outline-soft pt-4 flex justify-between items-center">
+          <h3 class="display text-2xl text-ink mt-3 md:mt-0 mb-2 md:mb-4 group-hover:text-accent transition">{event.title}</h3>
+          <p class="text-ink-muted text-sm flex-grow line-clamp-2 md:line-clamp-none md:mb-8">{event.description}</p>
+          <div class="hidden md:flex border-t border-outline-soft pt-4 justify-between items-center">
             <span class="font-mono uppercase tracking-wide text-xs text-ink-muted">{event.category}</span>
             <span class="text-accent" aria-hidden="true">→</span>
           </div>

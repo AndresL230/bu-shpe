@@ -31,9 +31,9 @@ const walkthrough = [
 <Base title="Career Fair Prep — Conferences" description="How BU SHPE prepares its delegation for the SHPE national career fair: bootcamp, recruiters, attire, and a booth walkthrough.">
 
   <!-- HERO -->
-  <header class="bg-deep py-20 md:py-28 px-6">
-    <div class="max-w-[1200px] mx-auto">
-      <a href="/conferences" class="inline-block"><SectionIndex index="01" label="Career Fair Prep" onDark /></a>
+  <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
+    <div class="max-w-[1200px] mx-auto relative z-10">
+      <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase"><a href="/conferences" class="inline-flex items-center min-h-11 -my-3 md:min-h-0 md:my-0 hover:text-cream transition-colors">Conferences</a><span aria-hidden="true">&nbsp;·&nbsp;</span>Career Fair Prep</p>
       <h1 class="display text-5xl md:text-6xl text-cream mt-5 max-w-2xl leading-[1.04]">
         Walk in <em class="font-serif italic font-normal lowercase tracking-normal text-accent">ready</em>.
       </h1>
@@ -42,12 +42,12 @@ const walkthrough = [
   </header>
 
   <!-- BOOTCAMP CHECKLIST -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-5">
-      <SectionIndex index="02" label="Bootcamp" />
+      <SectionIndex index="01" label="Bootcamp" />
       <h2 class="display text-3xl md:text-4xl text-ink mt-5">The prep bootcamp.</h2>
       <p class="mt-4 text-ink-muted max-w-md">Run in the weeks before the trip with our corporate partners — session dates are posted to members each fall.</p>
-      <a href={siteData.sponsorshipPacketUrl} class="mt-6 inline-flex items-center gap-2 font-sans font-semibold text-accent hover:text-accent-deep">
+      <a href={siteData.sponsorshipPacketUrl} class="mt-3.5 py-2.5 md:mt-6 md:py-0 inline-flex items-center gap-2 font-sans font-semibold text-accent hover:text-accent-deep">
         Download the prep guide <span aria-hidden="true">→</span>
       </a>
     </div>
@@ -57,8 +57,8 @@ const walkthrough = [
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- RECRUITER WALL -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
-    <SectionIndex index="03" label="Who's Recruiting" />
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
+    <SectionIndex index="02" label="Who's Recruiting" />
     <p class="mt-5 max-w-2xl text-ink-muted">{/* Companies verified as recent SHPE National Convention recruiters/sponsors (2024–2025); the exact roster changes year to year. Logos pending — add to recruiters.json. */}A snapshot of the names on the floor — 150+ companies recruit onsite each year. These are recent SHPE National recruiters across the major industries; the lineup shifts annually.</p>
     <div class="mt-10"><Reveal><RecruiterWall /></Reveal></div>
   </section>
@@ -66,15 +66,15 @@ const walkthrough = [
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- ATTIRE + LOADOUT -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-12">
     <div class="md:col-span-6">
-      <SectionIndex index="04" label="What To Bring" />
+      <SectionIndex index="03" label="What To Bring" />
       <h2 class="display text-3xl md:text-4xl text-ink mt-5">The loadout.</h2>
       <p class="mt-4 text-ink-muted max-w-md">Business or business-casual attire. Pack the night before — the floor opens early.</p>
       <div class="mt-6"><Checklist items={loadout} variant="loadout" /></div>
     </div>
-    <div class="md:col-span-5 md:col-start-8">
-      <SectionIndex index="05" label="Day In The Fair" />
+    <div class="md:col-span-5 md:col-start-8 border-t border-outline-soft pt-16 md:border-t-0 md:pt-0">
+      <SectionIndex index="04" label="Day In The Fair" />
       <div class="mt-6 space-y-6">
         {walkthrough.map((w, i) => (
           <div class="border-l-2 border-accent pl-5">

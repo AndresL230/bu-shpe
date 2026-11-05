@@ -21,10 +21,10 @@ const howto = [
 <Base title="The Record — Conferences" description="BU SHPE's chapter record at nationals — the year-by-year delegation archive and the national competition tracks we compete in.">
 
   <!-- HERO -->
-  <header class="bg-deep py-20 md:py-28 px-6">
-    <div class="max-w-[1200px] mx-auto">
-      <a href="/conferences" class="inline-block"><SectionIndex index="02" label="The Record" accent="scarlet" onDark /></a>
-      <h1 class="display text-5xl md:text-6xl text-cream mt-5 max-w-2xl leading-[1.04]">
+  <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
+    <div class="max-w-[1200px] mx-auto relative z-10">
+      <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase"><a href="/conferences" class="inline-flex items-center min-h-11 -my-3 md:min-h-0 md:my-0 hover:text-cream transition-colors">Conferences</a><span aria-hidden="true">&nbsp;·&nbsp;</span>The Record</p>
+      <h1 class="display text-[2.625rem] sm:text-5xl md:text-6xl text-cream mt-5 max-w-2xl leading-[1.04]">
         The chapter <em class="font-serif italic font-normal lowercase tracking-normal text-accent">record</em>.
       </h1>
       <p class="mt-6 text-cream/80 max-w-xl text-lg">Every delegation BU SHPE has sent to nationals, and every track we compete in — outcomes first. A new entry lands here each year.</p>
@@ -32,11 +32,12 @@ const howto = [
   </header>
 
   <!-- 01 — ARCHIVE LOG -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="01" label="The Log" />
-    <div class="mt-12 space-y-16 md:space-y-24">
+    <!-- Phones: entry 01 full plate, then hairline-ruled compact rows (see DossierEntry). -->
+    <div class="mt-12 md:space-y-24">
       {delegations.map((conf, i) => (
-        <Reveal>
+        <Reveal class={i === 0 ? "max-md:pb-12" : "max-md:py-6 max-md:border-t max-md:border-outline-soft"}>
           <DossierEntry conf={conf} index={i} />
         </Reveal>
       ))}
@@ -46,7 +47,7 @@ const howto = [
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 02 — TRACKS SCORECARD -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="02" label="The Tracks" />
     <p class="mt-5 max-w-2xl text-ink-muted">{/* Tracks + formats verified 2026-06 via convention.shpe.org/programs; see competitions.json _sources. */}The competition slate at the national convention. Mark the ones that fit your discipline.</p>
     <div class="mt-10"><Reveal><Scorecard /></Reveal></div>
@@ -55,14 +56,15 @@ const howto = [
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 03 — HOW IT WORKS -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="03" label="How It Works" />
-    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
+    <!-- Phones: open hairline rows (no side borders, no inset); md+: the boxed grid. -->
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft max-md:border-x-0 max-md:border-b-0">
       {howto.map((h, i) => (
-        <div class="bg-bg p-7">
+        <div class="bg-bg py-5 md:p-7 flex flex-wrap items-baseline gap-x-3 md:block">
           <p class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</p>
-          <p class="display text-2xl text-ink mt-2">{h.t}</p>
-          <p class="mt-2 text-ink-muted text-sm">{h.d}</p>
+          <p class="display text-2xl text-ink md:mt-2">{h.t}</p>
+          <p class="basis-full mt-2 text-ink-muted text-sm">{h.d}</p>
         </div>
       ))}
     </div>
@@ -71,7 +73,7 @@ const howto = [
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 04 — THE STAKES -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="04" label="The Stakes" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5 mb-8 max-w-xl">What you're competing for.</h2>
     <Reveal><TrophyStats /></Reveal>

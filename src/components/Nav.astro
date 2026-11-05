@@ -2,7 +2,7 @@
 import siteData from "@/data/site.json";
 import Icon from "@/components/Icon.astro";
 
-type SubLink = { href: string; label: string };
+type SubLink = { href: string; label: string; mobileLabel?: string };
 type NavLink = { href: string; label: string; submenu?: SubLink[] };
 
 const links: NavLink[] = [
@@ -11,8 +11,8 @@ const links: NavLink[] = [
     label: "About",
     submenu: [
       { href: "/about",                          label: "all of about" },
-      { href: "/about/national",                 label: "shpe nationals" },
-      { href: "/about/board",                    label: "e-board" },
+      { href: "/about/national",                 label: "shpe nationals", mobileLabel: "SHPE Nationals" },
+      { href: "/about/board",                    label: "e-board", mobileLabel: "E-Board" },
       { href: "/about/governance",               label: "governance" },
       { href: "/careers",                        label: "where we work" },
     ],
@@ -87,30 +87,54 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
            list is taller than the viewport (landscape / short phones); the
            inner column is centred with my-auto so it never clips at the top. -->
       <div class="fixed inset-x-0 bottom-0 top-[72px] z-30 flex flex-col overflow-y-auto overscroll-contain bg-bg">
-        <nav aria-label="Mobile" class="my-auto px-8 py-10 text-center">
-          <ul class="flex flex-col gap-2">
-            {links.map(({ href, label }) => (
-              <li>
-                <a
-                  href={href}
-                  aria-current={currentPath === href ? "page" : undefined}
-                  class:list={[
-                    "display inline-block py-2 text-3xl hover:text-accent",
-                    currentPath === href ? "text-accent" : "text-ink",
-                  ]}
-                >{label}</a>
-              </li>
-            ))}
-            <li>
-              <a
-                href="/join"
-                class="group mt-6 inline-flex items-center gap-2 btn-dossier"
-              >
-                Join SHPE
-                <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-              </a>
-            </li>
+        <nav aria-label="Mobile" class="px-6 pt-6 pb-10">
+          <ul class="border-t border-outline-soft">
+            {links.map(({ href, label, submenu }) => {
+              // "all of …" entries just repeat the parent link — skip them here.
+              // A lone sub-link (Gallery › events) isn't worth a row of its own.
+              const subs = (submenu ?? []).filter((s) => s.href !== href);
+              const shownSubs = subs.length > 1 ? subs : [];
+              const active = currentPath === href || currentPath.startsWith(`${href}/`);
+              return (
+                <li class="border-b border-outline-soft py-3">
+                  <a
+                    href={href}
+                    aria-current={currentPath === href ? "page" : undefined}
+                    class:list={[
+                      "display flex min-h-11 items-center justify-between text-[1.75rem] leading-none hover:text-accent",
+                      active ? "text-accent" : "text-ink",
+                    ]}
+                  >
+                    {label}
+                    <span class="font-mono text-base text-ink-muted" aria-hidden="true">→</span>
+                  </a>
+                  {shownSubs.length > 0 && (
+                    <ul class="-mt-1 flex flex-wrap gap-x-5">
+                      {shownSubs.map((s) => (
+                        <li>
+                          <a
+                            href={s.href}
+                            aria-current={currentPath === s.href ? "page" : undefined}
+                            class:list={[
+                              "inline-flex min-h-10 items-center text-sm hover:text-accent",
+                              currentPath === s.href ? "text-accent" : "text-ink-muted",
+                            ]}
+                          ><span class="first-letter:uppercase">{s.mobileLabel ?? s.label}</span></a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
           </ul>
+          <a
+            href="/join"
+            class="group mt-8 flex w-full items-center justify-center gap-2 btn-dossier"
+          >
+            Join SHPE
+            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
         </nav>
       </div>
     </details>

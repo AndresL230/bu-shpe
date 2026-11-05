@@ -15,14 +15,20 @@ interface Props {
 const { doc } = Astro.props;
 const d = legal[doc];
 const effective = formatEventDate(legal.effectiveDate, { withDay: true });
+// Run-in headings ("Mailing list. When you join…"): a short capitalised lead
+// phrase ending in a full stop is set bold so the list scans.
+const runIn = (p: string) => {
+  const m = p.match(/^([A-Z][\w-]*(?: [\w-]+){0,3}\.)\s(.*)$/s);
+  return m ? { lead: m[1], rest: m[2] } : { lead: "", rest: p };
+};
 const other = doc === "privacy"
   ? { href: "/terms", label: "Terms of Service" }
   : { href: "/privacy", label: "Privacy Policy" };
 ---
 <Base title={d.title} description={d.intro}>
-  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-24 md:py-32">
+  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-16 md:py-32">
     <div class="relative z-10 mx-auto max-w-[1200px]">
-      <p class="mb-5 font-mono text-sm uppercase tracking-[0.18em] text-cream/60">{d.eyebrow}</p>
+      <p class="mb-5 font-mono text-xs uppercase tracking-[0.14em] text-cream/60 md:text-sm md:tracking-[0.18em]">{d.eyebrow}</p>
       <h1 class="display max-w-3xl text-5xl leading-[1.02] text-cream md:text-7xl">
         {d.headline} <em class="font-serif font-normal lowercase italic tracking-normal text-accent">{d.headlineAccent}</em>.
       </h1>
@@ -31,7 +37,7 @@ const other = doc === "privacy"
     </div>
   </header>
 
-  <section class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+  <section class="mx-auto max-w-[1200px] px-6 pt-12 pb-16 md:py-28">
     <ol class="border-t border-ink">
       {d.sections.map((s, i) => (
         <li class="grid grid-cols-1 gap-4 border-b border-outline-soft py-10 md:grid-cols-12 md:gap-12">
@@ -40,7 +46,10 @@ const other = doc === "privacy"
             <h2 class="display mt-2 text-2xl text-ink md:text-3xl">{s.heading}</h2>
           </div>
           <div class="max-w-3xl space-y-4 text-ink-muted leading-relaxed md:col-span-8">
-            {s.body.map((p) => <p>{p}</p>)}
+            {s.body.map((p) => {
+              const { lead, rest } = runIn(p);
+              return lead ? <p><strong class="font-semibold text-ink">{lead}</strong> {rest}</p> : <p>{p}</p>;
+            })}
           </div>
         </li>
       ))}
@@ -59,7 +68,7 @@ const other = doc === "privacy"
       </li>
     </ol>
 
-    <a href={other.href} class="mt-10 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-ink">
+    <a href={other.href} class="mt-6 inline-flex min-h-11 items-center gap-2 md:mt-10 md:min-h-0 font-mono text-sm uppercase tracking-wide text-accent hover:text-ink">
       <span class="border-b border-current pb-0.5">Read the {other.label}</span>
       <span aria-hidden="true">→</span>
     </a>

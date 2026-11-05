@@ -66,8 +66,11 @@ html::-webkit-scrollbar {         /* Chromium, Safari */
   display: none;
 }
 
-button, input, select, textarea {
-  font-family: var(--font-sans);
+/* Base layer, so component classes (.btn-dossier → mono) still win on <button>. */
+@layer base {
+  button, input, select, textarea {
+    font-family: var(--font-sans);
+  }
 }
 
 body {
@@ -223,6 +226,13 @@ body {
     background-color: var(--color-ink);
     border-color: var(--color-ink);
     color: var(--color-cream);
+  }
+  /* Phones: lift dossier buttons to a 44px tap target. Desktop untouched. */
+  @media (max-width: 767px) {
+    .btn-dossier,
+    .btn-dossier-ghost {
+      min-height: 2.75rem;
+    }
   }
 }
 

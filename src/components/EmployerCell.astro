@@ -1,0 +1,84 @@
+---
+/**
+ * One company cell in the employer logo grids on /careers and /support.
+ * Phones (<640px) get one shared treatment on both pages: fixed-height cell,
+ * a 36px logo box (max 104px wide) and the company name underneath. From sm:
+ * up each page keeps its own sizing via `variant`.
+ *
+ * Heavy, roughly 1:1 solid marks (a filled square or circle) read much louder
+ * than thin wordmarks at the same box height, so on phones they get 4px of
+ * padding inside the 36px box (28px mark, labels stay aligned). Keyed by
+ * domain because most of these logos come from unavatar, not a repo file.
+ * Add a domain here if a new square mark looks too heavy.
+ */
+import { logoSrc, faviconSrc } from "@/lib/logos";
+
+interface Props {
+  company: { name: string; domain?: string; logo?: string };
+  variant: "careers" | "support";
+}
+
+const { company, variant } = Astro.props as Props;
+
+const HEAVY_SQUARE_MARKS = new Set([
+  "rtx.com",
+  "microsoft.com",
+  "tesla.com",
+  "ge.com",
+  "slb.com",
+  "gene.com",
+]);
+const heavy = company.domain ? HEAVY_SQUARE_MARKS.has(company.domain) : false;
+const careers = variant === "careers";
+---
+<div
+  data-variant={variant}
+  class:list={[
+    "group flex flex-col items-center justify-center border-b border-r border-outline-soft bg-bg text-center transition-colors hover:bg-surface-soft",
+    // of-type, not last/odd: dev mode renders the script tag inside the first grid
+    "max-sm:h-24 max-sm:gap-2.5 max-sm:p-3 max-sm:last-of-type:nth-of-type-[2n+1]:col-span-2",
+    careers ? "sm:aspect-[4/3] sm:gap-4 sm:p-6" : "sm:aspect-[4/3] sm:p-6",
+  ]}
+>
+  <img
+    src={logoSrc(company)}
+    data-fallback={company.logo ? undefined : faviconSrc(company.domain)}
+    alt={company.name}
+    loading="lazy"
+    referrerpolicy="no-referrer"
+    class:list={[
+      "employer-cell-logo w-auto object-contain transition-transform duration-300 group-hover:scale-105",
+      "max-sm:h-9 max-sm:max-w-[104px] max-sm:mix-blend-multiply",
+      heavy && "max-sm:p-1",
+      careers ? "mix-blend-multiply sm:max-h-14 sm:max-w-[70%]" : "sm:max-h-16 sm:max-w-[72%]",
+    ]}
+  />
+  {!careers && (
+    <span class="employer-cell-fallback display text-base tracking-wide text-ink max-sm:hidden!" style="display:none">{company.name}</span>
+  )}
+  <span class:list={["employer-cell-name font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-muted", !careers && "sm:hidden"]}>{company.name}</span>
+</div>
+
+<script>
+  // Logo fallback: unavatar → favicon → hide the image and lean on the name.
+  document.querySelectorAll<HTMLImageElement>("img.employer-cell-logo").forEach((img) => {
+    const fail = () => {
+      const fb = img.dataset.fallback;
+      if (fb) {
+        delete img.dataset.fallback;
+        img.src = fb;
+        return;
+      }
+      img.style.display = "none";
+      const cell = img.parentElement;
+      if (!cell) return;
+      const fallback = cell.querySelector<HTMLElement>(".employer-cell-fallback");
+      if (fallback) fallback.style.display = "block";
+      if (cell.dataset.variant === "careers") {
+        cell.querySelector(".employer-cell-name")?.classList.add("display", "text-xl", "text-ink");
+      }
+    };
+    img.addEventListener("error", fail);
+    if (img.complete && img.naturalWidth === 0) fail();
+  });
+</script>

@@ -4,13 +4,26 @@ import type { Convention } from "@/types";
 import { formatDate } from "@/lib/conferences";
 const c = conventionData as Convention;
 const dates = [...c.keyDates].sort((a, b) => a.date.localeCompare(b.date));
+// A key date is "past" once its day is over, in the convention's UTC offset.
+const tz = c.countdownTarget.match(/(Z|[+-]\d{2}:\d{2})$/)?.[1] ?? "Z";
+const endOf = (iso: string) => `${iso}T23:59:59${tz}`;
+// Build-time state (pages prerender); Countdown's inline script refreshes
+// data-past in the browser.
+const now = Date.now();
 ---
 <ol class="relative border-l border-outline-soft pl-6 space-y-8">
   {dates.map((kd) => (
-    <li class="relative">
-      <span class="absolute -left-[1.65rem] top-1.5 h-2.5 w-2.5 bg-accent" aria-hidden="true"></span>
-      <p class="font-mono text-sm text-ink tracking-wide">{formatDate(kd.date)}</p>
-      <p class="display text-xl text-ink leading-tight mt-1">{kd.label}</p>
+    <li
+      class="group/kd relative"
+      data-keydate
+      data-keydate-end={endOf(kd.date)}
+      data-past={now > new Date(endOf(kd.date)).getTime() ? "" : undefined}
+    >
+      <span class="absolute -left-[1.65rem] top-1.5 h-2.5 w-2.5 bg-accent group-data-past/kd:bg-outline-soft" aria-hidden="true"></span>
+      <p class="font-mono text-sm text-ink tracking-wide group-data-past/kd:text-ink-muted">
+        {formatDate(kd.date)}<span class="hidden group-data-past/kd:inline ml-3 text-xs uppercase tracking-[0.14em]"><span aria-hidden="true">✓ </span>Done</span>
+      </p>
+      <p class="display text-xl text-ink leading-tight mt-1 group-data-past/kd:text-ink-muted">{kd.label}</p>
       {kd.note && <p class="text-ink-muted text-sm mt-0.5">{kd.note}</p>}
     </li>
   ))}

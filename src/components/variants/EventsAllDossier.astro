@@ -6,6 +6,7 @@ import siteData from "@/data/site.json";
 
 import EventPhotoFallback from "@/components/EventPhotoFallback.astro";
 import type { EventRecord } from "@/lib/server/events";
+import { academicYear, formatEventStamp } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
@@ -27,27 +28,30 @@ const past = events
 
 const totalCount = events.length;
 
-const monthNames = [
-  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
-];
-
-function formatDate(iso: string): string {
-  const [y, m, d] = iso.split("-");
-  const monthIdx = parseInt(m, 10) - 1;
-  const month = monthNames[monthIdx] ?? "—";
-  if (d) return `${d} ${month} ${y.slice(2)}`; // archive spans years, so keep the year
-  return `${month} ${y.slice(2)}`;
+// Past events, grouped by academic year (Aug–Jul), newest year first. Only the
+// most recent year starts open — the current one whenever it has events.
+// `past` is already newest-first, so groups and their rows come out in order.
+const pastByYear: { label: string; events: EventRecord[] }[] = [];
+for (const e of past) {
+  const { label } = academicYear(e.date);
+  const last = pastByYear.at(-1);
+  if (last?.label === label) last.events.push(e);
+  else pastByYear.push({ label, events: [e] });
 }
 
-const chipBase = "inline-flex shrink-0 items-center whitespace-nowrap font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 min-h-11 md:min-h-0 border transition-colors";
+// Backfilled events carry a generated placeholder summary
+// ("From the chapter attendance records · Fall 2024."); rows skip it.
+const FILLER_SUMMARY = /^From the chapter (attendance records|photo archive) · /;
+const summaryOf = (e: EventRecord) => (FILLER_SUMMARY.test(e.description) ? "" : e.description);
+
+const chipBase = "snap-start inline-flex shrink-0 items-center whitespace-nowrap font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 min-h-11 md:min-h-0 border transition-colors";
 const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:text-ink";
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {totalCount} on record</p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {totalCount} on record</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       The whole <em class="font-serif italic font-normal lowercase tracking-normal text-accent">season</em>.
     </h1>
@@ -58,20 +62,20 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 </header>
 
 <!-- CONTENT: filter + upcoming + past -->
-<section id="all-events-content-d" class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section id="all-events-content-d" class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
 
   <!-- Top row: back link + mono filter chips -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10 md:mb-12">
     <a
       href="/events"
-      class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted hover:text-ink transition-colors self-start min-h-11 -my-3 md:min-h-0 md:my-0"
+      class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted hover:text-ink transition-colors self-start min-h-11 -my-3"
     >
       <span aria-hidden="true">←</span>
       <span class="border-b border-current pb-0.5">Back to events</span>
     </a>
-    <!-- Phones: one swipeable row bleeding to the screen edges; md+: wraps, right-aligned -->
-    <div class="-mx-6 flex gap-2 items-center overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:flex-wrap md:justify-end md:overflow-visible md:px-0">
-      <span class="shrink-0 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted mr-2">Filter</span>
+    <!-- Phones: one row that scrolls sideways (the clipped next chip is the cue); md+: wraps, right-aligned -->
+    <div class="flex flex-wrap gap-2 items-center md:justify-end max-md:flex-nowrap max-md:overflow-x-auto max-md:-mx-6 max-md:px-6 max-md:snap-x max-md:scroll-px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <span class="hidden md:inline shrink-0 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted mr-2">Filter</span>
 
       <a
         data-chip-d
@@ -100,18 +104,19 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 
   {/* Upcoming */}
   {upcoming.length > 0 && (
-    <div data-section-d="upcoming" class="mb-20 md:mb-28">
-      <div class="flex items-end justify-between gap-4 mb-10 border-b border-outline-soft pb-6 md:items-center">
+    <div data-section-d="upcoming" class="mb-16 md:mb-28">
+      <div class="flex items-end justify-between gap-4 mb-8 border-b border-outline-soft pb-6 md:mb-10 md:items-center">
         <div>
           <SectionIndex label="Upcoming" />
           <h2 class="display text-3xl md:text-4xl text-ink mt-5">On the calendar.</h2>
         </div>
         <p class="font-mono text-sm text-ink-muted tracking-wide uppercase" data-count-d>{upcoming.length} {upcoming.length === 1 ? "event" : "events"}</p>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border-y border-outline-soft sm:border">
         {upcoming.map((event) => (
-          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg p-4 sm:flex-col sm:gap-0 sm:p-6">
-            <div class="w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5">
+          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg py-4 sm:flex-col sm:gap-0 sm:p-6">
+            {/* Phones: no thumbnail slot for photo-less events — the fallback only repeats the category */}
+            <div class:list={["w-20 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5", !event.photo && "hidden sm:block"]}>
               {event.photo ? (
                 <img
                   src={event.photo}
@@ -124,12 +129,12 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
               )}
             </div>
             <div class="min-w-0">
-              <div class="flex flex-wrap items-baseline gap-x-3 mb-2 sm:mb-3">
-                <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatDate(event.date)}</span>
+              <div class="flex flex-wrap items-baseline gap-x-3 mb-1 sm:mb-3">
+                <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatEventStamp(event.date)}</span>
                 <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
               </div>
-              <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
+              <h3 class="display text-xl md:text-2xl text-ink leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
+              {summaryOf(event) && <p class="mt-2 text-sm text-ink-muted leading-relaxed line-clamp-2 sm:line-clamp-none">{summaryOf(event)}</p>}
             </div>
           </a>
         ))}
@@ -137,42 +142,55 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
     </div>
   )}
 
-  {/* Past */}
+  {/* Past — one collapsible group per academic year */}
   {past.length > 0 && (
     <div data-section-d="past">
-      <div class="flex items-end justify-between gap-4 mb-10 border-b border-outline-soft pb-6 md:items-center">
+      <div class="flex items-end justify-between gap-4 border-b border-outline-soft pb-6 md:items-center">
         <div>
           <SectionIndex label="Past" />
           <h2 class="display text-3xl md:text-4xl text-ink mt-5">The record.</h2>
         </div>
         <p class="font-mono text-sm text-ink-muted tracking-wide uppercase" data-count-d>{past.length} {past.length === 1 ? "event" : "events"}</p>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
-        {past.map((event) => (
-          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg p-4 sm:flex-col sm:gap-0 sm:p-6">
-            <div class="w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5">
-              {event.photo ? (
-                <img
-                  src={event.photo}
-                  alt={event.title}
-                  class="w-full h-full object-cover transition group-hover:scale-[1.02]"
-                  loading="lazy"
-                />
-              ) : (
-                <EventPhotoFallback label={event.category} tone="dossier" />
-              )}
-            </div>
-            <div class="min-w-0">
-              <div class="flex flex-wrap items-baseline gap-x-3 mb-2 sm:mb-3">
-                <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatDate(event.date)}</span>
-                <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
-              </div>
-              <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
-            </div>
-          </a>
-        ))}
-      </div>
+
+      {pastByYear.map((group, gi) => (
+        <details data-group-d open={gi === 0} class="group/ay border-b border-outline-soft">
+          <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 md:py-6 [&::-webkit-details-marker]:hidden">
+            <span class="display text-2xl md:text-4xl text-ink leading-none transition-colors group-hover/ay:text-accent">{group.label}</span>
+            <span class="flex items-center gap-4 font-mono text-xs md:text-sm uppercase tracking-[0.14em] text-ink-muted">
+              <span data-group-count-d>{group.events.length} {group.events.length === 1 ? "event" : "events"}</span>
+              <span aria-hidden="true" class="w-4 text-center text-lg leading-none text-accent transition-transform group-open/ay:rotate-45">+</span>
+            </span>
+          </summary>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border-t border-outline-soft sm:border sm:mb-10 md:mb-12">
+            {group.events.map((event) => (
+              <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg py-4 sm:flex-col sm:gap-0 sm:p-6">
+                {/* Phones: no thumbnail slot for photo-less events — the fallback only repeats the category */}
+                <div class:list={["w-20 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5", !event.photo && "hidden sm:block"]}>
+                  {event.photo ? (
+                    <img
+                      src={event.photo}
+                      alt={event.title}
+                      class="w-full h-full object-cover transition group-hover:scale-[1.02]"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <EventPhotoFallback label={event.category} tone="dossier" />
+                  )}
+                </div>
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-baseline gap-x-3 mb-1 sm:mb-3">
+                    <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatEventStamp(event.date)}</span>
+                    <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
+                  </div>
+                  <h3 class="display text-xl md:text-2xl text-ink leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
+                  {summaryOf(event) && <p class="mt-2 text-sm text-ink-muted leading-relaxed line-clamp-2 sm:line-clamp-none">{summaryOf(event)}</p>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </details>
+      ))}
     </div>
   )}
 
@@ -194,6 +212,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
     var chips = root.querySelectorAll("[data-chip-d]");
     var events = root.querySelectorAll("[data-event-d]");
     var sections = root.querySelectorAll("[data-section-d]");
+    var groups = root.querySelectorAll("[data-group-d]");
     var emptyState = root.querySelector("[data-empty-state-d]");
 
     var inactiveClasses = ["border-outline-soft", "text-ink-muted", "hover:border-ink", "hover:text-ink"];
@@ -232,6 +251,23 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
           countEl.textContent = visible.length + " " + (visible.length === 1 ? "event" : "events");
         }
       });
+      var firstVisibleGroup = null;
+      var anyGroupOpen = false;
+      groups.forEach(function (group) {
+        var n = Array.prototype.filter.call(
+          group.querySelectorAll("[data-event-d]"),
+          function (el) { return !el.hidden; }
+        ).length;
+        group.hidden = n === 0;
+        var countEl = group.querySelector("[data-group-count-d]");
+        if (countEl) countEl.textContent = n + " " + (n === 1 ? "event" : "events");
+        if (n > 0) {
+          if (!firstVisibleGroup) firstVisibleGroup = group;
+          if (group.open) anyGroupOpen = true;
+        }
+      });
+      // A filter shouldn't leave every matching year collapsed.
+      if (firstVisibleGroup && !anyGroupOpen) firstVisibleGroup.open = true;
       if (emptyState) {
         var anyVisible = Array.prototype.some.call(events, function (el) { return !el.hidden; });
         emptyState.hidden = anyVisible;

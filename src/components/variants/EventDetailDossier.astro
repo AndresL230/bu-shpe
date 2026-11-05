@@ -21,38 +21,25 @@ const roll = photos.map((p, i) => ({ src: p.url, alt: `${event.title}, photo ${i
 const copy = event.body ?? event.description;
 const paragraphs = copy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
 
-// Headline accent: split off the last word of the title for the italic accent treatment.
-// A trailing "(Spring 2026)"-style note stays plain, after the accent word.
-const [, titleMain, titleNote = ""] = event.title.trim().match(/^(.*?)\s*(\([^)]*\))?$/) ?? [, event.title, ""];
-const titleWords = titleMain.split(/\s+/);
-const accentWord = titleWords.length > 1 ? titleWords.pop()! : "";
-const headlineLead = titleWords.join(" ");
-
-const statusLabel = upcoming ? "Upcoming" : "Archived";
+// Titles come from the database as written, so the headline renders them
+// plain — no italic accent word (that lowercased proper nouns and words).
+const statusLabel = upcoming ? "Upcoming event" : "Past event";
 const metaLine = [displayDate, event.location, event.category].filter(Boolean);
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
-      Dossier · {statusLabel}
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">
+      {statusLabel}
     </p>
-    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
-      {accentWord
-        ? (
-          <>
-            {headlineLead}{" "}
-            <em class="font-serif italic font-normal lowercase tracking-normal text-accent">{accentWord}</em>
-            {titleNote && <span class="block text-2xl text-cream/70 md:text-3xl">{titleNote}</span>}
-          </>
-        )
-        : event.title}
-    </h1>
-    <p class="mt-7 font-mono text-cream/70 text-sm tracking-[0.12em] uppercase">
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">{event.title}</h1>
+    <!-- Phones: the Brief meta line directly below carries date · location · category -->
+    <p class="hidden md:block mt-7 font-mono text-cream/70 text-sm tracking-[0.12em] uppercase">
       {displayDate}{event.location && (<span> · {event.location}</span>)}
     </p>
-    <p class="mt-6 text-cream/80 max-w-xl text-lg">{event.description}</p>
+    <!-- Phones: without a body the Brief repeats this description verbatim, so show it once -->
+    <p class:list={["mt-6 text-cream/80 max-w-xl text-lg", !event.body && "hidden md:block"]}>{event.description}</p>
   </div>
 </header>
 
@@ -66,19 +53,21 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
       class="group inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-ink-muted hover:text-ink transition-colors min-h-11 -mt-3 mb-7 md:min-h-0 md:mt-0 md:mb-10"
     >
       <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
-      <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to the calendar</span>
+      <span class="border-b border-transparent max-md:border-current group-hover:border-current pb-0.5">Back to the calendar</span>
     </a>
 
     <SectionIndex index="01" label="Brief" />
 
-    <h2 class="display text-4xl md:text-5xl text-ink leading-[1.05] mt-5 mb-3">
+    <!-- Phones: the hero headline sits just above, so the title isn't repeated -->
+    <h2 class="hidden md:block display text-4xl md:text-5xl text-ink leading-[1.05] mt-5 mb-3">
       {event.title}
     </h2>
 
-    <p class="font-mono text-sm tracking-[0.12em] uppercase mb-12">
+    <!-- Phones: one item per line, no separators, so nothing orphans -->
+    <p class="font-mono text-sm tracking-[0.12em] uppercase mt-4 mb-8 max-sm:flex max-sm:flex-col max-sm:gap-y-1 md:mt-0 md:mb-12">
       {metaLine.map((part, i) => (
         <span class={i === 0 ? "text-accent" : "text-ink-muted"}>
-          {i > 0 && <span class="text-ink-muted"> · </span>}{part}
+          {i > 0 && <span class="text-ink-muted max-sm:hidden"> · </span>}{part}
         </span>
       ))}
     </p>
@@ -110,7 +99,7 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
 
 {roll.length > 0 && (
   <!-- 02 — PHOTO ROLL : extra photos from the event, lightbox via Gallery -->
-  <section class="max-w-[1200px] mx-auto px-6 pb-20 md:pb-28">
+  <section class="max-w-[1200px] mx-auto px-6 pb-16 md:pb-28">
     <div class="flex items-end justify-between gap-6 mb-8">
       <SectionIndex index="02" label="Photo Roll" />
       <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted">{roll.length + (event.photo ? 1 : 0)} frames</p>
