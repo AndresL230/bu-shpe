@@ -25,7 +25,7 @@ import siteData from "@/data/site.json";
 </header>
 
 <!-- 01 — PROGRAMS -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <SectionIndex label="Programs" accent="scarlet" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">The field log.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
@@ -72,7 +72,7 @@ import siteData from "@/data/site.json";
               />
             </div>
           ) : (
-            <div class="bg-deep blueprint-deep p-12 h-full min-h-[14rem] flex flex-col justify-center">
+            <div class="bg-deep blueprint-deep p-12 h-full min-h-[14rem] hidden md:flex flex-col justify-center">
               <p class="pullquote text-cream! text-left leading-snug">
                 "{program.description.split(".")[0]}."
               </p>
@@ -102,7 +102,7 @@ import siteData from "@/data/site.json";
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 02 — IMPACT -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
   <div class="md:col-span-5">
     <SectionIndex label="Impact" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">What showing up adds up to.</h2>
@@ -129,7 +129,7 @@ import siteData from "@/data/site.json";
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — GET INVOLVED -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
   <div class="md:col-span-5">
     <SectionIndex label="Get Involved" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">Have a partner in mind?</h2>
@@ -153,7 +153,7 @@ import siteData from "@/data/site.json";
     </div>
     <a
       href={`mailto:${siteData.contactEmail}?subject=Volunteer%20Idea`}
-      class="mt-8 inline-block font-mono text-sm text-ink-muted tracking-wide uppercase border-b border-outline-soft hover:text-accent hover:border-accent transition-colors pb-1"
+      class="mt-5 inline-flex min-h-11 items-end md:mt-8 md:inline-block md:min-h-0 font-mono text-sm text-ink-muted tracking-wide uppercase border-b border-outline-soft hover:text-accent hover:border-accent transition-colors pb-1"
     >
       Send us your idea →
     </a>

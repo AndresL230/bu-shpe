@@ -10,7 +10,7 @@ const gov = governanceData as GovernanceData;
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">About · Governance</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
@@ -19,7 +19,7 @@ const gov = governanceData as GovernanceData;
     <p class="mt-7 text-cream/80 max-w-xl text-lg">
       A written constitution, a nine-officer executive board, and a faculty advisor — the structure that keeps the familia going year after year.
     </p>
-    <div class="mt-9 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs tracking-[0.14em] uppercase text-cream/60">
+    <div class="mt-8 md:mt-9 flex flex-wrap gap-x-6 md:gap-x-10 gap-y-3 font-mono text-xs tracking-[0.14em] uppercase text-cream/60">
       <span>{gov.document.articleCount} articles</span>
       <span>9 officers</span>
       <span class="whitespace-nowrap">5+ meetings / semester</span>
@@ -29,7 +29,7 @@ const gov = governanceData as GovernanceData;
 </header>
 
 <!-- 01 — THE CHARTER -->
-<section id="constitution" class="scroll-mt-24 max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section id="constitution" class="scroll-mt-24 max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <a href="/about" class="group inline-flex items-center gap-2 font-mono text-sm text-ink-muted hover:text-ink transition-colors min-h-11 -mt-3 mb-5 md:min-h-0 md:mt-0 md:mb-8 tracking-wide uppercase">
     <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
     <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to about</span>
@@ -40,11 +40,13 @@ const gov = governanceData as GovernanceData;
     Nine articles govern everything the chapter does — digested below, downloadable in full.
   </p>
 
-  <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
+  <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
     {gov.articles.map((article) => (
       <div class="bg-bg p-5 sm:p-7">
-        <p class="font-mono text-xs text-ink-muted mb-2 sm:mb-4">Art. {article.number}</p>
-        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{article.title}</p>
+        <div class="flex flex-row-reverse items-baseline justify-between gap-4 mb-2 sm:block sm:mb-0">
+          <p class="font-mono text-xs text-ink-muted shrink-0 sm:mb-4">Art. {article.number}</p>
+          <p class="font-mono text-sm text-accent tracking-wide uppercase sm:mb-3">{article.title}</p>
+        </div>
         <p class="text-ink text-sm leading-relaxed">{article.summary}</p>
       </div>
     ))}
@@ -54,7 +56,7 @@ const gov = governanceData as GovernanceData;
     href={siteData.constitutionUrl}
     target="_blank"
     rel="noopener noreferrer"
-    class="mt-8 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-accent/80 transition-colors"
+    class="mt-5 md:mt-8 min-h-11 md:min-h-0 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-accent/80 transition-colors"
   >
     <span class="border-b border-current pb-0.5">Download the constitution (PDF)</span>
     <span aria-hidden="true">→</span>
@@ -64,18 +66,20 @@ const gov = governanceData as GovernanceData;
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 02 — THE BOARD -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <SectionIndex label="The Board" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Nine seats, one board.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
     Article IV defines the executive board; Article V gives every seat a job description.
   </p>
 
-  <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+  <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
     {gov.officers.map((officer, i) => (
       <div class="bg-bg p-5 sm:p-7">
-        <p class="font-mono text-xs text-ink-muted mb-2 sm:mb-4">{String(i + 1).padStart(2, "0")}</p>
-        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{officer.role}</p>
+        <div class="flex flex-row-reverse items-baseline justify-between gap-4 mb-2 sm:block sm:mb-0">
+          <p class="font-mono text-xs text-ink-muted shrink-0 sm:mb-4">{String(i + 1).padStart(2, "0")}</p>
+          <p class="font-mono text-sm text-accent tracking-wide uppercase sm:mb-3">{officer.role}</p>
+        </div>
         <p class="text-ink text-sm leading-relaxed">{officer.duty}</p>
       </div>
     ))}
@@ -90,7 +94,7 @@ const gov = governanceData as GovernanceData;
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — THE PROCESS -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
   <div class="md:col-span-5">
     <SectionIndex label="The Process" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">Elections, meetings, amendments.</h2>
@@ -113,7 +117,7 @@ const gov = governanceData as GovernanceData;
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 04 — THE ADVISOR -->
-<section id="advisor" class="scroll-mt-24 max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+<section id="advisor" class="scroll-mt-24 max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
   <div class="md:col-span-5">
     <SectionIndex label="The Advisor" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">{gov.advisor.name}</h2>
@@ -131,9 +135,9 @@ const gov = governanceData as GovernanceData;
             </li>
           ))}
         </ul>
-        <div class="mt-6 flex flex-wrap gap-x-8 gap-y-2">
-          <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="text-accent underline underline-offset-4 hover:text-accent/80 transition-colors">{siteData.facultyAdvisorEmail}</a>
-          <a href={gov.advisor.profileUrl} target="_blank" rel="noopener noreferrer" class="text-ink-muted underline underline-offset-4 hover:text-accent transition-colors">BU faculty profile</a>
+        <div class="mt-3 md:mt-6 flex flex-wrap gap-x-8 md:gap-y-2">
+          <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="py-2.5 md:py-0 text-accent underline underline-offset-4 hover:text-accent/80 transition-colors">{siteData.facultyAdvisorEmail}</a>
+          <a href={gov.advisor.profileUrl} target="_blank" rel="noopener noreferrer" class="py-2.5 md:py-0 text-ink-muted underline underline-offset-4 hover:text-accent transition-colors">BU faculty profile</a>
         </div>
       </div>
     </div>

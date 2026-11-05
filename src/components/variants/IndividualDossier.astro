@@ -11,9 +11,9 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
 ---
 
 <!-- HERO (dossier) -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-20 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Individual Giving · Every gift, to a student</p>
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Individual Giving · <span class="whitespace-nowrap">Every gift, to a student</span></p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       Support a <em class="font-serif italic font-normal lowercase tracking-normal text-accent">student</em>.
     </h1>
@@ -28,7 +28,7 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
 
 <!-- Closing CTA band (classic styling) -->
 <section class="bg-cream">
-  <div class="mx-auto max-w-4xl px-6 py-24 text-center">
+  <div class="mx-auto max-w-4xl px-6 py-16 md:py-24 text-center">
     <p class="eyebrow mb-4 text-ink-muted">GIVE BACK</p>
     <h2 class="display mb-6 text-4xl text-ink md:text-5xl">
       Invest in a <em class="font-serif italic font-normal lowercase tracking-normal text-accent">student</em>.
@@ -41,7 +41,7 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
         href={siteData.donateUrl}
         target="_blank"
         rel="noopener"
-        class="group inline-flex items-center gap-2 btn-dossier"
+        class="group inline-flex w-full items-center justify-center gap-2 btn-dossier sm:w-auto"
       >
         Donate via BU Trusted
         <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -49,7 +49,7 @@ const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
       <button
         type="button"
         data-open-modal-d="individual-d"
-        class="group inline-flex items-center gap-2 btn-dossier-ghost"
+        class="group inline-flex w-full items-center justify-center gap-2 btn-dossier-ghost sm:w-auto"
       >
         Get in Touch
         <Icon name="person-add" class="h-4 w-4" />

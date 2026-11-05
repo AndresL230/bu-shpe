@@ -32,7 +32,7 @@ const visionItems = [
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
       Leadership · Term {term}
@@ -54,7 +54,7 @@ const visionItems = [
 </header>
 
 <!-- 01 — ROSTER -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <SectionIndex label="Roster" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">The officer corps.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
@@ -64,13 +64,13 @@ const visionItems = [
     {!isLatest && <a href="/about/board" class="text-accent underline underline-offset-4">See the current board.</a>}
   </p>
 
-  <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+  <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
     {officers.map((member) => (
-      <div class="bg-bg p-5 sm:p-7 flex flex-row gap-5 sm:flex-col sm:gap-0">
-        <div class="w-24 shrink-0 self-start sm:w-auto sm:self-auto aspect-[4/5] bg-surface-soft overflow-hidden sm:mb-5">
+      <div class="bg-bg p-4 sm:p-7 flex flex-row gap-5 sm:flex-col sm:gap-0">
+        <div class="w-20 shrink-0 self-start sm:w-auto sm:self-auto aspect-[4/5] bg-surface-soft overflow-hidden sm:mb-5">
           <img src={member.photo} alt={member.name === "TBD" ? "" : member.name} class="w-full h-full object-cover" loading="lazy" />
         </div>
-        <div class="min-w-0 flex flex-1 flex-col">
+        <div class="min-w-0 flex flex-1 flex-col self-center sm:self-auto">
           <p class="font-mono text-xs sm:text-sm text-accent tracking-wide uppercase mb-2 sm:mb-3">{member.role}</p>
           <h3 class="display text-2xl md:text-3xl text-ink">{member.name}</h3>
           {member.bio && <p class="font-serif italic text-ink-muted mt-2 sm:mt-3">"{member.bio}"</p>}
@@ -89,10 +89,10 @@ const visionItems = [
   )}
 
   {pastTerms.length > 0 && (
-    <nav aria-label="Past boards" class="mt-10 flex flex-wrap items-baseline gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.12em]">
+    <nav aria-label="Past boards" class="mt-10 flex flex-wrap items-baseline gap-x-5 md:gap-y-2 font-mono text-xs uppercase tracking-[0.12em]">
       <span class="text-ink-muted">{isLatest ? "Past boards" : "Other years"}</span>
       {pastTerms.map((t) => (
-        <a href={t === terms[0] ? "/about/board" : `/about/board?term=${encodeURIComponent(t)}`} class="text-link hover:text-accent">{t}</a>
+        <a href={t === terms[0] ? "/about/board" : `/about/board?term=${encodeURIComponent(t)}`} class="py-3 md:py-0 text-link hover:text-accent">{t}</a>
       ))}
     </nav>
   )}
@@ -103,7 +103,7 @@ const visionItems = [
     <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
     <!-- 02 — FACULTY ADVISOR -->
-    <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+    <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
       <div class="md:col-span-5">
         <SectionIndex label="Faculty Advisor" />
         <h2 class="display text-3xl md:text-4xl text-ink mt-5">The chapter's anchor.</h2>
@@ -136,7 +136,7 @@ const visionItems = [
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — VISION -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
   <div class="md:col-span-5">
     <SectionIndex label="Vision" accent="scarlet" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">A collaborative engine.</h2>
@@ -157,7 +157,7 @@ const visionItems = [
   <div class="md:col-span-7">
     <div class="grid grid-cols-1 gap-px bg-outline-soft border border-outline-soft">
       {visionItems.map((text, i) => (
-        <div class="bg-bg p-7 flex gap-5 items-start">
+        <div class="bg-bg p-5 sm:p-7 flex gap-5 items-start">
           <span class="font-mono text-sm text-accent tracking-wide shrink-0 pt-0.5">
             {String(i + 1).padStart(2, "0")}
           </span>

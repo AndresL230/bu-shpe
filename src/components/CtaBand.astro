@@ -11,18 +11,18 @@ interface Props {
 
 const { eyebrow, heading, body, primaryCta, secondaryCta } = Astro.props;
 ---
-<section class="bg-cream py-24 px-6">
+<section class="bg-cream py-16 md:py-24 px-6">
   <div class="max-w-4xl mx-auto text-center">
     {eyebrow && <div class="eyebrow text-ink-muted mb-4">{eyebrow}</div>}
 
-    <h2 class="display text-5xl md:text-6xl text-ink mb-6" set:html={heading} />
+    <h2 class="display text-5xl md:text-6xl text-ink mb-6 text-balance md:text-wrap" set:html={heading} />
 
     <p class="text-ink-muted max-w-2xl mx-auto mb-10">{body}</p>
 
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
       <a
         href={primaryCta.href}
-        class="group inline-flex items-center gap-2 btn-dossier"
+        class="group inline-flex items-center gap-2 btn-dossier max-sm:px-4 max-sm:text-[0.8rem] max-sm:tracking-[0.06em]"
       >
         {primaryCta.label}
         <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />

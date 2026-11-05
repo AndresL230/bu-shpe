@@ -14,6 +14,10 @@ interface Props {
   extraPhotos?: Map<number, EventPhoto[]>;
 }
 
+// A convention photo can be both an event cover and a conferences.json photo;
+// show it once, filed under Conferences.
+const conferenceSrcs = new Set(conferencesData.flatMap((c) => c.photos));
+const seenSrcs = new Set<string>();
 const allPhotos = [
   // Events without a photo have nothing to show in the grid.
   ...Astro.props.events
@@ -32,7 +36,12 @@ const allPhotos = [
       group: "Conferences",
     }))
   ),
-];
+].filter((p) => {
+  if (!p.src || seenSrcs.has(p.src)) return false;
+  if (p.group !== "Conferences" && conferenceSrcs.has(p.src)) return false;
+  seenSrcs.add(p.src);
+  return true;
+});
 
 // Per-category counts for the manifest strip
 const counts = {
@@ -54,7 +63,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
       Photo Archive · {counts.All} frames on file
@@ -75,7 +84,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 <!-- 01 — ARCHIVE -->
 <section
   id="gallery-dossier-root"
-  class="max-w-[1200px] mx-auto px-6 py-20 md:py-28"
+  class="max-w-[1200px] mx-auto px-6 py-16 md:py-28"
 >
   <SectionIndex label="Archive" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">The whole familia, on file.</h2>
@@ -84,7 +93,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   </p>
 
   <!-- Mono filter chips -->
-  <nav aria-label="Filter gallery by category" class="-mx-6 mt-10 flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
+  <nav aria-label="Filter gallery by category" class="-mx-6 mt-8 flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:mt-10 md:flex-wrap md:overflow-visible md:px-0">
     {filters.map((label) => {
       const value = label === "All" ? "" : label;
       const href = value ? `?cat=${encodeURIComponent(value)}` : "?";
@@ -105,14 +114,15 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   <div
     data-empty-state-d
     hidden
-    class="mt-12 flex flex-col items-center justify-center border border-outline-soft bg-surface-soft py-20 text-center"
+    class="mt-8 md:mt-12 flex flex-col items-center justify-center border border-outline-soft bg-surface-soft py-20 text-center"
   >
     <p class="font-mono text-sm text-ink-muted uppercase tracking-[0.14em]">No frames in this category yet.</p>
     <p class="pullquote mx-auto max-w-md mt-3">Check back soon.</p>
   </div>
 
   <!-- Contact sheet: fixed-aspect frames, so loading never shifts the layout -->
-  <div class="mt-12 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3" id="gallery-grid-d" data-viewer-group>
+  <!-- Phones: a tight 3-up contact sheet so 300+ frames don't scroll forever -->
+  <div class="mt-8 grid grid-cols-3 gap-1 sm:gap-2 md:mt-12 md:grid-cols-2 md:gap-3 lg:grid-cols-3" id="gallery-grid-d" data-viewer-group>
     {allPhotos.map((p, i) => (
       <button
         type="button"

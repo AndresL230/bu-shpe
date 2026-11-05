@@ -45,7 +45,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {totalCount} on record</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
@@ -58,10 +58,10 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 </header>
 
 <!-- CONTENT: filter + upcoming + past -->
-<section id="all-events-content-d" class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section id="all-events-content-d" class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
 
   <!-- Top row: back link + mono filter chips -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10 md:mb-12">
     <a
       href="/events"
       class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted hover:text-ink transition-colors self-start min-h-11 -my-3 md:min-h-0 md:my-0"
@@ -100,8 +100,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 
   {/* Upcoming */}
   {upcoming.length > 0 && (
-    <div data-section-d="upcoming" class="mb-20 md:mb-28">
-      <div class="flex items-end justify-between gap-4 mb-10 border-b border-outline-soft pb-6 md:items-center">
+    <div data-section-d="upcoming" class="mb-16 md:mb-28">
+      <div class="flex items-end justify-between gap-4 mb-8 border-b border-outline-soft pb-6 md:mb-10 md:items-center">
         <div>
           <SectionIndex label="Upcoming" />
           <h2 class="display text-3xl md:text-4xl text-ink mt-5">On the calendar.</h2>
@@ -111,7 +111,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
         {upcoming.map((event) => (
           <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg p-4 sm:flex-col sm:gap-0 sm:p-6">
-            <div class="w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5">
+            {/* Phones: no thumbnail slot for photo-less events — the fallback only repeats the category */}
+            <div class:list={["w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5", !event.photo && "hidden sm:block"]}>
               {event.photo ? (
                 <img
                   src={event.photo}
@@ -129,7 +130,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
                 <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
               </div>
               <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
+              <p class="text-sm text-ink-muted leading-relaxed line-clamp-2 sm:line-clamp-none">{event.description}</p>
             </div>
           </a>
         ))}
@@ -140,7 +141,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   {/* Past */}
   {past.length > 0 && (
     <div data-section-d="past">
-      <div class="flex items-end justify-between gap-4 mb-10 border-b border-outline-soft pb-6 md:items-center">
+      <div class="flex items-end justify-between gap-4 mb-8 border-b border-outline-soft pb-6 md:mb-10 md:items-center">
         <div>
           <SectionIndex label="Past" />
           <h2 class="display text-3xl md:text-4xl text-ink mt-5">The record.</h2>
@@ -150,7 +151,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
         {past.map((event) => (
           <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg p-4 sm:flex-col sm:gap-0 sm:p-6">
-            <div class="w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5">
+            {/* Phones: no thumbnail slot for photo-less events — the fallback only repeats the category */}
+            <div class:list={["w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5", !event.photo && "hidden sm:block"]}>
               {event.photo ? (
                 <img
                   src={event.photo}
@@ -168,7 +170,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
                 <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
               </div>
               <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
+              <p class="text-sm text-ink-muted leading-relaxed line-clamp-2 sm:line-clamp-none">{event.description}</p>
             </div>
           </a>
         ))}

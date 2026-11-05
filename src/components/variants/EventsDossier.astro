@@ -48,10 +48,11 @@ const restUpcoming = upcoming.slice(1);
 
 // Archive mosaic: 6 most-recent past events, tiled asymmetrically (md+).
 // Pattern tiles a 4-col grid into a clean rectangle: big 2×2, then wides + squares.
-// Phones (2-col): first and last tiles run full width, the four between pair up.
+// Phones (2-col): the first tile runs full width at double height, the last full
+// width, and the four between pair up.
 const recordTiles = past.slice(0, 6);
 const mosaicSpans = [
-  "col-span-2 md:row-span-2",
+  "col-span-2 row-span-2",
   "md:col-span-2",
   "",
   "",
@@ -61,7 +62,7 @@ const mosaicSpans = [
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {currentYear}</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
@@ -79,7 +80,7 @@ const mosaicSpans = [
 </header>
 
 <!-- 01 — UPCOMING -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 md:items-end">
     <div class="md:col-span-8">
       <SectionIndex label="Upcoming" />
@@ -93,7 +94,7 @@ const mosaicSpans = [
         href={siteData.calendarEmbedUrl}
         target="_blank"
         rel="noopener"
-        class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors"
+        class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors min-h-11 -my-3 md:min-h-0 md:my-0"
       >
         <span class="border-b border-current pb-0.5">Subscribe to calendar →</span>
       </a>
@@ -101,9 +102,9 @@ const mosaicSpans = [
   </div>
 
   {upcoming.length === 0 ? (
-    <p class="mt-12 text-ink-muted italic">Nothing scheduled right now — subscribe to the calendar for updates.</p>
+    <p class="mt-10 md:mt-12 text-ink-muted italic">Nothing scheduled right now — subscribe to the calendar for updates.</p>
   ) : (
-    <div class="mt-12">
+    <div class="mt-10 md:mt-12">
       <!-- Next Up — featured -->
       <a
         href={`/events/${nextUp.slug}`}
@@ -174,7 +175,7 @@ const mosaicSpans = [
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 02 — THE RECORD -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
   <SectionIndex label="The Record" accent="scarlet" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Recently in the books.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
@@ -182,9 +183,9 @@ const mosaicSpans = [
   </p>
 
   {past.length === 0 ? (
-    <p class="mt-12 text-ink-muted italic">The archive is just getting started.</p>
+    <p class="mt-10 md:mt-12 text-ink-muted italic">The archive is just getting started.</p>
   ) : (
-    <div class="mt-12 grid grid-cols-2 auto-rows-[150px] gap-px border border-outline-soft bg-outline-soft sm:auto-rows-[180px] md:grid-cols-4 md:auto-rows-[210px]">
+    <div class="mt-10 md:mt-12 grid grid-cols-2 auto-rows-[150px] gap-px border border-outline-soft bg-outline-soft sm:auto-rows-[180px] md:grid-cols-4 md:auto-rows-[210px]">
       {recordTiles.map((event, i) => (
         <a
           href={`/events/${event.slug}`}
@@ -210,10 +211,10 @@ const mosaicSpans = [
     </div>
   )}
 
-  <div class="mt-12">
+  <div class="mt-10 md:mt-12">
     <a
       href="/events/all"
-      class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors"
+      class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors min-h-11 -my-3 md:min-h-0 md:my-0"
     >
       <span class="border-b border-current pb-0.5">See all events →</span>
     </a>

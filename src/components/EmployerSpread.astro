@@ -17,7 +17,7 @@ const { index } = Astro.props;
 const groups = employersData as EmployerGroup[];
 const total = groups.reduce((n, g) => n + g.companies.length, 0);
 ---
-<section class="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+<section class="mx-auto max-w-[1200px] px-6 py-16 md:py-28">
   <div class="flex flex-wrap items-end justify-between gap-6">
     <div>
       <SectionIndex index={index} label="Where We Work" />
@@ -30,27 +30,29 @@ const total = groups.reduce((n, g) => n + g.companies.length, 0);
     </p>
   </div>
 
-  <div class="mt-12 grid grid-cols-1 gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="mt-10 sm:mt-12 grid grid-cols-1 gap-x-10 gap-y-10 sm:gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
     {groups.map((group) => (
       <div>
-        <p class="mono-label">{group.industry}</p>
-        <p class="display mt-2 text-7xl leading-none text-ink" aria-hidden="true">
-          {String(group.companies.length).padStart(2, "0")}
-        </p>
-        <ul class="mt-5 border-t-2 border-ink">
+        <div class="flex items-end justify-between gap-4 sm:block">
+          <p class="mono-label">{group.industry}</p>
+          <p class="display text-4xl leading-none text-ink sm:mt-2 sm:text-7xl" aria-hidden="true">
+            {String(group.companies.length).padStart(2, "0")}
+          </p>
+        </div>
+        <ul class="mt-3 grid grid-cols-2 gap-x-4 border-t-2 border-ink sm:mt-5 sm:grid-cols-1 sm:gap-x-0">
           {group.companies.map((c) => (
-            <li class="group flex h-14 items-center gap-4 border-b border-outline-soft">
-              <span class="flex h-8 w-14 shrink-0 items-center justify-center">
+            <li class="group flex h-12 items-center gap-2.5 border-b border-outline-soft sm:h-14 sm:gap-4">
+              <span class="flex h-7 w-10 shrink-0 items-center justify-center sm:h-8 sm:w-14">
                 <img
                   src={logoSrc(c)}
                   data-fallback={c.logo ? undefined : faviconSrc(c.domain)}
                   alt=""
                   loading="lazy"
                   referrerpolicy="no-referrer"
-                  class="spread-logo max-h-8 max-w-14 object-contain mix-blend-multiply grayscale transition duration-300 group-hover:grayscale-0"
+                  class="spread-logo max-h-7 max-w-10 sm:max-h-8 sm:max-w-14 object-contain mix-blend-multiply grayscale transition duration-300 group-hover:grayscale-0"
                 />
               </span>
-              <span class="text-sm font-medium text-ink transition-colors group-hover:text-accent">{c.name}</span>
+              <span class="text-[13px] leading-tight font-medium text-ink transition-colors sm:text-sm group-hover:text-accent">{c.name}</span>
             </li>
           ))}
         </ul>

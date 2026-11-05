@@ -20,10 +20,10 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
 <Base title="Conferences" description="BU SHPE sends a delegation to the SHPE National Convention each year. Indianapolis, Oct 28–31 2026.">
 
   <!-- HERO -->
-  <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+  <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
     <div class="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 md:grid-cols-12 gap-10 items-end">
       <div class="md:col-span-8">
-        <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">{c.name}&nbsp;· {c.city}</p>
+        <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">{c.name}<span class="hidden md:inline">&nbsp;·</span> <span class="block md:inline">{c.city}</span></p>
         <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
           STEM for the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">bold</em>.
         </h1>
@@ -39,10 +39,10 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
   </header>
 
   <!-- 01 — SCALE (count-up stats) -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="01" label="The Convention" />
-    <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-10">
-      {c.scaleStats.map((s, i) => <StatCountUp value={s.value} label={s.label} accent={i === 0} />)}
+    <div class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-10">
+      {c.scaleStats.map((s, i) => <div class:list={[i === 0 && "col-span-2 sm:col-span-1"]}><StatCountUp value={s.value} label={s.label} accent={i === 0} /></div>)}
     </div>
     <p class="mt-8 max-w-3xl text-ink-muted">
       {/* SOURCE: 2025 Philadelphia figures (12,000 attendees / 150+ companies), Newswire 2025-09. */}
@@ -53,7 +53,7 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 02 — KEY DATES -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-4">
       <SectionIndex index="02" label="Key Dates" />
       <p class="mt-5 text-ink-muted max-w-sm">The road to Indianapolis. Registration deadlines follow SHPE's standard tiers — watch the mailing list for the chapter's locked travel calendar.</p>
@@ -66,10 +66,10 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 03 — TRAVEL (trip manifest) -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-5">
       <SectionIndex index="03" label="Travel" />
-      <h2 class="display text-3xl md:text-4xl text-ink mt-5">Coordinated, subsidized, group travel.</h2>
+      <h2 class="display text-3xl md:text-4xl text-ink mt-5 text-balance md:text-wrap">Coordinated, subsidized, group travel.</h2>
       <p class="mt-4 text-ink-muted max-w-md">We fly as a delegation. BU SHPE coordinates flights, a hotel block at the convention center, and ground transport for registered members.</p>
     </div>
     <div class="md:col-span-7"><Reveal><TripManifest /></Reveal></div>
@@ -78,11 +78,11 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 04 — COST & FUNDING -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
     <SectionIndex index="04" label="Cost & Funding" />
     <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
       {c.costFunding.map((cf) => (
-        <div class="bg-bg p-7">
+        <div class="bg-bg p-5 md:p-7">
           <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{cf.heading}</p>
           <p class="text-ink">{cf.detail}</p>
         </div>
@@ -93,7 +93,7 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
   <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
   <!-- 05 — ELIGIBILITY + FAQ -->
-  <section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
+  <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-5">
       <SectionIndex index="05" label="Eligibility" />
       <ul class="mt-6 space-y-3">
@@ -109,8 +109,8 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
       <div class="mt-6 divide-y divide-outline-soft border-t border-outline-soft">
         {c.faq.map((f) => (
           <details class="group py-4">
-            <summary class="display text-xl text-ink cursor-pointer list-none flex justify-between items-center [&::-webkit-details-marker]:hidden">
-              {f.q}<span class="font-mono text-accent transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            <summary class="display text-xl text-ink cursor-pointer list-none flex justify-between items-center gap-4 md:gap-0 text-balance md:text-wrap [&::-webkit-details-marker]:hidden">
+              {f.q}<span class="shrink-0 md:shrink font-mono text-accent transition-transform group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <p class="mt-3 text-ink-muted">{f.a}</p>
           </details>
@@ -120,15 +120,15 @@ const dateRange = formatDateRange(c.startDate, c.endDate);
   </section>
 
   <!-- SPOKES NAV -->
-  <section class="max-w-[1200px] mx-auto px-6 pb-20 md:pb-28">
+  <section class="max-w-[1200px] mx-auto px-6 pb-16 md:pb-28">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-soft border border-outline-soft">
       {[
         { href: "/conferences/prep", idx: "→", label: "Career fair prep", desc: "Bootcamp, recruiters, what to bring." },
         { href: "/conferences/record", idx: "→", label: "The record", desc: "Year-by-year delegations + competition tracks." },
       ].map((s) => (
-        <a href={s.href} class="bg-bg p-7 group hover:bg-surface-soft transition-colors">
+        <a href={s.href} class="bg-bg p-5 md:p-7 group hover:bg-surface-soft transition-colors">
           <p class="display text-2xl text-ink group-hover:text-accent transition-colors">{s.label} <span aria-hidden="true">→</span></p>
-          <p class="mt-2 text-ink-muted text-sm">{s.desc}</p>
+          <p class="mt-2 text-ink-muted text-sm text-balance md:text-wrap">{s.desc}</p>
         </a>
       ))}
     </div>
