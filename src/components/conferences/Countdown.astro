@@ -1,20 +1,49 @@
 ---
 import conventionData from "@/data/conventions.json";
 import type { Convention } from "@/types";
-import { formatDate } from "@/lib/conferences";
+import { formatDate, formatDateRange } from "@/lib/conferences";
 const c = conventionData as Convention;
 const staticFallback = formatDate(c.startDate);
+const cityShort = c.city.split(",")[0];
+// "Oct 28–31, 2026" → "Oct 28–31"
+const rangeShort = formatDateRange(c.startDate, c.endDate).replace(/,\s*\d{4}$/, "");
+
+// End of the last convention day, in the same UTC offset as countdownTarget.
+const tz = c.countdownTarget.match(/(Z|[+-]\d{2}:\d{2})$/)?.[1] ?? "Z";
+const endTarget = `${c.endDate}T23:59:59${tz}`;
+
+// Pages prerender, so this is the state at build time. The inline script
+// below re-evaluates it in the browser so a stale build still flips over.
+const now = Date.now();
+const state =
+  now >= new Date(endTarget).getTime() ? "returned"
+  : now >= new Date(c.countdownTarget).getTime() ? "onsite"
+  : "upcoming";
 ---
-<div data-countdown data-target={c.countdownTarget} class="font-mono">
-  <p class="mono-label mb-3 lede">Countdown to Indianapolis</p>
-  <div class="flex gap-4 md:gap-6" data-countdown-display>
-    <!-- JS fills these; reduced-motion replaces with static date -->
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="days">—</span><span class="block mono-label mt-1">days</span></div>
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="hours">—</span><span class="block mono-label mt-1">hrs</span></div>
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="minutes">—</span><span class="block mono-label mt-1">min</span></div>
-    <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="seconds">—</span><span class="block mono-label mt-1">sec</span></div>
+<div data-countdown data-target={c.countdownTarget} data-end={endTarget} class="font-mono">
+  <div data-countdown-panel="upcoming" hidden={state !== "upcoming"}>
+    <p class="mono-label mb-3 lede">Countdown to {cityShort}</p>
+    <div class="flex gap-4 md:gap-6" data-countdown-display>
+      <!-- JS fills these; reduced-motion replaces with static date -->
+      <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="days">—</span><span class="block mono-label mt-1">days</span></div>
+      <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="hours">—</span><span class="block mono-label mt-1">hrs</span></div>
+      <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="minutes">—</span><span class="block mono-label mt-1">min</span></div>
+      <div class="text-center"><span class="display text-4xl md:text-6xl text-cream" data-unit="seconds">—</span><span class="block mono-label mt-1">sec</span></div>
+    </div>
+    <p class="mono-label mt-3" data-countdown-static hidden>{staticFallback}</p>
   </div>
-  <p class="mono-label mt-3" data-countdown-static hidden>{staticFallback}</p>
+
+  <div data-countdown-panel="onsite" hidden={state !== "onsite"}>
+    <p class="mono-label mb-3 lede">Delegation on site <span class="text-accent">·</span> {rangeShort}</p>
+    <p class="display text-4xl md:text-6xl text-cream">{cityShort}</p>
+  </div>
+
+  <div data-countdown-panel="returned" hidden={state !== "returned"}>
+    <p class="mono-label mb-3 lede">Delegation returned <span class="text-accent">·</span> {rangeShort}</p>
+    <a href="/conferences/record" class="group inline-flex min-h-11 items-center gap-3 display text-3xl md:text-4xl text-cream hover:text-accent transition-colors">
+      The record <span aria-hidden="true" class="text-accent transition-transform group-hover:translate-x-1">→</span>
+    </a>
+  </div>
 </div>
 
 <style>
@@ -26,11 +55,26 @@ const staticFallback = formatDate(c.startDate);
   .mono-label.lede { color: var(--color-cream); }
 </style>
 
-<script is:inline define:vars={{ staticFallback }}>
+<script is:inline>
   (function () {
     const root = document.querySelector("[data-countdown]");
     if (!root) return;
     const target = new Date(root.getAttribute("data-target")).getTime();
+    const end = new Date(root.getAttribute("data-end")).getTime();
+    const panels = root.querySelectorAll("[data-countdown-panel]");
+    const show = (name) => panels.forEach((p) => (p.hidden = p.getAttribute("data-countdown-panel") !== name));
+    const stateAt = (t) => (t >= end ? "returned" : t >= target ? "onsite" : "upcoming");
+
+    // Key dates on the same page (KeyDatesTimeline) — mark the ones that
+    // have passed since the build.
+    document.querySelectorAll("[data-keydate]").forEach((el) => {
+      if (Date.now() > new Date(el.getAttribute("data-keydate-end")).getTime()) el.setAttribute("data-past", "");
+    });
+
+    const state = stateAt(Date.now());
+    show(state);
+    if (state !== "upcoming") return;
+
     const display = root.querySelector("[data-countdown-display]");
     const staticEl = root.querySelector("[data-countdown-static]");
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -49,8 +93,8 @@ const staticFallback = formatDate(c.startDate);
     function tick() {
       const diff = target - Date.now();
       if (diff <= 0) {
-        Object.values(units).forEach((u) => u && (u.textContent = "00"));
         clearInterval(timer);
+        show(stateAt(Date.now()));
         return;
       }
       const d = Math.floor(diff / 86400000);
@@ -62,7 +106,7 @@ const staticFallback = formatDate(c.startDate);
       if (units.minutes) units.minutes.textContent = pad(m);
       if (units.seconds) units.seconds.textContent = pad(s);
     }
-    tick();
     const timer = setInterval(tick, 1000);
+    tick();
   })();
 </script>

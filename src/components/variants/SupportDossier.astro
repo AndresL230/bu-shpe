@@ -45,9 +45,9 @@ const faviconSrc = (domain?: string) =>
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-20 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Boston University · <span class="whitespace-nowrap">Backers &amp; Benefactors</span></p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">Boston University · <span class="whitespace-nowrap">Backers &amp; Benefactors</span></p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl max-md:text-balance">
       The people behind the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">mission</em>.
     </h1>
@@ -121,19 +121,21 @@ const faviconSrc = (domain?: string) =>
       <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-4 md:mb-5">{group.industry}</p>
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 border-l border-t border-outline-soft">
         {group.companies.map((company) => (
-          <div class="group flex aspect-[2/1] sm:aspect-[4/3] max-sm:last:odd:col-span-2 max-sm:last:odd:aspect-[4/1] max-sm:last:odd:[&>img]:max-w-[36%] items-center justify-center border-b border-r border-outline-soft bg-bg p-4 sm:p-6 text-center transition-colors hover:bg-surface-soft">
+          <div class="group flex aspect-[2/1] sm:aspect-[4/3] max-sm:last:odd:col-span-2 max-sm:last:odd:aspect-[4/1] items-center justify-center border-b border-r border-outline-soft bg-bg p-4 sm:p-6 text-center transition-colors hover:bg-surface-soft max-sm:flex-col max-sm:gap-2.5 max-sm:bg-surface">
             <img
               src={logoSrc(company)}
               data-fallback={faviconSrc(company.domain)}
               alt={company.name}
               loading="lazy"
               referrerpolicy="no-referrer"
-              class="employer-logo-d max-h-11 sm:max-h-16 w-auto max-w-[72%] object-contain transition-transform duration-300 group-hover:scale-105"
+              class="employer-logo-d max-h-11 sm:max-h-16 w-auto max-w-[72%] object-contain transition-transform duration-300 group-hover:scale-105 max-sm:h-8 max-sm:max-w-[96px] max-sm:mix-blend-multiply"
             />
             <span
-              class="display text-base tracking-wide text-ink"
+              class="display text-base tracking-wide text-ink max-sm:hidden!"
               style="display:none"
             >{company.name}</span>
+            {/* Phones: always-on name label (icon-only marks read unlabeled otherwise) */}
+            <span class="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-muted sm:hidden">{company.name}</span>
           </div>
         ))}
       </div>

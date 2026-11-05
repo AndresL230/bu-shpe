@@ -9,6 +9,7 @@ import sponsorsRaw from "@/data/sponsors.json";
 
 import type { Sponsor } from "@/types";
 import type { EventRecord } from "@/lib/server/events";
+import { formatEventStamp } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
@@ -43,20 +44,6 @@ const pillars = [
   },
 ];
 
-const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"] as const;
-
-function formatEventDate(iso: string): string {
-  // ISO is either "yyyy-mm" or "yyyy-mm-dd".
-  const parts = iso.split("-");
-  const year = parts[0];
-  const monthIdx = Number(parts[1]) - 1;
-  const month = MONTHS[monthIdx] ?? "";
-  if (parts.length >= 3) {
-    return `${parts[2].padStart(2, "0")} ${month}`;
-  }
-  const yy = year.slice(-2);
-  return `${month} ${yy}`;
-}
 ---
 
 <!-- HERO — split: dossier text panel + campus photo -->
@@ -186,9 +173,9 @@ function formatEventDate(iso: string): string {
     {recentEvents.map((event) => (
       <a href={`/events/${event.slug}`} class="block">
         <article class="bg-bg group p-6 md:p-8 flex flex-col h-full hover:bg-surface-soft transition-colors">
-          <p class="font-mono text-sm text-accent tracking-wide uppercase"><span class="md:hidden">{formatEventDate(event.date)} · </span>{event.category}</p>
-          <div class="hidden md:block display text-5xl text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">
-            {formatEventDate(event.date)}
+          <p class="font-mono text-sm text-accent tracking-wide uppercase"><span class="md:hidden">{formatEventStamp(event.date)} · </span>{event.category}</p>
+          <div class="hidden md:block display text-4xl lg:text-5xl whitespace-nowrap text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">
+            {formatEventStamp(event.date)}
           </div>
           <h3 class="display text-2xl text-ink mt-3 md:mt-0 mb-2 md:mb-4 group-hover:text-accent transition">{event.title}</h3>
           <p class="text-ink-muted text-sm flex-grow line-clamp-2 md:line-clamp-none md:mb-8">{event.description}</p>

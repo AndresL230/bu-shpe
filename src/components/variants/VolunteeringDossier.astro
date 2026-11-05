@@ -7,9 +7,9 @@ import siteData from "@/data/site.json";
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Volunteering · Greater Boston</p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">Volunteering · Greater Boston</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       <em class="font-serif italic font-normal lowercase tracking-normal text-accent">Service</em> is part of the SHPE familia.
     </h1>
@@ -111,15 +111,16 @@ import siteData from "@/data/site.json";
     </p>
   </div>
   <div class="md:col-span-7">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+    <!-- Phones: ledger rows (value + label) instead of boxes -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft max-sm:gap-0 max-sm:bg-transparent max-sm:border-x-0 max-sm:border-b-0 max-sm:divide-y max-sm:divide-outline-soft">
       {[
         { value: "16,000", label: "lbs of food sorted in one afternoon — Greater Boston Food Bank" },
         { value: "2", label: "Rhetty-to-Go meal routes — Kenmore & Back Bay" },
         { value: "3", label: "standing community partners across Greater Boston" },
       ].map((stat) => (
-        <div class="bg-bg p-7">
+        <div class="bg-bg p-7 max-sm:grid max-sm:grid-cols-[7rem_1fr] max-sm:items-baseline max-sm:gap-x-5 max-sm:bg-transparent max-sm:px-0 max-sm:py-5">
           <p class="display text-4xl md:text-5xl leading-none text-accent tabular-nums">{stat.value}</p>
-          <p class="mt-3 font-mono text-xs text-ink-muted uppercase tracking-[0.12em] leading-relaxed">{stat.label}</p>
+          <p class="mt-3 font-mono text-xs text-ink-muted uppercase tracking-[0.12em] leading-relaxed max-sm:mt-0">{stat.label}</p>
         </div>
       ))}
     </div>
@@ -138,16 +139,17 @@ import siteData from "@/data/site.json";
     </p>
   </div>
   <div class="md:col-span-7">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+    <!-- Phones: hairline rows (inline number + title) instead of boxes -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border border-outline-soft max-sm:gap-0 max-sm:bg-transparent max-sm:border-x-0 max-sm:border-b-0 max-sm:divide-y max-sm:divide-outline-soft">
       {[
         { t: "Get on the list", d: "Volunteer calls go out through the mailing list first." },
         { t: "Show up", d: "Most outings are a single afternoon — no experience needed." },
         { t: "Bring an idea", d: "Know an organization that could use engineers? Tell us." },
       ].map((step, i) => (
-        <div class="bg-bg p-7">
+        <div class="bg-bg p-7 max-sm:grid max-sm:grid-cols-[auto_1fr] max-sm:items-baseline max-sm:gap-x-5 max-sm:bg-transparent max-sm:px-0 max-sm:py-5">
           <p class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</p>
-          <p class="display text-xl text-ink mt-2">{step.t}</p>
-          <p class="mt-2 text-ink-muted text-sm">{step.d}</p>
+          <p class="display text-xl text-ink mt-2 max-sm:mt-0">{step.t}</p>
+          <p class="mt-2 text-ink-muted text-sm max-sm:col-start-2">{step.d}</p>
         </div>
       ))}
     </div>

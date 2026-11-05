@@ -21,34 +21,19 @@ const roll = photos.map((p, i) => ({ src: p.url, alt: `${event.title}, photo ${i
 const copy = event.body ?? event.description;
 const paragraphs = copy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
 
-// Headline accent: split off the last word of the title for the italic accent treatment.
-// A trailing "(Spring 2026)"-style note stays plain, after the accent word.
-const [, titleMain, titleNote = ""] = event.title.trim().match(/^(.*?)\s*(\([^)]*\))?$/) ?? [, event.title, ""];
-const titleWords = titleMain.split(/\s+/);
-const accentWord = titleWords.length > 1 ? titleWords.pop()! : "";
-const headlineLead = titleWords.join(" ");
-
-const statusLabel = upcoming ? "Upcoming" : "Archived";
+// Titles come from the database as written, so the headline renders them
+// plain — no italic accent word (that lowercased proper nouns and words).
+const statusLabel = upcoming ? "Upcoming event" : "Past event";
 const metaLine = [displayDate, event.location, event.category].filter(Boolean);
 ---
 
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
-      Dossier · {statusLabel}
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">
+      {statusLabel}
     </p>
-    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
-      {accentWord
-        ? (
-          <>
-            {headlineLead}{" "}
-            <em class="font-serif italic font-normal lowercase tracking-normal text-accent">{accentWord}</em>
-            {titleNote && <span class="block text-2xl text-cream/70 md:text-3xl">{titleNote}</span>}
-          </>
-        )
-        : event.title}
-    </h1>
+    <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">{event.title}</h1>
     <!-- Phones: the Brief meta line directly below carries date · location · category -->
     <p class="hidden md:block mt-7 font-mono text-cream/70 text-sm tracking-[0.12em] uppercase">
       {displayDate}{event.location && (<span> · {event.location}</span>)}

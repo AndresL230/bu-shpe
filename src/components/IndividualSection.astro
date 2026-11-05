@@ -2,6 +2,8 @@
 import type { GivingImpact } from "@/types";
 import supportData from "@/data/support.json";
 import siteData from "@/data/site.json";
+import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import Icon from "@/components/Icon.astro";
 
 const givingImpact = (supportData as { givingImpact: GivingImpact[] }).givingImpact;
 
@@ -21,10 +23,12 @@ const primaryExternal = /^https?:/.test(primary.href);
 <!-- Continuous canvas: sticky intro rail + outcome cards, closing on the give actions -->
 <section class="reveal py-16 md:py-32">
   <div class="mx-auto max-w-[1200px] px-6">
-    <div class="grid grid-cols-1 gap-x-16 gap-y-10 md:gap-y-12 md:grid-cols-12">
+    <!-- Phones: the rail dissolves (display: contents) so the give actions can
+         drop below the outcome list via order-last; desktop DOM/look unchanged. -->
+    <div class="grid grid-cols-1 gap-x-16 gap-y-10 md:gap-y-12 md:grid-cols-12 max-md:gap-y-0">
       <!-- Sticky intro rail -->
-      <div class="md:col-span-4">
-        <p class="eyebrow text-accent">WHERE IT GOES</p>
+      <div class="md:col-span-4 max-md:contents">
+        <SectionIndex label="Where it goes" />
         <h2 class="display mt-4 text-3xl leading-[1.05] text-ink md:text-4xl">
           Every gift, straight to the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">students</em>.
         </h2>
@@ -36,12 +40,12 @@ const primaryExternal = /^https?:/.test(primary.href);
         </p>
 
         <!-- Give actions — editorial text links, underline resolves into an arrow -->
-        <div class="mt-8 md:mt-10 flex flex-col items-start gap-5">
+        <div class="mt-8 md:mt-10 flex flex-col items-start gap-5 max-md:order-last max-md:items-center max-md:gap-3">
           <a
             href={primary.href}
             target={primaryExternal ? "_blank" : undefined}
             rel={primaryExternal ? "noopener" : undefined}
-            class="give-action"
+            class="give-action max-md:hidden!"
           >
             <span class="give-action-label">{primary.label}</span>
             <svg class="give-arrowhead" width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true">
@@ -49,12 +53,26 @@ const primaryExternal = /^https?:/.test(primary.href);
             </svg>
           </a>
 
-          <a href={secondary.href} class="give-secondary">{secondary.label}</a>
+          <!-- Phones: the standard primary button replaces the display-text link -->
+          <a
+            href={primary.href}
+            target={primaryExternal ? "_blank" : undefined}
+            rel={primaryExternal ? "noopener" : undefined}
+            class="group inline-flex w-full items-center justify-center gap-2 btn-dossier md:hidden"
+          >
+            {primary.label}
+            <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </a>
+
+          <a href={secondary.href} class="give-secondary group">
+            <span class="give-secondary-label">{secondary.label}</span>
+            <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1 md:hidden" />
+          </a>
         </div>
       </div>
 
       <!-- Outcome cards -->
-      <div class="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-rule/30 bg-rule/30 sm:grid-cols-2 md:col-span-8">
+      <div class="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-rule/30 bg-rule/30 sm:grid-cols-2 md:col-span-8 max-md:mt-10">
         {givingImpact.map((item, i) => (
           <div class="rule-accent group bg-surface p-6 transition-colors hover:bg-bg md:p-8">
             <p class="font-cond text-sm tracking-widest text-accent/70 tabular-nums">0{i + 1}</p>
@@ -167,11 +185,31 @@ const primaryExternal = /^https?:/.test(primary.href);
 
   /* Phones: grow the quiet secondary link to a ~44px tap target without
      shifting layout (padding offset by an equal negative margin). */
+  /* Phones: the secondary becomes the site's standard text link (matches
+     CtaBand's secondary): Inter, sentence case, always-on underline, 44px tall. */
   @media (max-width: 767px) {
     .give-secondary {
-      display: inline-block;
-      padding-block: 0.75rem;
-      margin-block: -0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 2.75rem;
+      padding-bottom: 0;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--color-ink);
+    }
+    .give-secondary::after {
+      display: none;
+    }
+    .give-secondary-label {
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 0.125rem;
+    }
+    .give-secondary:hover,
+    .give-secondary:focus-visible {
+      color: var(--color-accent);
     }
   }
 

@@ -28,7 +28,7 @@ const steps = [
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">Membership · No fee · No application</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
@@ -51,12 +51,14 @@ const steps = [
     Joining the chapter is a short procedure — three moves and you're in the loop.
   </p>
 
-  <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+  <!-- Phones: hairline ledger rows (inline mono number + label) instead of boxes -->
+  <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft max-md:mt-8 max-md:gap-0 max-md:bg-transparent max-md:border-x-0 max-md:border-b-0 max-md:divide-y max-md:divide-outline-soft">
     {steps.map((step) => (
-      <div class="bg-bg p-6 grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 md:p-7 md:flex md:flex-col md:gap-3">
-        <span class="row-span-2 display text-5xl text-accent leading-none tabular-nums">{step.index}</span>
-        <p class="font-mono text-sm text-accent tracking-wide uppercase">{step.label}</p>
-        <p class="text-sm leading-relaxed text-ink-muted">{step.body}</p>
+      <div class="bg-bg p-6 grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 md:p-7 md:flex md:flex-col md:gap-3 max-md:items-baseline max-md:bg-transparent max-md:px-0 max-md:py-5">
+        <span class="row-span-2 display text-5xl text-accent leading-none tabular-nums max-md:hidden">{step.index}</span>
+        <span class="font-mono text-sm tracking-wide text-accent tabular-nums md:hidden">{step.index}</span>
+        <p class="font-mono text-sm text-accent tracking-wide uppercase max-md:text-ink">{step.label}</p>
+        <p class="text-sm leading-relaxed text-ink-muted max-md:col-start-2">{step.body}</p>
       </div>
     ))}
   </div>
@@ -115,9 +117,10 @@ const steps = [
     </p>
   </div>
   <div class="md:col-span-7">
-    <div class="grid grid-cols-1 gap-px bg-outline-soft border border-outline-soft">
-      <div class="bg-bg p-7">
-        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">Chapter</p>
+    <!-- Phones: hairline rows instead of boxes -->
+    <div class="grid grid-cols-1 gap-px bg-outline-soft border border-outline-soft max-md:gap-0 max-md:bg-transparent max-md:border-x-0 max-md:border-b-0 max-md:divide-y max-md:divide-outline-soft">
+      <div class="bg-bg p-7 max-md:bg-transparent max-md:px-0 max-md:py-5">
+        <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3 max-md:mb-1.5">Chapter</p>
         <a
           href={`mailto:${siteData.contactEmail}`}
           class="font-mono text-ink hover:text-accent transition-colors break-all"
@@ -125,8 +128,8 @@ const steps = [
           {siteData.contactEmail}
         </a>
       </div>
-      <div class="bg-bg p-7">
-        <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-3">Faculty Advisor</p>
+      <div class="bg-bg p-7 max-md:bg-transparent max-md:px-0 max-md:py-5">
+        <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-3 max-md:mb-1.5">Faculty Advisor</p>
         <a
           href={`mailto:${siteData.facultyAdvisorEmail}`}
           class="text-ink hover:text-accent transition-colors"

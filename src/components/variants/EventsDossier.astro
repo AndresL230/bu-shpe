@@ -6,6 +6,7 @@ import siteData from "@/data/site.json";
 
 import EventPhotoFallback from "@/components/EventPhotoFallback.astro";
 import type { EventRecord } from "@/lib/server/events";
+import { formatEventStamp } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
@@ -29,13 +30,6 @@ const monthNames = [
   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
 ];
 
-function dateLabel(iso: string): string {
-  const [y, m] = iso.split("-");
-  const monthIdx = parseInt(m, 10) - 1;
-  const month = monthNames[monthIdx] ?? "—";
-  return `${month} ${y}`;
-}
-
 // Oversized date for the "Next Up" feature: big month over a day·year sub-line.
 function bigDate(iso: string): { month: string; sub: string } {
   const [y, m, d] = iso.split("-");
@@ -46,11 +40,15 @@ function bigDate(iso: string): { month: string; sub: string } {
 const nextUp = upcoming[0];
 const restUpcoming = upcoming.slice(1);
 
-// Archive mosaic: 6 most-recent past events, tiled asymmetrically (md+).
+// Archive mosaic: the 6 most-recent past events that have a photo, tiled
+// asymmetrically. A photo-less tile reads as a broken image, so those only top
+// the mosaic up (with the typographic fallback) when fewer than 6 have photos.
 // Pattern tiles a 4-col grid into a clean rectangle: big 2×2, then wides + squares.
 // Phones (2-col): the first tile runs full width at double height, the last full
 // width, and the four between pair up.
-const recordTiles = past.slice(0, 6);
+const MOSAIC_SIZE = 6;
+const withPhoto = past.filter((e) => e.photo);
+const recordTiles = [...withPhoto, ...past.filter((e) => !e.photo)].slice(0, MOSAIC_SIZE);
 const mosaicSpans = [
   "col-span-2 row-span-2",
   "md:col-span-2",
@@ -64,7 +62,7 @@ const mosaicSpans = [
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {currentYear}</p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {currentYear}</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       Events &amp; <em class="font-serif italic font-normal lowercase tracking-normal text-accent">opportunities</em>.
     </h1>
@@ -159,7 +157,7 @@ const mosaicSpans = [
                 </div>
               )}
               <div class="min-w-0 flex flex-col p-5 sm:p-7 md:p-8">
-                <p class="font-mono text-sm tracking-wide uppercase text-accent">{dateLabel(event.date)}</p>
+                <p class="font-mono text-sm tracking-wide uppercase text-accent">{formatEventStamp(event.date)}</p>
                 <p class="mono-label mt-1">{event.category}</p>
                 <h3 class="display text-2xl text-ink mt-3 leading-tight transition-colors group-hover:text-accent">{event.title}</h3>
                 <p class="mt-2 text-sm text-ink-muted leading-relaxed line-clamp-2">{event.description}</p>
@@ -185,26 +183,28 @@ const mosaicSpans = [
   {past.length === 0 ? (
     <p class="mt-10 md:mt-12 text-ink-muted italic">The archive is just getting started.</p>
   ) : (
-    <div class="mt-10 md:mt-12 grid grid-cols-2 auto-rows-[150px] gap-px border border-outline-soft bg-outline-soft sm:auto-rows-[180px] md:grid-cols-4 md:auto-rows-[210px]">
+    <div class="mt-10 md:mt-12 grid grid-cols-2 auto-rows-[180px] gap-px border border-outline-soft bg-outline-soft md:grid-cols-4 md:auto-rows-[210px]">
       {recordTiles.map((event, i) => (
         <a
           href={`/events/${event.slug}`}
           class:list={["group relative overflow-hidden bg-deep photo-warm", mosaicSpans[i]]}
         >
-          {event.photo && (
+          {event.photo ? (
             <img
               src={event.photo}
               alt={event.title}
               class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               loading="lazy"
             />
+          ) : (
+            <EventPhotoFallback label={event.category} tone="dossier" class="absolute inset-0 bg-surface-soft" />
           )}
           <span class="mono-label absolute left-0 top-0 z-10 bg-deep px-3 py-1.5 text-cream">
-            {dateLabel(event.date)}
+            {formatEventStamp(event.date)}
           </span>
           <div class="absolute inset-x-0 bottom-0 z-10 bg-deep/85 px-3 py-2.5 sm:px-4 sm:py-3">
-            <p class="mono-label text-accent">{event.category}</p>
-            <h3 class="display text-base md:text-lg text-cream leading-tight mt-0.5 line-clamp-2">{event.title}</h3>
+            <p class="mono-label text-accent hidden sm:block">{event.category}</p>
+            <h3 class="display text-base md:text-lg text-cream leading-tight sm:mt-0.5 line-clamp-1 sm:line-clamp-2">{event.title}</h3>
           </div>
         </a>
       ))}

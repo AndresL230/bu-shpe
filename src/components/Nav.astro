@@ -87,30 +87,52 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
            list is taller than the viewport (landscape / short phones); the
            inner column is centred with my-auto so it never clips at the top. -->
       <div class="fixed inset-x-0 bottom-0 top-[72px] z-30 flex flex-col overflow-y-auto overscroll-contain bg-bg">
-        <nav aria-label="Mobile" class="my-auto px-8 py-10 text-center">
-          <ul class="flex flex-col gap-2">
-            {links.map(({ href, label }) => (
-              <li>
-                <a
-                  href={href}
-                  aria-current={currentPath === href ? "page" : undefined}
-                  class:list={[
-                    "display inline-block py-2 text-3xl hover:text-accent",
-                    currentPath === href ? "text-accent" : "text-ink",
-                  ]}
-                >{label}</a>
-              </li>
-            ))}
-            <li>
-              <a
-                href="/join"
-                class="group mt-6 inline-flex items-center gap-2 btn-dossier"
-              >
-                Join SHPE
-                <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-              </a>
-            </li>
+        <nav aria-label="Mobile" class="px-6 pt-6 pb-10">
+          <ul class="border-t border-outline-soft">
+            {links.map(({ href, label, submenu }) => {
+              // "all of …" entries just repeat the parent link — skip them here.
+              const subs = (submenu ?? []).filter((s) => s.href !== href);
+              const active = currentPath === href || currentPath.startsWith(`${href}/`);
+              return (
+                <li class="border-b border-outline-soft py-3">
+                  <a
+                    href={href}
+                    aria-current={currentPath === href ? "page" : undefined}
+                    class:list={[
+                      "display flex min-h-11 items-center justify-between text-[1.75rem] leading-none hover:text-accent",
+                      active ? "text-accent" : "text-ink",
+                    ]}
+                  >
+                    {label}
+                    <span class="font-mono text-base text-ink-muted/60" aria-hidden="true">→</span>
+                  </a>
+                  {subs.length > 0 && (
+                    <ul class="-mt-1 flex flex-wrap gap-x-5">
+                      {subs.map((s) => (
+                        <li>
+                          <a
+                            href={s.href}
+                            aria-current={currentPath === s.href ? "page" : undefined}
+                            class:list={[
+                              "inline-flex min-h-10 items-center text-sm hover:text-accent",
+                              currentPath === s.href ? "text-accent" : "text-ink-muted",
+                            ]}
+                          >{s.label}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
           </ul>
+          <a
+            href="/join"
+            class="group mt-8 flex w-full items-center justify-center gap-2 btn-dossier"
+          >
+            Join SHPE
+            <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
         </nav>
       </div>
     </details>

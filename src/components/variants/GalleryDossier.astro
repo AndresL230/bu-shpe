@@ -19,9 +19,11 @@ interface Props {
 const conferenceSrcs = new Set(conferencesData.flatMap((c) => c.photos));
 const seenSrcs = new Set<string>();
 const allPhotos = [
-  // Events without a photo have nothing to show in the grid.
+  // Events without a photo have nothing to show in the grid. Newest event
+  // first (props arrive in creation order); ties keep creation order.
   ...Astro.props.events
     .filter((e) => e.photo)
+    .sort((a, b) => b.date.localeCompare(a.date))
     .flatMap((e) => [
       { src: e.photo, alt: e.title, group: "Events" },
       ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events" })),
@@ -65,7 +67,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">
       Photo Archive · {counts.All} frames on file
     </p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">

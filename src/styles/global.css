@@ -66,8 +66,11 @@ html::-webkit-scrollbar {         /* Chromium, Safari */
   display: none;
 }
 
-button, input, select, textarea {
-  font-family: var(--font-sans);
+/* Base layer, so component classes (.btn-dossier → mono) still win on <button>. */
+@layer base {
+  button, input, select, textarea {
+    font-family: var(--font-sans);
+  }
 }
 
 body {
