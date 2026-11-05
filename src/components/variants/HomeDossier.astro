@@ -1,7 +1,6 @@
 ---
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
-import SponsorGrid from "@/components/SponsorGrid.astro";
 import LogoMarquee from "@/components/LogoMarquee.astro";
 import EmployerSpread from "@/components/EmployerSpread.astro";
 
@@ -204,15 +203,6 @@ function formatEventDate(iso: string): string {
 
 <!-- 04 — WHERE WE WORK -->
 <EmployerSpread />
-
-<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
-
-<!-- 05 — SPONSORS -->
-<section class="max-w-[1200px] mx-auto px-6 py-20 md:py-28">
-  <SectionIndex label="With Support From" />
-  <h2 class="display text-3xl md:text-4xl text-ink mt-5 mb-10 max-w-2xl">The partners behind the work.</h2>
-  <SponsorGrid sponsors={sponsors} />
-</section>
 
 <!-- CTA -->
 <CtaBand
