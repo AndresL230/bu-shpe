@@ -93,7 +93,12 @@
     let items: HTMLElement[] = [];
     let pos = 0;
 
-    const render = () => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+    let closing = false;
+
+    /** Sets the photo + caption; resolves once the new image is decoded (so it can animate in without a flash). */
+    const render = async () => {
       const el = items[pos];
       img.src = el.dataset.viewerSrc!;
       img.alt = el.dataset.viewerAlt ?? "";
@@ -101,11 +106,55 @@
       const many = items.length > 1;
       count.textContent = many ? `${String(pos + 1).padStart(2, "0")} / ${String(items.length).padStart(2, "0")}` : "";
       prev.hidden = next.hidden = !many;
+      await img.decode().catch(() => {});
     };
-    const step = (d: number) => {
+
+    const open = async (trigger: HTMLElement) => {
+      closing = false;
+      img.style.opacity = "0";
+      dlg.showModal();
+      if (!reduced) dlg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" });
+      await render();
+      img.style.opacity = "";
+      if (reduced) return;
+      // Grow the photo out of the tile that was tapped.
+      const from = (trigger.querySelector("img") ?? trigger).getBoundingClientRect();
+      const to = img.getBoundingClientRect();
+      if (!to.width || !from.width) return;
+      const dx = from.left + from.width / 2 - (to.left + to.width / 2);
+      const dy = from.top + from.height / 2 - (to.top + to.height / 2);
+      const scale = Math.max(from.width / to.width, from.height / to.height);
+      img.animate(
+        [
+          { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.6 },
+          { transform: "none", opacity: 1 },
+        ],
+        { duration: 380, easing: EASE },
+      );
+    };
+
+    const close = async () => {
+      if (closing || !dlg.open) return;
+      closing = true;
+      if (!reduced) {
+        img.animate([{ transform: "none" }, { transform: "scale(0.96)" }], { duration: 200, easing: "ease-in", fill: "forwards" });
+        await dlg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: "ease-in", fill: "forwards" }).finished;
+      }
+      dlg.close();
+      dlg.getAnimations().forEach((a) => a.cancel());
+      img.getAnimations().forEach((a) => a.cancel());
+    };
+
+    const step = async (d: number) => {
       if (items.length < 2) return;
       pos = (pos + d + items.length) % items.length;
-      render();
+      await render();
+      if (!reduced) {
+        img.animate(
+          [{ transform: `translateX(${d * 40}px)`, opacity: 0 }, { transform: "none", opacity: 1 }],
+          { duration: 260, easing: EASE },
+        );
+      }
     };
 
     document.addEventListener("click", (e) => {
@@ -116,17 +165,18 @@
       // Only visible items, so filtered-out gallery tiles are skipped.
       items = [...group.querySelectorAll<HTMLElement>("[data-viewer-src]")].filter((el) => el.offsetParent !== null);
       pos = Math.max(0, items.indexOf(trigger));
-      render();
-      dlg.showModal();
+      open(trigger);
     });
 
-    q("[data-pv-close]").addEventListener("click", () => dlg.close());
+    q("[data-pv-close]").addEventListener("click", close);
     prev.addEventListener("click", () => step(-1));
     next.addEventListener("click", () => step(1));
+    // Esc: animate out instead of the dialog's instant close.
+    dlg.addEventListener("cancel", (e) => { e.preventDefault(); close(); });
     // Tap on the dark area (not the photo or a button) closes.
     dlg.addEventListener("click", (e) => {
       const t = e.target as Element;
-      if (t === dlg || t.matches("[data-pv-stage]")) dlg.close();
+      if (t === dlg || t.matches("[data-pv-stage]")) close();
     });
     dlg.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") step(-1);
