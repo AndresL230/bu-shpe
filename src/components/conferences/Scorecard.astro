@@ -18,7 +18,9 @@ const { tracks } = competitionsData as CompetitionsData;
         </div>
         <p class="text-ink-muted text-sm md:px-5">{t.blurb}</p>
         <p class="font-mono text-xs text-ink-muted md:px-2">{t.format}</p>
-        <p class="font-mono text-xs text-ink-muted">{t.prize ?? "—"}</p>
+        {t.prize
+          ? <p class="font-mono text-xs text-ink-muted">{t.prize}</p>
+          : <p class="hidden md:block font-mono text-xs text-ink-muted" aria-hidden="true">—</p>}
       </div>
     ))}
   </div>

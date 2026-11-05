@@ -22,7 +22,9 @@ const copy = event.body ?? event.description;
 const paragraphs = copy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
 
 // Headline accent: split off the last word of the title for the italic accent treatment.
-const titleWords = event.title.trim().split(/\s+/);
+// A trailing "(Spring 2026)"-style note stays plain, after the accent word.
+const [, titleMain, titleNote = ""] = event.title.trim().match(/^(.*?)\s*(\([^)]*\))?$/) ?? [, event.title, ""];
+const titleWords = titleMain.split(/\s+/);
 const accentWord = titleWords.length > 1 ? titleWords.pop()! : "";
 const headlineLead = titleWords.join(" ");
 
@@ -33,7 +35,7 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">
       Dossier · {statusLabel}
     </p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
@@ -42,6 +44,7 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
           <>
             {headlineLead}{" "}
             <em class="font-serif italic font-normal lowercase tracking-normal text-accent">{accentWord}</em>
+            {titleNote && <span class="block text-2xl text-cream/70 md:text-3xl">{titleNote}</span>}
           </>
         )
         : event.title}
@@ -60,7 +63,7 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
     <!-- Header — full container width -->
     <a
       href="/events"
-      class="group inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-ink-muted hover:text-ink transition-colors mb-10"
+      class="group inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] uppercase text-ink-muted hover:text-ink transition-colors min-h-11 -mt-3 mb-7 md:min-h-0 md:mt-0 md:mb-10"
     >
       <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span>
       <span class="border-b border-transparent group-hover:border-current pb-0.5">Back to the calendar</span>

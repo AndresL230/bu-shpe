@@ -78,7 +78,7 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Boston University</p>
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Boston University</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       A <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em> of engineers.
     </h1>
@@ -200,7 +200,7 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
         {eventCategories.map((cat) => (
           <a
             href={cat.href}
-            class="group relative block aspect-[3/4] overflow-hidden bg-surface-soft rounded-[var(--radius-card)]"
+            class="group relative block aspect-[4/3] sm:aspect-[3/4] overflow-hidden bg-surface-soft rounded-[var(--radius-card)]"
           >
             <img
               src={cat.photo}

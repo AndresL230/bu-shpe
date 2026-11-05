@@ -30,7 +30,7 @@ const { eyebrow, heading, body, primaryCta, secondaryCta } = Astro.props;
       {secondaryCta && (
         <a
           href={secondaryCta.href}
-          class="group inline-flex items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
+          class="group inline-flex min-h-11 items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors md:min-h-0"
         >
           <span class="border-b border-current pb-0.5">{secondaryCta.label}</span>
           <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />

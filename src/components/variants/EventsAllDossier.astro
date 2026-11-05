@@ -36,18 +36,18 @@ function formatDate(iso: string): string {
   const [y, m, d] = iso.split("-");
   const monthIdx = parseInt(m, 10) - 1;
   const month = monthNames[monthIdx] ?? "—";
-  if (d) return `${d} ${month}`;
+  if (d) return `${d} ${month} ${y.slice(2)}`; // archive spans years, so keep the year
   return `${month} ${y.slice(2)}`;
 }
 
-const chipBase = "inline-flex items-center font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 border transition-colors";
+const chipBase = "inline-flex shrink-0 items-center whitespace-nowrap font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 min-h-11 md:min-h-0 border transition-colors";
 const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:text-ink";
 ---
 
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-24 md:py-32 px-6 overflow-hidden">
   <div class="max-w-[1200px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5">Chapter Calendar · {totalCount} on record</p>
+    <p class="font-mono text-cream/60 text-sm tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {totalCount} on record</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       The whole <em class="font-serif italic font-normal lowercase tracking-normal text-accent">season</em>.
     </h1>
@@ -64,13 +64,14 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
     <a
       href="/events"
-      class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted hover:text-ink transition-colors self-start"
+      class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted hover:text-ink transition-colors self-start min-h-11 -my-3 md:min-h-0 md:my-0"
     >
       <span aria-hidden="true">←</span>
       <span class="border-b border-current pb-0.5">Back to events</span>
     </a>
-    <div class="flex flex-wrap gap-2 items-center md:justify-end">
-      <span class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted mr-2">Filter</span>
+    <!-- Phones: one swipeable row bleeding to the screen edges; md+: wraps, right-aligned -->
+    <div class="-mx-6 flex gap-2 items-center overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:flex-wrap md:justify-end md:overflow-visible md:px-0">
+      <span class="shrink-0 font-mono text-xs uppercase tracking-[0.14em] text-ink-muted mr-2">Filter</span>
 
       <a
         data-chip-d
@@ -100,7 +101,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   {/* Upcoming */}
   {upcoming.length > 0 && (
     <div data-section-d="upcoming" class="mb-20 md:mb-28">
-      <div class="flex items-center justify-between mb-10 border-b border-outline-soft pb-6">
+      <div class="flex items-end justify-between gap-4 mb-10 border-b border-outline-soft pb-6 md:items-center">
         <div>
           <SectionIndex label="Upcoming" />
           <h2 class="display text-3xl md:text-4xl text-ink mt-5">On the calendar.</h2>
@@ -109,8 +110,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
         {upcoming.map((event) => (
-          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-col bg-bg p-6">
-            <div class="aspect-[4/3] overflow-hidden bg-surface-soft mb-5">
+          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg p-4 sm:flex-col sm:gap-0 sm:p-6">
+            <div class="w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5">
               {event.photo ? (
                 <img
                   src={event.photo}
@@ -122,12 +123,14 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
                 <EventPhotoFallback label={event.category} tone="dossier" />
               )}
             </div>
-            <div class="flex items-baseline gap-3 mb-3">
-              <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatDate(event.date)}</span>
-              <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-baseline gap-x-3 mb-2 sm:mb-3">
+                <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatDate(event.date)}</span>
+                <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
+              </div>
+              <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
             </div>
-            <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
-            <p class="text-sm text-ink-muted leading-relaxed">{event.description}</p>
           </a>
         ))}
       </div>
@@ -137,7 +140,7 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
   {/* Past */}
   {past.length > 0 && (
     <div data-section-d="past">
-      <div class="flex items-center justify-between mb-10 border-b border-outline-soft pb-6">
+      <div class="flex items-end justify-between gap-4 mb-10 border-b border-outline-soft pb-6 md:items-center">
         <div>
           <SectionIndex label="Past" />
           <h2 class="display text-3xl md:text-4xl text-ink mt-5">The record.</h2>
@@ -146,8 +149,8 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
         {past.map((event) => (
-          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-col bg-bg p-6">
-            <div class="aspect-[4/3] overflow-hidden bg-surface-soft mb-5">
+          <a data-event-d data-category={event.category} href={`/events/${event.slug}`} class="group flex flex-row gap-4 bg-bg p-4 sm:flex-col sm:gap-0 sm:p-6">
+            <div class="w-24 shrink-0 self-start aspect-square overflow-hidden bg-surface-soft sm:w-auto sm:self-auto sm:aspect-[4/3] sm:mb-5">
               {event.photo ? (
                 <img
                   src={event.photo}
@@ -159,12 +162,14 @@ const chipInactive = "border-outline-soft text-ink-muted hover:border-ink hover:
                 <EventPhotoFallback label={event.category} tone="dossier" />
               )}
             </div>
-            <div class="flex items-baseline gap-3 mb-3">
-              <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatDate(event.date)}</span>
-              <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-baseline gap-x-3 mb-2 sm:mb-3">
+                <span class="font-mono text-sm text-accent tracking-wide uppercase tabular-nums">{formatDate(event.date)}</span>
+                <span class="font-mono text-xs text-ink-muted tracking-[0.12em] uppercase">{event.category}</span>
+              </div>
+              <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
             </div>
-            <h3 class="display text-xl md:text-2xl text-ink mb-2 leading-tight group-hover:text-accent transition-colors">{event.title}</h3>
-            <p class="text-sm text-ink-muted leading-relaxed">{event.description}</p>
           </a>
         ))}
       </div>

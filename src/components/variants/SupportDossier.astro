@@ -119,9 +119,9 @@ const faviconSrc = (domain?: string) =>
   {groups.map((group) => (
     <div class="mt-12">
       <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-5">{group.industry}</p>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-outline-soft border border-outline-soft">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 border-l border-t border-outline-soft">
         {group.companies.map((company) => (
-          <div class="group flex aspect-[4/3] items-center justify-center bg-bg p-6 text-center transition-colors hover:bg-surface-soft">
+          <div class="group flex aspect-[4/3] items-center justify-center border-b border-r border-outline-soft bg-bg p-6 text-center transition-colors hover:bg-surface-soft">
             <img
               src={logoSrc(company)}
               data-fallback={faviconSrc(company.domain)}

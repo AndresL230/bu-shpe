@@ -12,8 +12,7 @@ export const prerender = false;
 const slug = Astro.params.slug ?? "";
 const event = await getEventBySlug(Astro.locals.runtime.env.DB, slug);
 
-// Unknown slug or a draft: real 404. Rewrites to /404 so a future
-// src/pages/404.astro is picked up; until then Astro serves its default.
+// Unknown slug or a draft: real 404, rendered by src/pages/404.astro.
 if (!event) {
   return Astro.rewrite("/404");
 }

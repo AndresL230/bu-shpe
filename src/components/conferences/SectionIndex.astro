@@ -3,17 +3,20 @@ interface Props {
   index?: string;                      // "01" — optional; omit for tick + label only
   label: string;                       // "TRAVEL"
   accent?: "orange" | "scarlet";       // tick color, default orange
+  onDark?: boolean;                    // cream text for navy (bg-deep) surfaces
 }
-const { index, label, accent = "orange" } = Astro.props;
+const { index, label, accent = "orange", onDark = false } = Astro.props;
 const tick = accent === "scarlet" ? "bg-scarlet" : "bg-accent";
+const strong = onDark ? "text-cream" : "text-ink";
+const soft = onDark ? "text-cream/60" : "";
 ---
 <div class="flex items-center gap-3">
   <span class={`inline-block h-2.5 w-2.5 ${tick}`} aria-hidden="true"></span>
   {index && (
     <>
-      <span class="mono-label text-ink">{index}</span>
-      <span class="mono-label">—</span>
+      <span class={`mono-label ${strong}`}>{index}</span>
+      <span class={`mono-label ${soft}`}>—</span>
     </>
   )}
-  <span class="mono-label text-ink">{label}</span>
+  <span class={`mono-label ${strong}`}>{label}</span>
 </div>

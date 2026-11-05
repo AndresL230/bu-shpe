@@ -23,38 +23,38 @@ const quickLinks = [
       </p>
       <a
         href={siteData.socials.shpe}
-        class="eyebrow mt-6 inline-block text-cream/60 hover:text-accent"
+        class="eyebrow mt-4 md:mt-6 inline-block py-2.5 md:py-0 text-cream/60 hover:text-accent"
         rel="noopener"
       >Part of SHPE National →</a>
     </div>
 
     <div>
       <p class="eyebrow text-cream/60">Explore</p>
-      <ul class="mt-4 space-y-2">
+      <ul class="mt-2 md:mt-4 md:space-y-2">
         {quickLinks.map(l => (
-          <li><a href={l.href} class="text-cream hover:text-accent transition-colors">{l.label}</a></li>
+          <li><a href={l.href} class="inline-block py-2.5 md:py-0 text-cream hover:text-accent transition-colors">{l.label}</a></li>
         ))}
       </ul>
     </div>
 
     <div>
       <p class="eyebrow text-cream/60">Contact</p>
-      <ul class="mt-4 space-y-2 text-cream">
-        <li><a href={`mailto:${siteData.contactEmail}`} class="hover:text-accent">{siteData.contactEmail}</a></li>
-        <li class="text-cream/70 text-sm">Faculty Advisor: <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="hover:text-accent">{siteData.facultyAdvisorEmail}</a></li>
+      <ul class="mt-2 md:mt-4 md:space-y-2 text-cream">
+        <li><a href={`mailto:${siteData.contactEmail}`} class="inline-block py-2.5 md:py-0 hover:text-accent">{siteData.contactEmail}</a></li>
+        <li class="text-cream/70 text-sm">Faculty Advisor: <a href={`mailto:${siteData.facultyAdvisorEmail}`} class="inline-block py-2.5 md:py-0 hover:text-accent">{siteData.facultyAdvisorEmail}</a></li>
       </ul>
 
       <p class="eyebrow mt-8 text-cream/60">Follow</p>
-      <ul class="mt-4 flex gap-4">
-        <li><a href={siteData.socials.instagram} aria-label="Instagram" class="hover:text-accent" rel="noopener">Instagram</a></li>
-        <li><a href={siteData.socials.linkedin} aria-label="LinkedIn" class="hover:text-accent" rel="noopener">LinkedIn</a></li>
-        <li><a href={siteData.socials.facebook} aria-label="Facebook" class="hover:text-accent" rel="noopener">Facebook</a></li>
+      <ul class="mt-2 md:mt-4 flex flex-wrap gap-x-6 md:gap-4">
+        <li><a href={siteData.socials.instagram} aria-label="Instagram" class="inline-block py-2.5 md:py-0 hover:text-accent" rel="noopener">Instagram</a></li>
+        <li><a href={siteData.socials.linkedin} aria-label="LinkedIn" class="inline-block py-2.5 md:py-0 hover:text-accent" rel="noopener">LinkedIn</a></li>
+        <li><a href={siteData.socials.facebook} aria-label="Facebook" class="inline-block py-2.5 md:py-0 hover:text-accent" rel="noopener">Facebook</a></li>
       </ul>
 
       <a
         href={siteData.donateUrl}
         rel="noopener"
-        class="mt-8 inline-flex items-center rounded-[var(--radius-card)] border border-accent px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-accent transition hover:bg-accent hover:text-white"
+        class="mt-8 inline-flex min-h-11 md:min-h-0 items-center rounded-[var(--radius-card)] border border-accent px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-accent transition hover:bg-accent hover:text-white"
       >Donate to BU SHPE</a>
     </div>
   </div>
@@ -63,9 +63,9 @@ const quickLinks = [
     <div class="mx-auto flex max-w-[1200px] flex-col gap-2 px-6 py-6 text-xs text-cream/60 md:flex-row md:items-center md:justify-between">
       <p>© {new Date().getFullYear()} SHPE-BostonU. Designed con familia.</p>
       <p class="flex flex-wrap gap-x-5 gap-y-1">
-        <a href="/privacy" class="hover:text-accent">Privacy</a>
-        <a href="/terms" class="hover:text-accent">Terms</a>
-        <span>{siteData.region} · Boston University</span>
+        <a href="/privacy" class="py-2.5 md:py-0 hover:text-accent">Privacy</a>
+        <a href="/terms" class="py-2.5 md:py-0 hover:text-accent">Terms</a>
+        <span class="py-2.5 md:py-0">{siteData.region} · Boston University</span>
       </p>
     </div>
   </div>

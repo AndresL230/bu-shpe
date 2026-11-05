@@ -169,13 +169,13 @@ const benefitTiles = [
   <p class="mt-4 max-w-2xl font-serif text-lg italic text-ink-muted">
     With continued support from the BU College of Engineering and the Student Activities Office.
   </p>
-  <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-outline-soft border border-outline-soft">
+  <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border-l border-t border-outline-soft">
     {corporate.map((s) => (
       <a
         href={s.url}
         target="_blank"
         rel="noopener"
-        class="group flex items-center justify-center bg-bg p-7 aspect-[4/3] transition-colors hover:bg-surface-soft"
+        class="group flex items-center justify-center border-b border-r border-outline-soft bg-bg p-7 aspect-[4/3] transition-colors hover:bg-surface-soft"
         aria-label={s.name}
       >
         <img src={s.logo} alt={s.name} loading="lazy" class="max-h-12 w-auto max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100" />
