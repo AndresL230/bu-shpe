@@ -1,0 +1,121 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import PartnerForm from "@/components/admin/PartnerForm.astro";
+import { listPartnerYears, listPartners, publicPartnerYear } from "@/lib/server/content";
+import { partnerMessage } from "@/lib/server/partner-form";
+import { currentShpeYear, formatShpeYear, parseShpeYear } from "@/lib/shpe-year";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const years = await listPartnerYears(db);
+const live = await publicPartnerYear(db);
+const requested = parseShpeYear(Astro.url.searchParams.get("year"));
+const year = requested ?? years[0] ?? currentShpeYear();
+const partners = await listPartners(db, year);
+const allYears = years.includes(year) ? years : [...years, year].sort((a, b) => b - a);
+
+// Suggest the year after the newest one for "start a new year".
+const newest = years[0] ?? currentShpeYear();
+const nextYear = Math.max(newest + 1, currentShpeYear());
+const copyFrom = years.includes(year) ? year : years[0];
+
+const ok = partnerMessage(Astro.url.searchParams.get("ok"));
+const error = partnerMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="Partners" accent="& sponsors" eyebrow="03 — Partners" section="partners">
+  <a slot="actions" href="/support/corporate" class="btn-dossier-ghost" target="_blank" rel="noopener">View page ↗</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <nav class="adm-segment mb-6" aria-label="SHPE year">
+    {allYears.map((y) => (
+      <a href={`/admin/partners?year=${formatShpeYear(y)}`} aria-current={y === year ? "page" : undefined}>
+        {formatShpeYear(y)}{y === live && <span class="opacity-60"> · on site</span>}
+      </a>
+    ))}
+  </nav>
+
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div class="min-w-0">
+      {partners.length === 0 ? (
+        <div class="adm-panel">
+          <p class="mono-label mb-2">Empty</p>
+          <p class="text-ink-muted">No partners listed for {formatShpeYear(year)} yet. Add one on the right, or copy another year's list below.</p>
+        </div>
+      ) : (
+        <table class="adm-table adm-table--stack">
+          <thead>
+            <tr>
+              <th class="w-28"></th>
+              <th>Partner</th>
+              <th class="w-32">Tier</th>
+              <th class="w-56 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {partners.map((p, i) => (
+              <tr>
+                <td data-label="" class="max-sm:hidden!">
+                  <span class="flex h-12 w-24 items-center justify-center border border-hairline bg-surface p-1.5">
+                    {p.logo ? <img src={p.logo} alt="" class="max-h-full max-w-full object-contain" loading="lazy" /> : <span class="mono-label text-[0.6rem]">No logo</span>}
+                  </span>
+                </td>
+                <td data-label="">
+                  <span>
+                    <a href={`/admin/partners/${p.id}`} class="font-semibold text-ink hover:text-accent">{p.name}</a>
+                    {p.url && <a href={p.url} class="block max-w-[22rem] truncate text-xs text-ink-muted hover:text-link" target="_blank" rel="noopener">{p.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}</a>}
+                  </span>
+                </td>
+                <td data-label="Tier">
+                  {p.tier ? <span class="adm-badge adm-badge--live">{p.tier}</span> : <span class="text-ink-muted">—</span>}
+                </td>
+                <td data-label="" class="adm-cell-actions whitespace-nowrap text-right">
+                  <form method="post" action={`/api/admin/partners/${p.id}`} class="inline">
+                    <button name="action" value="up" class="adm-link px-1 disabled:opacity-25" disabled={i === 0} aria-label={`Move ${p.name} up`}>↑</button>
+                    <button name="action" value="down" class="adm-link px-1 disabled:opacity-25" disabled={i === partners.length - 1} aria-label={`Move ${p.name} down`}>↓</button>
+                  </form>
+                  <a href={`/admin/partners/${p.id}`} class="adm-link ml-3">Edit</a>
+                  <details class="adm-confirm ml-3 inline-block">
+                    <summary class="adm-link adm-link--danger">Remove</summary>
+                    <form method="post" action={`/api/admin/partners/${p.id}`} class="adm-confirm__panel adm-confirm__panel--sm grid gap-3">
+                      <p class="text-sm text-ink">Remove {p.name} from {formatShpeYear(year)}?</p>
+                      <button name="action" value="delete" class="btn-danger justify-self-start px-3 py-1.5 text-[0.65rem]">Yes, remove</button>
+                    </form>
+                  </details>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <form method="post" action="/api/admin/partners" class="adm-panel mt-10 grid gap-4">
+        <input type="hidden" name="action" value="copy" />
+        <p class="mono-label">Start a new year from…</p>
+        <p class="max-w-2xl text-sm text-ink-muted">
+          Copies a year's partners, logos and order into a new year. The site shows the newest year with partners,
+          so the copy goes live right away. Remove anyone who didn't renew.
+        </p>
+        <div class="flex flex-wrap items-end gap-3">
+          <div>
+            <label class="adm-label" for="copy-from">Copy from</label>
+            <select id="copy-from" name="from" class="adm-select w-32 font-mono" disabled={!years.length}>
+              {years.map((y) => <option value={formatShpeYear(y)} selected={y === copyFrom}>{formatShpeYear(y)}</option>)}
+            </select>
+          </div>
+          <div>
+            <label class="adm-label" for="copy-to">New year</label>
+            <input id="copy-to" name="to" class="adm-input w-32 font-mono" value={formatShpeYear(nextYear)} required autocomplete="off" />
+          </div>
+          <button type="submit" class="btn-dossier-ghost" disabled={!years.length}>Start year</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="adm-panel content-start lg:self-start">
+      <PartnerForm action="/api/admin/partners" year={year} years={allYears} submitLabel="Add partner" compact />
+    </div>
+  </div>
+</AdminLayout>

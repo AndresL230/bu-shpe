@@ -1,0 +1,26 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import PartnerForm from "@/components/admin/PartnerForm.astro";
+import { getPartner, listPartnerYears } from "@/lib/server/content";
+import { partnerMessage } from "@/lib/server/partner-form";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const id = Number(Astro.params.id);
+const partner = Number.isInteger(id) && id > 0 ? await getPartner(db, id) : null;
+if (!partner) return Astro.redirect("/admin/partners?error=not_found", 303);
+const years = await listPartnerYears(db);
+
+const ok = partnerMessage(Astro.url.searchParams.get("ok"));
+const error = partnerMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title={partner.name} eyebrow={`03 — Partners / ${formatShpeYear(partner.shpeYear)}`} section="partners">
+  <a slot="actions" href={`/admin/partners?year=${formatShpeYear(partner.shpeYear)}`} class="btn-dossier-ghost">← Partners</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <PartnerForm action={`/api/admin/partners/${partner.id}`} partner={partner} year={partner.shpeYear} years={years} submitLabel="Save" />
+</AdminLayout>
