@@ -2,9 +2,17 @@
 import Base from "@/layouts/Base.astro";
 import VolunteeringClassic from "@/components/variants/VolunteeringClassic.astro";
 import VolunteeringDossier from "@/components/variants/VolunteeringDossier.astro";
+import { PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listVolunteering } from "@/lib/server/content";
+
+// Programs live in D1 (edited at /admin/volunteering), so this page renders per request.
+export const prerender = false;
+
+const programs = await listVolunteering(Astro.locals.runtime.env.DB).catch(() => []);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base title="Volunteering" description="BU SHPE shows up for Greater Boston — at museums, food banks, and on the street with meals.">
   <div data-variant-block="classic"><VolunteeringClassic /></div>
-  <div data-variant-block="dossier"><VolunteeringDossier /></div>
+  <div data-variant-block="dossier"><VolunteeringDossier programs={programs} /></div>
 </Base>

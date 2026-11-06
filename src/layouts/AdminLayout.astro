@@ -11,7 +11,7 @@ import "@/styles/admin.css";
 interface Props {
   title: string;
   eyebrow?: string;
-  section: "dashboard" | "events" | "board" | "subscribers" | "campaigns" | "admins";
+  section: "dashboard" | "events" | "board" | "partners" | "employers" | "conventions" | "volunteering" | "subscribers" | "campaigns" | "admins";
   /** Optional accent word rendered in Playfair italic after the title. */
   accent?: string;
 }
@@ -22,10 +22,14 @@ const admin = Astro.locals.admin;
 const nav: { key: Props["section"]; href: string; label: string; index: string; ownerOnly?: boolean }[] = [
   { key: "dashboard",   href: "/admin/dashboard",   label: "Overview",     index: "00" },
   { key: "events",      href: "/admin/events",      label: "Events",       index: "01" },
-  { key: "board",       href: "/admin/board",       label: "E-board",      index: "02" },
-  { key: "subscribers", href: "/admin/subscribers", label: "Mailing list", index: "03" },
-  { key: "campaigns",   href: "/admin/campaigns",   label: "Campaigns",    index: "04" },
-  { key: "admins",      href: "/admin/admins",      label: "Admins",       index: "05", ownerOnly: true },
+  { key: "board",        href: "/admin/board",        label: "E-board",       index: "02" },
+  { key: "partners",     href: "/admin/partners",     label: "Partners",      index: "03" },
+  { key: "employers",    href: "/admin/employers",    label: "Employers",     index: "04" },
+  { key: "conventions",  href: "/admin/conventions",  label: "Conventions",   index: "05" },
+  { key: "volunteering", href: "/admin/volunteering", label: "Volunteering",  index: "06" },
+  { key: "subscribers",  href: "/admin/subscribers",  label: "Mailing list",  index: "07" },
+  { key: "campaigns",    href: "/admin/campaigns",    label: "Campaigns",     index: "08" },
+  { key: "admins",       href: "/admin/admins",       label: "Admins",        index: "09", ownerOnly: true },
 ];
 const visibleNav = nav.filter((n) => !n.ownerOnly || admin?.role === "owner");
 ---

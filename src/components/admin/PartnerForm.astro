@@ -1,0 +1,122 @@
+---
+/**
+ * Create/edit form for one partner. Plain multipart POST; the API route
+ * validates and redirects back with ?ok= / ?error=.
+ */
+import type { PartnerRecord } from "@/lib/server/content";
+import { PARTNER_TIERS } from "@/lib/server/content";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+interface Props {
+  action: string;
+  partner?: PartnerRecord;
+  /** Default SHPE year (start year) for a new partner. */
+  year: number;
+  /** Existing SHPE years, offered as suggestions in the year field. */
+  years: number[];
+  submitLabel: string;
+  /** Compact layout for the sidebar "add" panel. */
+  compact?: boolean;
+}
+
+const { action, partner, year, years, submitLabel, compact = false } = Astro.props;
+const uid = partner ? `p${partner.id}` : "new";
+const accept = "image/jpeg,image/png,image/webp,image/avif";
+---
+<form method="post" action={action} enctype="multipart/form-data" class:list={["grid gap-5", !compact && "lg:grid-cols-[1fr_280px] lg:gap-8"]}>
+  <input type="hidden" name="action" value={partner ? "update" : "add"} />
+  <div class:list={["grid content-start gap-5", !compact && "adm-panel lg:self-start"]}>
+    {compact && <p class="mono-label">Add a partner</p>}
+    <div>
+      <label class="adm-label" for={`${uid}-name`}>Name</label>
+      <input id={`${uid}-name`} name="name" class="adm-input" required maxlength="120" value={partner?.name ?? ""} autocomplete="off" />
+    </div>
+    <div>
+      <label class="adm-label" for={`${uid}-url`}>Link</label>
+      <input id={`${uid}-url`} name="url" class="adm-input" maxlength="300" value={partner?.url ?? ""} placeholder="https://example.com" autocomplete="off" inputmode="url" />
+      {!compact && <p class="adm-hint">Optional. The logo links here on the site.</p>}
+    </div>
+    <div class:list={["grid gap-5", compact ? "grid-cols-2" : "md:grid-cols-3"]}>
+      <div>
+        <label class="adm-label" for={`${uid}-tier`}>Tier</label>
+        <select id={`${uid}-tier`} name="tier" class="adm-select">
+          <option value="" selected={!partner?.tier}>None</option>
+          {PARTNER_TIERS.map((t) => <option value={t} selected={partner?.tier === t}>{t}</option>)}
+        </select>
+        {!compact && <p class="adm-hint">With tiers set, the site groups partners by tier.</p>}
+      </div>
+      <div>
+        <label class="adm-label" for={`${uid}-year`}>SHPE year</label>
+        <input id={`${uid}-year`} name="year" class="adm-input font-mono" required value={formatShpeYear(partner?.shpeYear ?? year)} list={`${uid}-years`} placeholder="26-27" autocomplete="off" />
+        <datalist id={`${uid}-years`}>{years.map((y) => <option value={formatShpeYear(y)} />)}</datalist>
+      </div>
+      {!compact && (
+        <div>
+          <label class="adm-label" for={`${uid}-sort`}>Order</label>
+          <input id={`${uid}-sort`} name="sort" type="number" class="adm-input font-mono" value={partner?.sort ?? ""} />
+          <p class="adm-hint">Lower shows first. The arrows on the list also reorder.</p>
+        </div>
+      )}
+    </div>
+
+    {compact && (
+      <>
+        <div>
+          <label class="adm-label" for={`${uid}-logo-file`}>Logo</label>
+          <input id={`${uid}-logo-file`} type="file" name="logo_file" accept={accept} class="adm-file" />
+        </div>
+        <div>
+          <label class="adm-label" for={`${uid}-logo-path`}>Or existing path</label>
+          <input id={`${uid}-logo-path`} name="logo_path" class="adm-input font-mono text-xs" placeholder="/assets/sponsors/…" autocomplete="off" />
+          <p class="adm-hint">Upload a file or point at one already on the site.</p>
+        </div>
+        <button type="submit" class="btn-dossier">{submitLabel}</button>
+      </>
+    )}
+  </div>
+
+  {!compact && (
+    <div class="grid content-start gap-6">
+      <div class="adm-panel grid gap-4">
+        <p class="adm-label mb-0">Logo</p>
+        <figure class="flex aspect-[3/2] w-full items-center justify-center border border-hairline bg-surface p-5">
+          <img src={partner?.logo || undefined} alt="" class:list={["max-h-full max-w-full object-contain", !partner?.logo && "hidden"]} data-logo-preview />
+          <span class:list={["mono-label", partner?.logo && "hidden"]} data-logo-empty>No logo</span>
+        </figure>
+        <div>
+          <label class="adm-label" for={`${uid}-logo-file`}>Upload new</label>
+          <input id={`${uid}-logo-file`} type="file" name="logo_file" accept={accept} class="adm-file" data-logo-input />
+          <p class="adm-hint">PNG, JPEG, WebP or AVIF, up to 8 MB. Transparent or white backgrounds look best.</p>
+        </div>
+        <div>
+          <label class="adm-label" for={`${uid}-logo-path`}>Or keep / use path</label>
+          <input id={`${uid}-logo-path`} name="logo_path" class="adm-input font-mono text-xs" value={partner?.logo ?? ""} placeholder="/assets/sponsors/…" autocomplete="off" />
+          <p class="adm-hint">An upload replaces this.</p>
+        </div>
+      </div>
+      <div class="adm-panel grid gap-4">
+        <button type="submit" class="btn-dossier w-full">{submitLabel}</button>
+        {partner?.logo && <button type="submit" form={`${uid}-rmlogo`} class="adm-link adm-link--danger justify-self-start">Remove logo</button>}
+      </div>
+    </div>
+  )}
+</form>
+{partner?.logo && (
+  <form id={`${uid}-rmlogo`} method="post" action={action} class="hidden"><input type="hidden" name="action" value="remove_logo" /></form>
+)}
+
+<script>
+  const input = document.querySelector<HTMLInputElement>("[data-logo-input]");
+  const preview = document.querySelector<HTMLImageElement>("[data-logo-preview]");
+  const empty = document.querySelector<HTMLElement>("[data-logo-empty]");
+  let objectUrl: string | null = null;
+  input?.addEventListener("change", () => {
+    const file = input.files?.[0];
+    if (!file || !preview) return;
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    preview.src = objectUrl;
+    preview.classList.remove("hidden");
+    empty?.classList.add("hidden");
+  });
+</script>

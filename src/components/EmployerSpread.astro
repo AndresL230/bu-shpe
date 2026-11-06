@@ -3,20 +3,19 @@
  * Landing-page "where we work" spread: one column per industry, its count
  * (a large numeral on phones, a mono "· 5" beside the industry at md+), then
  * the companies as a hairline-ruled list.
- * Data: src/data/employers.json (same source as /careers).
+ * Data: D1 `employers` via listEmployerGroups, passed in by the page (same source as /careers).
  */
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import Icon from "@/components/Icon.astro";
-import employersData from "@/data/employers.json";
 import { logoSrc, faviconSrc } from "@/lib/logos";
 import type { EmployerGroup } from "@/types";
 
 interface Props {
   index?: string;
+  groups: EmployerGroup[];
 }
 
-const { index } = Astro.props;
-const groups = employersData as EmployerGroup[];
+const { index, groups } = Astro.props;
 const total = groups.reduce((n, g) => n + g.companies.length, 0);
 ---
 <section class="mx-auto max-w-[1200px] px-6 py-16 md:py-28">

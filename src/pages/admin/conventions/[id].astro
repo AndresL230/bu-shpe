@@ -1,0 +1,54 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import ConventionForm from "@/components/admin/ConventionForm.astro";
+import { conventionYearTaken, getConventionRecord } from "@/lib/server/content";
+import { conventionMessage } from "@/lib/server/convention-form";
+import { currentShpeYear, formatShpeYear } from "@/lib/shpe-year";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const isNew = Astro.params.id === "new";
+const id = Number(Astro.params.id);
+const record = !isNew && Number.isInteger(id) && id > 0 ? await getConventionRecord(db, id) : null;
+if (!isNew && !record) return Astro.redirect("/admin/conventions?error=not_found", 303);
+
+// Suggest this SHPE year's convention for a new record, unless it already has one.
+const thisYear = currentShpeYear();
+const suggested = isNew && !(await conventionYearTaken(db, thisYear)) ? thisYear : undefined;
+const hasUploads = record?.photos.some((p) => p.startsWith("/media/")) ?? false;
+
+const ok = conventionMessage(Astro.url.searchParams.get("ok"));
+const error = conventionMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout
+  title={record ? `${record.year} · ${record.city}` : "New record"}
+  eyebrow={record ? `05 — Conventions / SHPE ${formatShpeYear(record.year)}` : "05 — Conventions / New"}
+  section="conventions"
+>
+  <a slot="actions" href={record ? `/admin/conventions#c${record.id}` : "/admin/conventions"} class="btn-dossier-ghost">← All records</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  {record ? (
+    <>
+      <ConventionForm action={`/api/admin/conventions/${record.id}`} record={record} submitLabel="Save" />
+
+      <details class="adm-danger mt-12 max-w-xl">
+        <summary>Delete this record</summary>
+        <form method="post" action={`/api/admin/conventions/${record.id}`} class="grid gap-4 p-5">
+          <input type="hidden" name="action" value="delete" />
+          <p class="text-sm leading-relaxed text-ink-muted">
+            Removes the {record.year} {record.city} record from the site.
+            {hasUploads && " Uploaded photos nothing else uses are deleted too."}
+            This can't be undone.
+          </p>
+          <div><button type="submit" class="btn-danger">Delete record</button></div>
+        </form>
+      </details>
+    </>
+  ) : (
+    <ConventionForm action="/api/admin/conventions" year={suggested} submitLabel="Add record" />
+  )}
+</AdminLayout>

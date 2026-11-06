@@ -1,0 +1,71 @@
+---
+/**
+ * Create/edit form for one National Convention record. Plain multipart POST;
+ * the API route validates and redirects back with ?ok= / ?error=.
+ */
+import type { ConventionRecord } from "@/lib/server/content";
+import PhotoListField from "@/components/admin/PhotoListField.astro";
+
+interface Props {
+  action: string;
+  record?: ConventionRecord;
+  /** Prefilled year for a new record. */
+  year?: number;
+  submitLabel: string;
+}
+
+const { action, record, year, submitLabel } = Astro.props;
+const uid = record ? `c${record.id}` : "new";
+---
+<form method="post" action={action} enctype="multipart/form-data" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-8">
+  <input type="hidden" name="action" value={record ? "update" : "add"} />
+  <div class="adm-panel grid content-start gap-5 lg:self-start">
+    <div class="grid gap-5 sm:grid-cols-[10rem_1fr]">
+      <div>
+        <label class="adm-label" for={`${uid}-year`}>Year</label>
+        <input id={`${uid}-year`} name="year" type="number" min="1950" max="2100" step="1" class="adm-input font-mono" required value={record?.year ?? year ?? ""} />
+        <p class="adm-hint">One record per year.</p>
+      </div>
+      <div>
+        <label class="adm-label" for={`${uid}-city`}>City</label>
+        <input id={`${uid}-city`} name="city" class="adm-input" required maxlength="120" value={record?.city ?? ""} placeholder="Indianapolis, IN" autocomplete="off" />
+      </div>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-[1fr_10rem]">
+      <div>
+        <label class="adm-label" for={`${uid}-region`}>Event</label>
+        <input id={`${uid}-region`} name="region" class="adm-input" maxlength="120" value={record?.region ?? "National Convention"} autocomplete="off" />
+      </div>
+      <div>
+        <label class="adm-label" for={`${uid}-headcount`}>Delegates</label>
+        <input id={`${uid}-headcount`} name="headcount" type="number" min="0" step="1" class="adm-input font-mono" value={record?.headcount ?? 0} />
+        <p class="adm-hint">0 if unknown.</p>
+      </div>
+    </div>
+    <div>
+      <label class="adm-label" for={`${uid}-description`}>Description</label>
+      <textarea id={`${uid}-description`} name="description" class="adm-textarea" maxlength="2000">{record?.description ?? ""}</textarea>
+    </div>
+    <div>
+      <label class="adm-label" for={`${uid}-outcomes`}>Outcomes</label>
+      <textarea id={`${uid}-outcomes`} name="outcomes" class="adm-textarea min-h-24" maxlength="3000" placeholder="Cyber Security Challenge — 2nd place">{(record?.outcomes ?? []).join("\n")}</textarea>
+      <p class="adm-hint">One per line. Awards, interviews, offers.</p>
+    </div>
+    <div>
+      <label class="adm-label" for={`${uid}-quote`}>Quote</label>
+      <textarea id={`${uid}-quote`} name="quote_text" class="adm-textarea min-h-20" maxlength="600">{record?.quote?.text ?? ""}</textarea>
+    </div>
+    <div>
+      <label class="adm-label" for={`${uid}-attribution`}>Quote by</label>
+      <input id={`${uid}-attribution`} name="quote_attribution" class="adm-input" maxlength="120" value={record?.quote?.attribution ?? ""} placeholder="Name, Class of 2027" />
+      <p class="adm-hint">Optional. Blank fields are hidden on the site.</p>
+    </div>
+  </div>
+
+  <div class="grid content-start gap-6">
+    <PhotoListField uid={uid} photos={record?.photos ?? []} />
+    <div class="adm-panel">
+      <button type="submit" class="btn-dossier w-full">{submitLabel}</button>
+    </div>
+  </div>
+</form>

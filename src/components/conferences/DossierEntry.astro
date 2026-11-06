@@ -1,8 +1,12 @@
 ---
 import type { Conference } from "@/types";
+import { formatShpeYear } from "@/lib/shpe-year";
 interface Props { conf: Conference; index: number; }
 const { conf, index } = Astro.props;
 const idx = String(index + 1).padStart(2, "0");
+// The national convention runs in the fall, so it opens that year's SHPE year
+// (2026 -> "26-27"); shown muted beside the calendar year.
+const shpe = formatShpeYear(conf.year);
 // Phones: only the newest entry (index 0) keeps the full plate. Every later
 // entry collapses to a compact row — square thumb left, text right — so the
 // log reads as an index rather than eight stacked full-width cards.
@@ -33,9 +37,9 @@ const hasMeta = (conf.headcount != null && conf.headcount > 0) || (conf.outcomes
     <div class:list={["flex items-center gap-3 mb-3", compact && "max-md:mb-1.5"]}>
       <span class="mono-label text-ink md:hidden">{idx}</span>
       <span class:list={["font-mono text-accent text-sm tracking-[0.12em] uppercase", compact && "max-md:text-xs"]}>{compact ? (
-        <><span class="md:hidden">{conf.year}</span><span class="max-md:hidden">{conf.region ?? "National Convention"} · {conf.year}</span></>
+        <><span class="md:hidden">{conf.year}<span class="text-ink-muted"> · {shpe}</span></span><span class="max-md:hidden">{conf.region ?? "National Convention"} · {conf.year}<span class="text-ink-muted"> · {shpe}</span></span></>
       ) : (
-        <>{conf.region ?? "National Convention"} · {conf.year}</>
+        <>{conf.region ?? "National Convention"} · {conf.year}<span class="text-ink-muted"> · {shpe}</span></>
       )}</span>
     </div>
     <h2 class:list={["display text-3xl md:text-4xl text-ink", compact && "max-md:text-2xl"]}>{conf.city}</h2>

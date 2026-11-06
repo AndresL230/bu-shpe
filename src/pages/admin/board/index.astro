@@ -3,6 +3,7 @@ import AdminLayout from "@/layouts/AdminLayout.astro";
 import BoardMemberForm from "@/components/admin/BoardMemberForm.astro";
 import { listBoard, listTerms, normalizeTerm, publicTerm, termFor } from "@/lib/server/board";
 import { boardMessage } from "@/lib/server/board-form";
+import { formatShpeYear, termStartYear } from "@/lib/shpe-year";
 
 export const prerender = false;
 
@@ -20,6 +21,11 @@ const allTerms = terms.includes(term) ? terms : [term, ...terms];
 const newest = terms[0] ?? termFor();
 const nextTerm = `${Number(newest.slice(0, 4)) + 1}–${Number(newest.slice(0, 4)) + 2}`;
 const isLive = term === live;
+/** Stored "2026–2027" -> shown "26-27". */
+const short = (t: string) => {
+  const y = termStartYear(t);
+  return y === null ? t : formatShpeYear(y);
+};
 
 const ok = boardMessage(Astro.url.searchParams.get("ok"));
 const error = boardMessage(Astro.url.searchParams.get("error"));
@@ -33,7 +39,7 @@ const error = boardMessage(Astro.url.searchParams.get("error"));
   <nav class="adm-segment mb-6" aria-label="Academic year">
     {allTerms.map((t) => (
       <a href={`/admin/board?term=${encodeURIComponent(t)}`} aria-current={t === term ? "page" : undefined}>
-        {t}{t === live && <span class="opacity-60"> · on site</span>}
+        {short(t)}{t === live && <span class="opacity-60"> · on site</span>}
       </a>
     ))}
   </nav>
@@ -43,7 +49,7 @@ const error = boardMessage(Astro.url.searchParams.get("error"));
       {members.length === 0 ? (
         <div class="adm-panel">
           <p class="mono-label mb-2">Empty</p>
-          <p class="text-ink-muted">No one is listed for {term} yet. Add people on the right, or copy last year's roles below.</p>
+          <p class="text-ink-muted">No one is listed for {short(term)} yet. Add people on the right, or copy last year's roles below.</p>
         </div>
       ) : (
         <table class="adm-table adm-table--stack">
@@ -78,7 +84,7 @@ const error = boardMessage(Astro.url.searchParams.get("error"));
                     <details class="adm-confirm ml-3 inline-block">
                       <summary class="adm-link adm-link--danger">Remove</summary>
                       <form method="post" action={`/api/admin/board/${m.id}`} class="adm-confirm__panel adm-confirm__panel--sm grid gap-3">
-                        <p class="text-sm text-ink">Remove {m.name} from {term}?</p>
+                        <p class="text-sm text-ink">Remove {m.name} from {short(term)}?</p>
                         <button name="action" value="delete" class="btn-danger justify-self-start px-3 py-1.5 text-[0.65rem]">Yes, remove</button>
                       </form>
                     </details>
@@ -95,12 +101,12 @@ const error = boardMessage(Astro.url.searchParams.get("error"));
         <input type="hidden" name="from" value={terms[0] ?? ""} />
         <p class="mono-label sm:col-span-3">Start a new academic year</p>
         <p class="text-sm text-ink-muted sm:col-span-2">
-          Copies the positions{terms[0] ? ` from ${terms[0]}` : ""} with names set to TBD, plus the advisor.
-          The site keeps showing {live ?? "the current board"} until you fill in at least one name for the new year.
+          Copies the positions{terms[0] ? ` from ${short(terms[0])}` : ""} with names set to TBD, plus the advisor.
+          The site keeps showing {live ? short(live) : "the current board"} until you fill in at least one name for the new year.
         </p>
         <div class="flex gap-3 sm:col-span-3">
           <input name="to" class="adm-input max-w-[12rem] font-mono" value={nextTerm} aria-label="New academic year" required />
-          <button type="submit" class="btn-dossier-ghost" disabled={!terms.length}>Start {nextTerm.slice(2)}</button>
+          <button type="submit" class="btn-dossier-ghost" disabled={!terms.length}>Start {short(nextTerm)}</button>
         </div>
       </form>
     </div>

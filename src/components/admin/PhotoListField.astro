@@ -1,0 +1,63 @@
+---
+/**
+ * Photo list editor used by the convention + volunteering forms: current
+ * photos with a "remove" tick each, a multi-file upload (shrunk in the
+ * browser first), and a box for paths already on the site. Must sit inside
+ * a multipart form. Server side: parsePhotoChanges() in convention-form.ts.
+ */
+import { MAX_PHOTOS } from "@/lib/server/convention-form";
+
+interface Props {
+  uid: string;
+  photos: string[];
+  /** Where uploads end up, e.g. "the record page". */
+  hint?: string;
+}
+const { uid, photos, hint } = Astro.props;
+---
+<div class="adm-panel grid gap-5" data-photo-field>
+  <div class="flex items-baseline justify-between gap-3">
+    <p class="adm-label mb-0">Photos</p>
+    <p class="mono-label">{photos.length} / {MAX_PHOTOS}</p>
+  </div>
+
+  {photos.length > 0 ? (
+    <ul class="grid grid-cols-2 gap-3">
+      {photos.map((p, i) => (
+        <li class="border border-hairline bg-surface">
+          <a href={p} target="_blank" rel="noopener" class="block aspect-[4/3] overflow-hidden bg-surface-soft">
+            <img src={p} alt={`Photo ${i + 1}`} loading="lazy" class="h-full w-full object-cover" />
+          </a>
+          <label class="flex cursor-pointer items-center gap-2 px-2 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.08em] text-ink-muted has-checked:text-scarlet">
+            <input type="checkbox" name="remove_photo" value={p} class="accent-scarlet" />
+            Remove
+          </label>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="text-sm text-ink-muted">No photos yet.</p>
+  )}
+  {photos.length > 1 && <p class="adm-hint -mt-2">The first photo leads. New photos go after these.</p>}
+
+  <div>
+    <label class="adm-label" for={`${uid}-photos`}>Upload</label>
+    <input id={`${uid}-photos`} type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/avif" multiple class="adm-file" data-photos-input />
+    <p class="adm-hint">{hint ?? "Several at once is fine. Large photos are resized before uploading."}</p>
+  </div>
+  <div>
+    <label class="adm-label" for={`${uid}-paths`}>Or add existing paths</label>
+    <textarea id={`${uid}-paths`} name="photo_paths" class="adm-textarea min-h-20 font-mono text-xs" placeholder="/assets/conferences/photo.jpg" spellcheck="false"></textarea>
+    <p class="adm-hint">One per line, starting with /assets/ or /media/.</p>
+  </div>
+  <p class="mono-label" role="status" data-photos-status></p>
+</div>
+
+<script>
+  import { shrinkOnSubmit } from "@/lib/client/shrink-images";
+  for (const field of document.querySelectorAll<HTMLElement>("[data-photo-field]")) {
+    const input = field.querySelector<HTMLInputElement>("[data-photos-input]");
+    const form = input?.closest("form");
+    if (input && form) shrinkOnSubmit(form, input, field.querySelector<HTMLElement>("[data-photos-status]"));
+  }
+</script>

@@ -1,0 +1,45 @@
+---
+/**
+ * Create/edit form for one volunteering program. Plain multipart POST; the
+ * API route validates and redirects back with ?ok= / ?error=.
+ */
+import type { VolunteeringRecord } from "@/lib/server/content";
+import PhotoListField from "@/components/admin/PhotoListField.astro";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+interface Props {
+  action: string;
+  program?: VolunteeringRecord;
+  submitLabel: string;
+}
+
+const { action, program, submitLabel } = Astro.props;
+const uid = program ? `v${program.id}` : "new";
+---
+<form method="post" action={action} enctype="multipart/form-data" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-8">
+  <input type="hidden" name="action" value={program ? "update" : "add"} />
+  <div class="adm-panel grid content-start gap-5 lg:self-start">
+    <div class="grid gap-5 sm:grid-cols-[1fr_10rem]">
+      <div>
+        <label class="adm-label" for={`${uid}-name`}>Name</label>
+        <input id={`${uid}-name`} name="name" class="adm-input" required maxlength="160" value={program?.name ?? ""} placeholder="Greater Boston Food Bank" autocomplete="off" />
+      </div>
+      <div>
+        <label class="adm-label" for={`${uid}-year`}>SHPE year</label>
+        <input id={`${uid}-year`} name="shpe_year" class="adm-input font-mono" maxlength="20" value={program?.shpeYear != null ? formatShpeYear(program.shpeYear) : ""} placeholder="26-27" autocomplete="off" />
+        <p class="adm-hint">Blank = ongoing.</p>
+      </div>
+    </div>
+    <div>
+      <label class="adm-label" for={`${uid}-description`}>Description</label>
+      <textarea id={`${uid}-description`} name="description" class="adm-textarea" maxlength="2000">{program?.description ?? ""}</textarea>
+    </div>
+  </div>
+
+  <div class="grid content-start gap-6">
+    <PhotoListField uid={uid} photos={program?.photos ?? []} />
+    <div class="adm-panel">
+      <button type="submit" class="btn-dossier w-full">{submitLabel}</button>
+    </div>
+  </div>
+</form>

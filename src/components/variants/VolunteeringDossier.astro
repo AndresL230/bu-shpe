@@ -3,8 +3,16 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import Icon from "@/components/Icon.astro";
 
-import volunteeringData from "@/data/volunteering.json";
 import siteData from "@/data/site.json";
+import type { VolunteeringRecord } from "@/lib/server/content";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+interface Props {
+  /** Programs in display order (D1). */
+  programs: VolunteeringRecord[];
+}
+
+const { programs } = Astro.props;
 ---
 
 <!-- HERO -->
@@ -31,7 +39,7 @@ import siteData from "@/data/site.json";
   </p>
 
   <div class="mt-12 flex flex-col gap-px bg-outline-soft border border-outline-soft">
-    {volunteeringData.map((program, index) => (
+    {programs.map((program, index) => (
       <article class="bg-bg grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-10 items-stretch">
 
         {/* Image side — md:col-span-7, alternates left/right */}
@@ -93,8 +101,9 @@ import siteData from "@/data/site.json";
           ]}
         >
           <p class="font-mono text-sm text-accent tracking-wide uppercase md:hidden">
-            {String(index + 1).padStart(2, "0")} · Field Log
+            {String(index + 1).padStart(2, "0")} · Field Log{program.shpeYear != null && <span class="text-ink-muted"> · {formatShpeYear(program.shpeYear)}</span>}
           </p>
+          {program.shpeYear != null && <p class="mono-label max-md:hidden">{formatShpeYear(program.shpeYear)}</p>}
           <h3 class="display text-2xl md:text-3xl text-ink">{program.name}</h3>
           <p class="text-sm leading-relaxed text-ink-muted">{program.description}</p>
         </div>

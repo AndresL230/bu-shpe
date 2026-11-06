@@ -3,13 +3,20 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import ContactModal from "@/components/ContactModal.astro";
 import Icon from "@/components/Icon.astro";
-import type { Sponsor } from "@/types";
 import supportData from "@/data/support.json";
-import sponsorsData from "@/data/sponsors.json";
 import siteData from "@/data/site.json";
+import type { PartnerRecord } from "@/lib/server/content";
+import { currentShpeYear, formatShpeYear } from "@/lib/shpe-year";
 
-const sponsors = sponsorsData as Sponsor[];
-const corporate = sponsors.filter((s) => !s.name.startsWith("BU "));
+interface Props {
+  /** The public SHPE year's partners (D1, newest year with any). */
+  partners: PartnerRecord[];
+}
+
+const { partners } = Astro.props;
+const corporate = partners.filter((s) => !s.name.startsWith("BU "));
+// Which SHPE year these partners are ("26-27"); all rows share one year.
+const partnerYear = partners[0] ? formatShpeYear(partners[0].shpeYear) : "";
 
 const partnerBenefits = supportData.partnerBenefits as string[];
 
@@ -58,7 +65,7 @@ const benefitTiles = [
 <!-- HERO -->
 <header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
   <div class="max-w-[1152px] mx-auto relative z-10">
-    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">BU SHPE · Corporate · 2026</p>
+    <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">BU SHPE · Corporate · {formatShpeYear(currentShpeYear())}</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       <em class="font-serif italic font-normal lowercase tracking-normal text-accent">Partner</em> with <span class="whitespace-nowrap">BU SHPE.</span>
     </h1>
@@ -173,8 +180,13 @@ const benefitTiles = [
 
 <!-- 04 — OUR PARTNERS -->
 <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
-  <SectionIndex index="04" label="Our partners" />
-  <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Thank you to our partners.</h2>
+  <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+    <div>
+      <SectionIndex index="04" label="Our partners" />
+      <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Thank you to our partners.</h2>
+    </div>
+    {partnerYear && <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted">{partnerYear} partners</p>}
+  </div>
   <p class="mt-4 max-w-2xl font-serif text-lg italic text-ink-muted">
     With continued support from the BU College of Engineering and the Student Activities Office.
   </p>

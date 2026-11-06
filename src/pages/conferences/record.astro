@@ -6,10 +6,15 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import DossierEntry from "@/components/conferences/DossierEntry.astro";
 import Scorecard from "@/components/conferences/Scorecard.astro";
 import TrophyStats from "@/components/conferences/TrophyStats.astro";
-import conferencesData from "@/data/conferences.json";
-import type { Conference } from "@/types";
+import { PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listConventionRecords } from "@/lib/server/content";
 
-const delegations = [...(conferencesData as Conference[])].sort((a, b) => b.year - a.year);
+// The delegation log lives in D1 (edited at /admin/conventions), so this page renders per request.
+export const prerender = false;
+
+// Newest first.
+const delegations = await listConventionRecords(Astro.locals.runtime.env.DB).catch(() => []);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 
 const howto = [
   { t: "Sign up", d: "Registration opens through the SHPE convention portal; the chapter posts deadlines on the mailing list." },

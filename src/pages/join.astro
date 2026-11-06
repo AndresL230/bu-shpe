@@ -2,9 +2,17 @@
 import Base from "@/layouts/Base.astro";
 import JoinClassic from "@/components/variants/JoinClassic.astro";
 import JoinDossier from "@/components/variants/JoinDossier.astro";
+import { PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listEmployerGroups } from "@/lib/server/content";
+
+// Employers live in D1 (edited at /admin/employers), so this page renders per request.
+export const prerender = false;
+
+const employerGroups = await listEmployerGroups(Astro.locals.runtime.env.DB).catch(() => []);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base title="Join Us">
   <div data-variant-block="classic"><JoinClassic /></div>
-  <div data-variant-block="dossier"><JoinDossier /></div>
+  <div data-variant-block="dossier"><JoinDossier employerGroups={employerGroups} /></div>
 </Base>

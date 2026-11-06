@@ -3,15 +3,22 @@ import Base from "@/layouts/Base.astro";
 import HomeClassic from "@/components/variants/HomeClassic.astro";
 import HomeDossier from "@/components/variants/HomeDossier.astro";
 import { listPublishedEventsInCreationOrder, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listEmployerGroups, listPublicPartners } from "@/lib/server/content";
 
-// Rendered on demand from D1 so newly published events appear without a rebuild.
+// Rendered on demand from D1 so newly published events, partners and
+// employers appear without a rebuild.
 export const prerender = false;
 
-const events = await listPublishedEventsInCreationOrder(Astro.locals.runtime.env.DB);
+const db = Astro.locals.runtime.env.DB;
+const [events, partners, employerGroups] = await Promise.all([
+  listPublishedEventsInCreationOrder(db),
+  listPublicPartners(db).catch(() => []),
+  listEmployerGroups(db).catch(() => []),
+]);
 Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base title="Home">
   <div data-variant-block="classic"><HomeClassic events={events} /></div>
-  <div data-variant-block="dossier"><HomeDossier events={events} /></div>
+  <div data-variant-block="dossier"><HomeDossier events={events} partners={partners} employerGroups={employerGroups} /></div>
 </Base>

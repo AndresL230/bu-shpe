@@ -3,10 +3,17 @@ import AdminLayout from "@/layouts/AdminLayout.astro";
 import { listAllEvents } from "@/lib/server/events";
 import { flashMessage } from "@/lib/server/event-form";
 import { formatEventDate, isUpcoming } from "@/lib/events";
+import { formatShpeYear, parseShpeYear, shpeYearOf } from "@/lib/shpe-year";
 
 export const prerender = false;
 
-const all = await listAllEvents(Astro.locals.runtime.env.DB);
+const everything = await listAllEvents(Astro.locals.runtime.env.DB);
+
+// SHPE year filter (?year=2026). Date-TBA events count as the current year.
+const years = [...new Set(everything.map((e) => shpeYearOf(e.date)))].sort((a, b) => b - a);
+const yearParam = parseShpeYear(Astro.url.searchParams.get("year"));
+const year = yearParam !== null && years.includes(yearParam) ? yearParam : null;
+const all = year === null ? everything : everything.filter((e) => shpeYearOf(e.date) === year);
 
 const views = [
   { key: "all", label: "All" },
@@ -30,6 +37,13 @@ if (view === "upcoming") rows = all.filter((e) => e.published && isUpcoming(e.da
 if (view === "past") rows = all.filter((e) => e.published && !isUpcoming(e.date));
 if (view === "drafts") rows = all.filter((e) => !e.published);
 
+const href = (v: View, y: number | null) => {
+  const q = new URLSearchParams();
+  if (v !== "all") q.set("view", v);
+  if (y !== null) q.set("year", String(y));
+  return q.size ? `/admin/events?${q}` : "/admin/events";
+};
+
 const ok = flashMessage(Astro.url.searchParams.get("ok"));
 const error = flashMessage(Astro.url.searchParams.get("error"));
 ---
@@ -39,13 +53,23 @@ const error = flashMessage(Astro.url.searchParams.get("error"));
   {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
   {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
 
-  <nav class="adm-segment mb-6" aria-label="Filter events">
-    {views.map((v) => (
-      <a href={v.key === "all" ? "/admin/events" : `/admin/events?view=${v.key}`} aria-current={v.key === view ? "page" : undefined}>
-        {v.label} <span class="opacity-60">{counts[v.key]}</span>
-      </a>
-    ))}
-  </nav>
+  <div class="mb-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+    <nav class="adm-segment" aria-label="Filter events">
+      {views.map((v) => (
+        <a href={href(v.key, year)} aria-current={v.key === view ? "page" : undefined}>
+          {v.label} <span class="opacity-60">{counts[v.key]}</span>
+        </a>
+      ))}
+    </nav>
+    {years.length > 1 && (
+      <nav class="adm-segment" aria-label="SHPE year">
+        <a href={href(view, null)} aria-current={year === null ? "page" : undefined}>All years</a>
+        {years.map((y) => (
+          <a href={href(view, y)} aria-current={y === year ? "page" : undefined}>{formatShpeYear(y)}</a>
+        ))}
+      </nav>
+    )}
+  </div>
 
   {rows.length === 0 ? (
     <div class="adm-panel">
@@ -58,6 +82,7 @@ const error = flashMessage(Astro.url.searchParams.get("error"));
         <thead>
           <tr>
             <th>Date</th>
+            <th>Year</th>
             <th>Title</th>
             <th>Category</th>
             <th>Status</th>
@@ -73,6 +98,7 @@ const error = flashMessage(Astro.url.searchParams.get("error"));
                 <td data-label="Date" class="whitespace-nowrap font-mono text-xs text-ink-muted">
                   {formatEventDate(e.date, { withDay: true })}
                 </td>
+                <td data-label="SHPE year" class="whitespace-nowrap font-mono text-xs text-ink-muted">{formatShpeYear(shpeYearOf(e.date))}</td>
                 <td data-label="">
                   <a href={`/admin/events/${e.id}`} class="font-semibold text-ink hover:text-accent">{e.title}</a>
                   {e.location && <span class="block text-xs text-ink-muted">{e.location}</span>}

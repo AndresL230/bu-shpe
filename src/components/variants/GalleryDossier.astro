@@ -3,23 +3,32 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import PhotoViewer from "@/components/PhotoViewer.astro";
 
-import volunteeringData from "@/data/volunteering.json";
-import conferencesData from "@/data/conferences.json";
 import siteData from "@/data/site.json";
 import type { EventPhoto, EventRecord } from "@/lib/server/events";
+import type { ConventionRecord, VolunteeringRecord } from "@/lib/server/content";
+import { formatShpeYear, shpeYearOf } from "@/lib/shpe-year";
 
 interface Props {
   events: EventRecord[];
   /** Extra photos per event id (event_photos), shown after each event's cover. */
   extraPhotos?: Map<number, EventPhoto[]>;
+  /** Convention delegation record (D1), newest first. */
+  conventions: ConventionRecord[];
+  /** Volunteering programs (D1), in display order. */
+  programs: VolunteeringRecord[];
 }
 
-// A convention photo can be both an event cover and a conferences.json photo;
+const { conventions, programs } = Astro.props;
+
+// A convention photo can be both an event cover and a convention-record photo;
 // show it once, filed under Conferences.
-const conferenceSrcs = new Set(conferencesData.flatMap((c) => c.photos));
+const conferenceSrcs = new Set(conventions.flatMap((c) => c.photos));
 const seenSrcs = new Set<string>();
-// `year` files each frame under a year header: the event's date, or the
-// convention year. Volunteering programs carry no date, so they file as "".
+// `year` files each frame under a SHPE year (Aug–Jul), keyed by its start year
+// ("2026" -> header "26-27"): the event's date; the convention year (the
+// convention runs in the fall, so it opens that SHPE year); a volunteering
+// program's SHPE year. Programs without one file as "" (Undated).
+const eventYear = (date: string) => String(shpeYearOf(date));
 const allPhotos = [
   // Events without a photo have nothing to show in the grid. Newest event
   // first (props arrive in creation order); ties keep creation order.
@@ -27,13 +36,13 @@ const allPhotos = [
     .filter((e) => e.photo)
     .sort((a, b) => b.date.localeCompare(a.date))
     .flatMap((e) => [
-      { src: e.photo, alt: e.title, group: "Events", year: e.date.slice(0, 4) || String(new Date().getFullYear()) },
-      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events", year: e.date.slice(0, 4) || String(new Date().getFullYear()) })),
+      { src: e.photo, alt: e.title, group: "Events", year: eventYear(e.date) },
+      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events", year: eventYear(e.date) })),
     ]),
-  ...volunteeringData.flatMap((v) =>
-    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering", year: "" }))
+  ...programs.flatMap((v) =>
+    v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering", year: v.shpeYear != null ? String(v.shpeYear) : "" }))
   ),
-  ...conferencesData.flatMap((c) =>
+  ...conventions.flatMap((c) =>
     c.photos.map((src) => ({
       src,
       alt: `${c.region ?? "Conference"} ${c.year} — ${c.city}`,
@@ -49,8 +58,9 @@ const allPhotos = [
 });
 type Frame = (typeof allPhotos)[number];
 
-// Year groups, newest first; undated frames close the archive. Within a year,
-// frames keep the order above (events newest-first, then conventions).
+// SHPE-year groups, newest first; undated frames close the archive. Within a
+// year, frames keep the order above (events newest-first, then volunteering,
+// then conventions).
 const years = [...new Set(allPhotos.map((p) => p.year))].sort((a, b) =>
   !a ? 1 : !b ? -1 : b.localeCompare(a)
 );
@@ -85,7 +95,7 @@ const indexOf = new Map([...head, ...tail].flatMap((b) => b.photos).map((p, i) =
 const continuation = new Map(tail.filter((b) => b.continued).map((b) => [b.year, b.photos]));
 const restTail = tail.filter((b) => !b.continued);
 
-const yearLabel = (y: string) => y || "Undated";
+const yearLabel = (y: string) => (y ? formatShpeYear(Number(y)) : "Undated");
 const frameLabel = (n: number) => `${n} ${n === 1 ? "frame" : "frames"}`;
 const blockCls = "mt-12 first:mt-0 md:mt-16";
 // md+: the year header pins under the fixed 72px nav while its frames scroll.

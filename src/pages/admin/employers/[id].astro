@@ -1,0 +1,25 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EmployerForm from "@/components/admin/EmployerForm.astro";
+import { getEmployer, listIndustries } from "@/lib/server/content";
+import { employerMessage } from "@/lib/server/employer-form";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const id = Number(Astro.params.id);
+const employer = Number.isInteger(id) && id > 0 ? await getEmployer(db, id) : null;
+if (!employer) return Astro.redirect("/admin/employers?error=not_found", 303);
+const industries = await listIndustries(db);
+
+const ok = employerMessage(Astro.url.searchParams.get("ok"));
+const error = employerMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title={employer.name} eyebrow={`04 — Employers / ${employer.industry}`} section="employers">
+  <a slot="actions" href={`/admin/employers#e${employer.id}`} class="btn-dossier-ghost">← Employers</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <EmployerForm action={`/api/admin/employers/${employer.id}`} employer={employer} industries={industries} submitLabel="Save" />
+</AdminLayout>

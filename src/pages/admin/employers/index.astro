@@ -1,0 +1,100 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import EmployerForm from "@/components/admin/EmployerForm.astro";
+import { listEmployers, type EmployerRecord } from "@/lib/server/content";
+import { employerMessage } from "@/lib/server/employer-form";
+
+export const prerender = false;
+
+const db = Astro.locals.runtime.env.DB;
+const employers = await listEmployers(db);
+
+// Same grouping as the public site: industries in order of their first company.
+const groups: { industry: string; companies: EmployerRecord[] }[] = [];
+for (const e of employers) {
+  let g = groups.find((x) => x.industry === e.industry);
+  if (!g) groups.push((g = { industry: e.industry, companies: [] }));
+  g.companies.push(e);
+}
+const industries = groups.map((g) => g.industry);
+
+const ok = employerMessage(Astro.url.searchParams.get("ok"));
+const error = employerMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="Employers" accent="by industry" eyebrow="04 — Employers" section="employers">
+  <a slot="actions" href="/careers" class="btn-dossier-ghost" target="_blank" rel="noopener">View page ↗</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div class="grid min-w-0 content-start gap-12">
+      {groups.length === 0 && (
+        <div class="adm-panel">
+          <p class="mono-label mb-2">Empty</p>
+          <p class="text-ink-muted">No companies yet. Add the first one on the right.</p>
+        </div>
+      )}
+      {groups.map((g) => (
+        <section aria-labelledby={`ind-${industries.indexOf(g.industry)}`}>
+          <div class="mb-3 flex items-baseline justify-between gap-4">
+            <h2 id={`ind-${industries.indexOf(g.industry)}`} class="display text-2xl text-ink">{g.industry}</h2>
+            <span class="mono-label">{g.companies.length} {g.companies.length === 1 ? "company" : "companies"}</span>
+          </div>
+          <table class="adm-table adm-table--stack">
+            <thead>
+              <tr>
+                <th class="w-28"></th>
+                <th>Company</th>
+                <th class="w-40">Logo</th>
+                <th class="w-56 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {g.companies.map((e, i) => (
+                <tr id={`e${e.id}`} class="scroll-mt-6">
+                  <td data-label="" class="max-sm:hidden!">
+                    <span class="flex h-12 w-24 items-center justify-center border border-hairline bg-surface p-1.5">
+                      {e.logo ? <img src={e.logo} alt="" class="max-h-full max-w-full object-contain" loading="lazy" /> : <span class="mono-label text-[0.6rem]">Auto</span>}
+                    </span>
+                  </td>
+                  <td data-label="">
+                    <span>
+                      <a href={`/admin/employers/${e.id}`} class="font-semibold text-ink hover:text-accent">{e.name}</a>
+                      {e.domain && <span class="block font-mono text-xs text-ink-muted">{e.domain}</span>}
+                    </span>
+                  </td>
+                  <td data-label="Logo">
+                    {e.logo
+                      ? <span class="adm-badge adm-badge--live">Uploaded</span>
+                      : e.domain
+                        ? <span class="adm-badge adm-badge--muted">From domain</span>
+                        : <span class="adm-badge adm-badge--alert">None</span>}
+                  </td>
+                  <td data-label="" class="adm-cell-actions whitespace-nowrap text-right">
+                    <form method="post" action={`/api/admin/employers/${e.id}`} class="inline">
+                      <button name="action" value="up" class="adm-link px-1 disabled:opacity-25" disabled={i === 0} aria-label={`Move ${e.name} up`}>↑</button>
+                      <button name="action" value="down" class="adm-link px-1 disabled:opacity-25" disabled={i === g.companies.length - 1} aria-label={`Move ${e.name} down`}>↓</button>
+                    </form>
+                    <a href={`/admin/employers/${e.id}`} class="adm-link ml-3">Edit</a>
+                    <details class="adm-confirm ml-3 inline-block">
+                      <summary class="adm-link adm-link--danger">Remove</summary>
+                      <form method="post" action={`/api/admin/employers/${e.id}`} class="adm-confirm__panel adm-confirm__panel--sm grid gap-3">
+                        <p class="text-sm text-ink">Remove {e.name}?</p>
+                        <button name="action" value="delete" class="btn-danger justify-self-start px-3 py-1.5 text-[0.65rem]">Yes, remove</button>
+                      </form>
+                    </details>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ))}
+    </div>
+
+    <div class="adm-panel content-start lg:self-start">
+      <EmployerForm action="/api/admin/employers" industries={industries} submitLabel="Add company" compact />
+    </div>
+  </div>
+</AdminLayout>
