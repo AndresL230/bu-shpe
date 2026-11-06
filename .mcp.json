@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "bu-shpe-events": {
+      "command": "node",
+      "args": ["tools/events-mcp/server.mjs"],
+      "env": { "BU_SHPE_TARGET": "remote" }
+    }
+  }
+}
