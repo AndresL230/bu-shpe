@@ -2,16 +2,20 @@
 /**
  * /careers — "Where we work". Dossier showcase of the companies BU SHPE
  * members and alumni have gone on to, grouped by industry. Content comes
- * from src/data/employers.json (also feeds the home + /join marquees).
+ * from D1 (`employers`, edited at /admin/employers; also feeds the home +
+ * /join marquees and /support), so the page renders per request.
  */
 import Base from "@/layouts/Base.astro";
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
-import employersData from "@/data/employers.json";
 import EmployerCell from "@/components/EmployerCell.astro";
-import type { EmployerGroup } from "@/types";
+import { PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listEmployerGroups } from "@/lib/server/content";
 
-const groups = employersData as EmployerGroup[];
+export const prerender = false;
+
+const groups = await listEmployerGroups(Astro.locals.runtime.env.DB).catch(() => []);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
 ---
 <Base

@@ -5,9 +5,13 @@ import SocialLinks from "@/components/SocialLinks.astro";
 import MailingListForm from "@/components/MailingListForm.astro";
 import LogoMarquee from "@/components/LogoMarquee.astro";
 import Icon from "@/components/Icon.astro";
-import employersData from "@/data/employers.json";
-
 import siteData from "@/data/site.json";
+import type { EmployerGroup } from "@/types";
+
+interface Props {
+  /** Where members work, by industry (D1) — feeds the logo marquee. */
+  employerGroups: EmployerGroup[];
+}
 
 const steps = [
   {
@@ -52,7 +56,7 @@ const steps = [
 <!-- WHERE MEMBERS WORK — the payoff, shown before the ask -->
 <!-- Phones: hidden so the hero leads straight into the steps + form -->
 <div class="max-md:hidden">
-  <LogoMarquee items={employersData.flatMap((g) => g.companies)} label="Where our members work" href="/careers" linkText="See where we work" />
+  <LogoMarquee items={Astro.props.employerGroups.flatMap((g) => g.companies)} label="Where our members work" href="/careers" linkText="See where we work" />
 </div>
 
 <!-- 01 — INTAKE -->

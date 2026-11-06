@@ -2,6 +2,14 @@
 import Base from "@/layouts/Base.astro";
 import SupportClassic from "@/components/variants/SupportClassic.astro";
 import SupportDossier from "@/components/variants/SupportDossier.astro";
+import { PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listEmployerGroups } from "@/lib/server/content";
+
+// Employers live in D1 (edited at /admin/employers), so this page renders per request.
+export const prerender = false;
+
+const employerGroups = await listEmployerGroups(Astro.locals.runtime.env.DB).catch(() => []);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base
@@ -9,5 +17,5 @@ import SupportDossier from "@/components/variants/SupportDossier.astro";
   description="The companies, alumni, faculty, and friends who invest in Hispanic engineers at Boston University, and where SHPE takes its members."
 >
   <div data-variant-block="classic"><SupportClassic /></div>
-  <div data-variant-block="dossier"><SupportDossier /></div>
+  <div data-variant-block="dossier"><SupportDossier employerGroups={employerGroups} /></div>
 </Base>

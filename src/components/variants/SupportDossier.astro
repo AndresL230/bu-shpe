@@ -6,11 +6,15 @@ import EmployerCell from "@/components/EmployerCell.astro";
 import Icon from "@/components/Icon.astro";
 import supportData from "@/data/support.json";
 import siteData from "@/data/site.json";
-import employersData from "@/data/employers.json";
 import type { EmployerGroup } from "@/types";
 
+interface Props {
+  /** "Where SHPE takes us" employers by industry (D1). */
+  employerGroups: EmployerGroup[];
+}
+
 const stats = supportData.stats;
-const groups = employersData as EmployerGroup[];
+const groups = Astro.props.employerGroups;
 
 interface PathRow {
   number: string;

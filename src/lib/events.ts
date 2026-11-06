@@ -1,3 +1,5 @@
+import { formatShpeYear, shpeYearOf } from "@/lib/shpe-year";
+
 /**
  * Kebab-case slug derived from an event title.
  * "Resume Review with GE" -> "resume-review-with-ge"
@@ -53,15 +55,13 @@ export function formatEventStamp(date: string, opts: { withYear?: boolean } = {}
 }
 
 /**
- * Academic year (August–July) an event falls in, e.g. "2025-10" -> "2025–26",
- * "2026-03" -> "2025–26". `start` is the August calendar year, for sorting.
+ * SHPE (academic) year, August–July, an event falls in, e.g. "2025-10" ->
+ * "25-26", "2026-03" -> "25-26". `start` is the August calendar year, for
+ * sorting. An empty date ("Date TBA") counts as the current SHPE year.
  */
 export function academicYear(date: string): { start: number; label: string } {
-  if (!date) date = new Date().toISOString().slice(0, 7);
-  const y = parseInt(date.slice(0, 4), 10);
-  const m = parseInt(date.slice(5, 7), 10);
-  const start = m >= 8 ? y : y - 1;
-  return { start, label: `${start}–${String((start + 1) % 100).padStart(2, "0")}` };
+  const start = shpeYearOf(date);
+  return { start, label: formatShpeYear(start) };
 }
 
 /**

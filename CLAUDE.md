@@ -4,7 +4,7 @@ Project context for Claude Code sessions working on this repo. Read once at sess
 
 ## What this is
 
-Editorial-style marketing site for **Boston University's SHPE chapter**. Astro 5 static site, Tailwind v4, TypeScript strict, deployed to **Cloudflare Workers static assets** (Git-connected). Every page is a `.astro` file that composes shared components and pulls content from `src/data/*.json` — except **events, subscribers and campaigns, which live in Cloudflare D1** and are edited from the hidden `/admin` portal. Pages prerender by default; event pages, `/admin`, `/api`, `/media`, `/subscribed`, `/unsubscribe` opt out with `export const prerender = false` and run on the Worker (`@astrojs/cloudflare` adapter). No React island, no client-side framework.
+Editorial-style marketing site for **Boston University's SHPE chapter**. Astro 5 static site, Tailwind v4, TypeScript strict, deployed to **Cloudflare Workers static assets** (Git-connected). Every page is a `.astro` file that composes shared components and pulls content from either `src/data/*.json` (static copy and settings) or **Cloudflare D1** (events, e-board, partners, employers, convention records, volunteering programs, subscribers, campaigns), which is edited from the hidden `/admin` portal or the `bu-shpe-events` MCP. Pages prerender by default; event pages, `/admin`, `/api`, `/media`, `/subscribed`, `/unsubscribe` opt out with `export const prerender = false` and run on the Worker (`@astrojs/cloudflare` adapter). No React island, no client-side framework.
 
 User: chapter member (`andreslopez.23061@gmail.com`). Tone is editorial / magazine, not corporate / SaaS.
 
@@ -24,12 +24,13 @@ Git-connected **Cloudflare Workers static assets** (Worker name `bu-shpe`). Push
 
 ## Admin portal + data (D1 / R2 / Resend)
 
-- **D1** `bu-shpe-db` (binding `DB`), schema in `migrations/`. Apply with `npx wrangler d1 migrations apply bu-shpe-db --local` (dev) / `--remote` (prod, before deploying schema changes). Tables: `events`, `admins` (allowlist, role owner|editor), `sessions`, `subscribers`, `campaigns`.
+- **D1** `bu-shpe-db` (binding `DB`), schema in `migrations/`. Apply with `npx wrangler d1 migrations apply bu-shpe-db --local` (dev) / `--remote` (prod, before deploying schema changes). Tables: `events` (+ `event_photos`), `board_members`, `partners` (one row per company per SHPE year), `employers`, `convention_records`, `volunteering_programs`, `admins` (allowlist, role owner|editor), `sessions`, `subscribers`, `campaigns`. Data access in `src/lib/server/events.ts`, `board.ts`, `content.ts`.
+- **SHPE years** run Aug–Jul, are stored as the start year (2026) and shown as **"26-27"** — always go through `src/lib/shpe-year.ts` (`formatShpeYear`, `parseShpeYear`, `shpeYearOf`). Board terms are stored "2026–2027" but displayed "26-27".
 - **R2** `bu-shpe-media` (binding `MEDIA`) holds uploaded event photos, served at `/media/events/...`. Legacy photos stay under `/assets/events/`.
 - **Auth:** Google OAuth popup — `/admin` → `/api/auth/google` → `/admin/callback`. `src/middleware.ts` gates `/admin/*` + `/api/admin/*` and does the CSRF same-origin check for all writes (Astro's `checkOrigin` is off on purpose so RFC 8058 one-click unsubscribe works; `/api/unsubscribe` is the only exempt write).
 - **Email:** Resend via `fetch` (`src/lib/server/email.ts`), from `EMAIL_FROM` on `bushpe.org`. Batches of 100, run in `waitUntil`.
 - **Secrets** (`.dev.vars` locally, `wrangler secret put` in prod): `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`. See `.dev.vars.example`.
-- **Events MCP** (`tools/events-mcp/server.mjs`, registered in `.mcp.json` as `bu-shpe-events`): tools `list_events`, `get_event`, `create_event`, `update_event`, `add_event_photos`, `delete_event` against **production** D1/R2 via the user's `wrangler login`. Set `BU_SHPE_TARGET=local` to point it at the dev DB. It mirrors the admin portal's rules (slug collisions get -2, date `""` = TBA, uploads under `events/<yyyy>/`); keep the two in sync when event rules change.
+- **Content MCP** (`tools/events-mcp/server.mjs`, registered in `.mcp.json` as `bu-shpe-events`): events (`list_events`, `get_event`, `create_event`, `update_event`, `add_event_photos`, `delete_event`), partners (`list_/add_/update_/delete_partner`, `copy_partner_year`), employers, conventions and volunteering (`list_/add_/update_/delete_*`), against **production** D1/R2 via the user's `wrangler login`. Images are deleted from R2 only when no table references them. Set `BU_SHPE_TARGET=local` to point it at the dev DB. It mirrors the admin portal's rules (slug collisions get -2, date `""` = TBA, uploads under `events/<yyyy>/`); keep the two in sync when event rules change.
 - Server-only code lives in `src/lib/server/`. Admin pages use `AdminLayout.astro` + `src/styles/admin.css` (`adm-*` classes) — keep new admin UI on those.
 
 ## File map
@@ -109,7 +110,7 @@ Use as Tailwind classes: `bg-deep`, `text-ink-muted`, `border-rule`, etc.
 
 ## Architecture conventions
 
-- **JSON is the source of truth** (except events/subscribers/campaigns → D1). Roster, sponsors, conferences, volunteering programs, contact emails, social URLs — all in `src/data/*.json`. Never hardcode chapter content inside `.astro` files. If something needs to be editable by a non-developer, add a token or field.
+- **Chapter records live in D1; copy and settings live in JSON.** Events, e-board, partners, employers, convention records and volunteering programs come from D1 (pages that read them set `prerender = false`). Contact emails, social URLs, convention logistics, governance, legal copy and similar stay in `src/data/*.json`; the hidden `*Classic` variants still read the old JSON copies of the D1 data. Never hardcode chapter content inside `.astro` files. If something needs to be editable by a non-developer, add a token or field.
 - **No inline hex colors.** Every color goes through a `@theme` token. Adding a new hue = add it to `global.css` first.
 - **No JavaScript unless strictly necessary.** Static HTML by default. Existing inline `<script>` blocks: gallery lightbox (`Gallery.astro`), scroll-reveal toggle (none — pure CSS). That's it. Don't add a framework.
 - **Editorial spacing rhythm.** Sections are `py-24` to `py-32`. Container width `max-w-[1200px]`. Paragraph copy capped at `max-w-3xl`.

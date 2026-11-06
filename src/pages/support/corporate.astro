@@ -2,6 +2,14 @@
 import Base from "@/layouts/Base.astro";
 import CorporateClassic from "@/components/variants/CorporateClassic.astro";
 import CorporateDossier from "@/components/variants/CorporateDossier.astro";
+import { PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listPublicPartners } from "@/lib/server/content";
+
+// Partners live in D1 (edited at /admin/partners), so this page renders per request.
+export const prerender = false;
+
+const partners = await listPublicPartners(Astro.locals.runtime.env.DB).catch(() => []);
+Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base
@@ -9,5 +17,5 @@ import CorporateDossier from "@/components/variants/CorporateDossier.astro";
   description="Partner with BU SHPE to reach Hispanic engineers, scientists, and technologists at one of the nation's top engineering schools."
 >
   <div data-variant-block="classic"><CorporateClassic /></div>
-  <div data-variant-block="dossier"><CorporateDossier /></div>
+  <div data-variant-block="dossier"><CorporateDossier partners={partners} /></div>
 </Base>

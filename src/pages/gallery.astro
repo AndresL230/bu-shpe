@@ -3,19 +3,22 @@ import Base from "@/layouts/Base.astro";
 import GalleryClassic from "@/components/variants/GalleryClassic.astro";
 import GalleryDossier from "@/components/variants/GalleryDossier.astro";
 import { listPublishedEventPhotos, listPublishedEventsInCreationOrder, PUBLIC_EVENTS_CACHE_CONTROL } from "@/lib/server/events";
+import { listConventionRecords, listVolunteering } from "@/lib/server/content";
 
 // Rendered on demand from D1 so newly published events appear without a rebuild.
 export const prerender = false;
 
 const db = Astro.locals.runtime.env.DB;
-const [events, extraPhotos] = await Promise.all([
+const [events, extraPhotos, conventions, programs] = await Promise.all([
   listPublishedEventsInCreationOrder(db),
   listPublishedEventPhotos(db),
+  listConventionRecords(db).catch(() => []),
+  listVolunteering(db).catch(() => []),
 ]);
 Astro.response.headers.set("Cache-Control", PUBLIC_EVENTS_CACHE_CONTROL);
 ---
 
 <Base title="Gallery">
   <div data-variant-block="classic"><GalleryClassic events={events} /></div>
-  <div data-variant-block="dossier"><GalleryDossier events={events} extraPhotos={extraPhotos} /></div>
+  <div data-variant-block="dossier"><GalleryDossier events={events} extraPhotos={extraPhotos} conventions={conventions} programs={programs} /></div>
 </Base>

@@ -7,20 +7,22 @@ import EventCard from "@/components/EventCard.astro";
 import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
-import sponsorsRaw from "@/data/sponsors.json";
-
-import type { Sponsor } from "@/types";
+import type { EmployerGroup, Sponsor } from "@/types";
 import type { EventRecord } from "@/lib/server/events";
 import { eventSortKey, formatEventStamp } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
+  /** This SHPE year's partners & sponsors (D1, newest year). */
+  partners: Sponsor[];
+  /** "Where we work" employers by industry (D1). */
+  employerGroups: EmployerGroup[];
 }
 
 const events = [...Astro.props.events].sort((a, b) => eventSortKey(b.date).localeCompare(eventSortKey(a.date)));
 const recentEvents = events.slice(0, 3);
 
-const sponsors = sponsorsRaw as Sponsor[];
+const sponsors = Astro.props.partners;
 
 const pillars = [
   {
@@ -199,7 +201,7 @@ const pillars = [
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 04 — WHERE WE WORK -->
-<EmployerSpread />
+<EmployerSpread groups={Astro.props.employerGroups} />
 
 <!-- CTA -->
 <CtaBand
