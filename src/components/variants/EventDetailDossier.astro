@@ -6,6 +6,7 @@ import Gallery from "@/components/Gallery.astro";
 import siteData from "@/data/site.json";
 
 import type { EventItem } from "@/types";
+import { linkRuns } from "@/lib/events";
 
 interface Props {
   event: EventItem;
@@ -88,7 +89,11 @@ const metaLine = [displayDate, event.location, event.category].filter(Boolean);
 
       <div class:list={[!event.photo && "max-w-2xl"]}>
         {paragraphs.map((p) => (
-          <p class="text-lg text-ink-muted leading-relaxed mb-6 last:mb-0">{p}</p>
+          <p class="text-lg text-ink-muted leading-relaxed mb-6 last:mb-0">
+            {linkRuns(p).map((r) => r.href ? (
+              <a href={r.href} target="_blank" rel="noopener" class="text-ink underline decoration-accent underline-offset-4 hover:text-accent transition-colors">{r.text}</a>
+            ) : r.text)}
+          </p>
         ))}
       </div>
 

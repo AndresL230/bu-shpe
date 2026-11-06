@@ -71,7 +71,7 @@ const published = event ? event.published : true;
     <div>
       <label class="adm-label" for="ev-body">Long copy <span class="normal-case tracking-normal">(optional)</span></label>
       <textarea id="ev-body" name="body" class="adm-textarea min-h-[16rem]" maxlength="20000">{event?.body ?? ""}</textarea>
-      <p class="adm-hint">For the event's own page. Separate paragraphs with a blank line. Left empty, the page uses the card description.</p>
+      <p class="adm-hint">For the event's own page. Separate paragraphs with a blank line. Links: paste a URL, or write [link text](https://…). Left empty, the page uses the card description.</p>
     </div>
   </div>
 
