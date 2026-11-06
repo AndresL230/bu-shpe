@@ -42,12 +42,20 @@ const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 
 async function wrangler(args) {
   const env = { ...process.env, CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID ?? "0bda3a2560ca48711ef7336cc421abed", CI: "1" };
-  try {
-    const { stdout } = await run(WRANGLER, args, { cwd: ROOT, env, maxBuffer: 32 * 1024 * 1024 });
-    return stdout;
-  } catch (err) {
-    const msg = (err.stderr || err.stdout || err.message || "").toString().trim();
-    throw new Error(`wrangler ${args.slice(0, 3).join(" ")} failed: ${msg.slice(-1500)}`);
+  // Cloudflare's API intermittently rejects a valid login with code 7403;
+  // that happens before the query runs, so retrying is safe.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const { stdout } = await run(WRANGLER, args, { cwd: ROOT, env, maxBuffer: 32 * 1024 * 1024 });
+      return stdout;
+    } catch (err) {
+      const msg = (err.stderr || err.stdout || err.message || "").toString().trim();
+      if (attempt < 3 && /code: 7403|"code": 7403/.test(msg)) {
+        await new Promise((r) => setTimeout(r, 800 * attempt));
+        continue;
+      }
+      throw new Error(`wrangler ${args.slice(0, 3).join(" ")} failed: ${msg.slice(-1500)}`);
+    }
   }
 }
 
@@ -225,7 +233,7 @@ tool(
       date: dateArg,
       category: z.enum(CATEGORIES),
       description: z.string().min(1).max(600).describe("One or two sentences for event cards."),
-      body: z.string().max(20000).optional().describe("Longer copy for the event page; blank lines separate paragraphs."),
+      body: z.string().max(20000).optional().describe("Longer copy for the event page; blank lines separate paragraphs. Links: [link text](https://...) or a bare URL."),
       location: z.string().max(160).optional(),
       photo: photoArg.optional(),
       published: z.boolean().default(true).describe("false saves a hidden draft."),
