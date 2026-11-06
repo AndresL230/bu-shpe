@@ -166,10 +166,11 @@ const mosaicFocus = ["md:object-[center_65%]", "", "", "", "", ""];
           {restUpcoming.map((event) => (
             <a
               href={`/events/${event.slug}`}
-              class="group flex items-stretch bg-bg transition-colors hover:bg-surface-soft"
+              class="group flex flex-col bg-bg transition-colors hover:bg-surface-soft sm:flex-row sm:items-stretch"
             >
+              <!-- Phones: full-width photo on top (a narrow thumb cropped logos and squeezed the copy); sm+: photo beside the copy -->
               {event.photo && (
-                <div class="relative w-28 shrink-0 overflow-hidden photo-warm bg-surface-soft sm:w-48">
+                <div class="relative aspect-[3/2] w-full shrink-0 overflow-hidden photo-warm bg-surface-soft sm:aspect-auto sm:w-48">
                   <img
                     src={event.photo}
                     alt={event.title}
