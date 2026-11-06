@@ -1,0 +1,68 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { listVolunteering } from "@/lib/server/content";
+import { volunteeringMessage } from "@/lib/server/volunteering-form";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+export const prerender = false;
+
+const programs = await listVolunteering(Astro.locals.runtime.env.DB);
+
+const ok = volunteeringMessage(Astro.url.searchParams.get("ok"));
+const error = volunteeringMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="Volunteering" accent="programs" eyebrow="06 — Volunteering" section="volunteering">
+  <Fragment slot="actions">
+    <a href="/volunteering" class="btn-dossier-ghost" target="_blank" rel="noopener">View page ↗</a>
+    <a href="/admin/volunteering/new" class="btn-dossier">+ New program</a>
+  </Fragment>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <p class="mb-8 max-w-2xl text-sm text-ink-muted">Shown on the volunteering page in this order. Use the arrows to reorder.</p>
+
+  {programs.length === 0 ? (
+    <div class="adm-panel">
+      <p class="mono-label mb-2">Empty</p>
+      <p class="text-ink-muted">No volunteering programs yet.</p>
+    </div>
+  ) : (
+    <table class="adm-table adm-table--stack">
+      <thead>
+        <tr>
+          <th class="w-20"></th>
+          <th>Program</th>
+          <th>SHPE year</th>
+          <th>Photos</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {programs.map((p, i) => (
+          <tr id={`v${p.id}`}>
+            <td data-label="" class="max-sm:hidden!">
+              {p.photos[0]
+                ? <img src={p.photos[0]} alt="" class="aspect-[4/3] w-16 bg-surface-soft object-cover" loading="lazy" />
+                : <span class="block aspect-[4/3] w-16 bg-surface-soft"></span>}
+            </td>
+            <td data-label="">
+              <a href={`/admin/volunteering/${p.id}`} class="font-semibold text-ink hover:text-accent">{p.name}</a>
+            </td>
+            <td data-label="SHPE year" class:list={["whitespace-nowrap font-mono text-xs", p.shpeYear == null ? "text-ink-muted" : "text-accent"]}>
+              {p.shpeYear == null ? "Ongoing" : formatShpeYear(p.shpeYear)}
+            </td>
+            <td data-label="Photos" class="font-mono text-xs text-ink-muted">{p.photos.length}</td>
+            <td data-label="" class="adm-cell-actions whitespace-nowrap text-right">
+              <form method="post" action={`/api/admin/volunteering/${p.id}`} class="inline">
+                <button name="action" value="up" class="adm-link px-1 disabled:opacity-25" disabled={i === 0} aria-label={`Move ${p.name} up`}>↑</button>
+                <button name="action" value="down" class="adm-link px-1 disabled:opacity-25" disabled={i === programs.length - 1} aria-label={`Move ${p.name} down`}>↓</button>
+              </form>
+              <a href={`/admin/volunteering/${p.id}`} class="adm-link ml-3">Edit</a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</AdminLayout>

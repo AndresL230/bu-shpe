@@ -1,0 +1,66 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { listConventionRecords } from "@/lib/server/content";
+import { conventionMessage } from "@/lib/server/convention-form";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+export const prerender = false;
+
+const records = await listConventionRecords(Astro.locals.runtime.env.DB);
+
+const ok = conventionMessage(Astro.url.searchParams.get("ok"));
+const error = conventionMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout title="Conventions" accent="record" eyebrow="05 — Conventions" section="conventions">
+  <Fragment slot="actions">
+    <a href="/conferences/record" class="btn-dossier-ghost" target="_blank" rel="noopener">View page ↗</a>
+    <a href="/admin/conventions/new" class="btn-dossier">+ New record</a>
+  </Fragment>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  <p class="mb-8 max-w-2xl text-sm text-ink-muted">One record per National Convention, newest first. Each shows on the delegation record page.</p>
+
+  {records.length === 0 ? (
+    <div class="adm-panel">
+      <p class="mono-label mb-2">Empty</p>
+      <p class="text-ink-muted">No convention records yet.</p>
+    </div>
+  ) : (
+    <table class="adm-table adm-table--stack">
+      <thead>
+        <tr>
+          <th class="w-20"></th>
+          <th>Year</th>
+          <th>City</th>
+          <th>Photos</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {records.map((r) => (
+          <tr id={`c${r.id}`}>
+            <td data-label="" class="max-sm:hidden!">
+              {r.photos[0]
+                ? <img src={r.photos[0]} alt="" class="aspect-[4/3] w-16 bg-surface-soft object-cover" loading="lazy" />
+                : <span class="block aspect-[4/3] w-16 bg-surface-soft"></span>}
+            </td>
+            <td data-label="" class="whitespace-nowrap">
+              <span class="font-mono text-sm font-semibold text-ink">{r.year}</span>
+              <span class="ml-2 font-mono text-xs uppercase tracking-[0.06em] text-accent">SHPE {formatShpeYear(r.year)}</span>
+            </td>
+            <td data-label="">
+              <a href={`/admin/conventions/${r.id}`} class="font-semibold text-ink hover:text-accent">{r.city}</a>
+              {r.region && r.region !== "National Convention" && <span class="block text-xs text-ink-muted">{r.region}</span>}
+            </td>
+            <td data-label="Photos" class="font-mono text-xs text-ink-muted">{r.photos.length}</td>
+            <td data-label="" class="adm-cell-actions whitespace-nowrap text-right">
+              <a href={`/admin/conventions/${r.id}`} class="adm-link">Edit</a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</AdminLayout>

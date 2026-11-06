@@ -1,0 +1,49 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import VolunteeringForm from "@/components/admin/VolunteeringForm.astro";
+import { getVolunteering } from "@/lib/server/content";
+import { volunteeringMessage } from "@/lib/server/volunteering-form";
+import { formatShpeYear } from "@/lib/shpe-year";
+
+export const prerender = false;
+
+const isNew = Astro.params.id === "new";
+const id = Number(Astro.params.id);
+const program = !isNew && Number.isInteger(id) && id > 0 ? await getVolunteering(Astro.locals.runtime.env.DB, id) : null;
+if (!isNew && !program) return Astro.redirect("/admin/volunteering?error=not_found", 303);
+const hasUploads = program?.photos.some((p) => p.startsWith("/media/")) ?? false;
+
+const ok = volunteeringMessage(Astro.url.searchParams.get("ok"));
+const error = volunteeringMessage(Astro.url.searchParams.get("error"));
+---
+<AdminLayout
+  title={program ? program.name : "New program"}
+  eyebrow={program ? `06 — Volunteering / ${program.shpeYear == null ? "Ongoing" : `SHPE ${formatShpeYear(program.shpeYear)}`}` : "06 — Volunteering / New"}
+  section="volunteering"
+>
+  <a slot="actions" href={program ? `/admin/volunteering#v${program.id}` : "/admin/volunteering"} class="btn-dossier-ghost">← All programs</a>
+
+  {ok && <p class="adm-flash adm-flash--ok mb-8" role="status">{ok}</p>}
+  {error && <p class="adm-flash adm-flash--error mb-8" role="alert">{error}</p>}
+
+  {program ? (
+    <>
+      <VolunteeringForm action={`/api/admin/volunteering/${program.id}`} program={program} submitLabel="Save" />
+
+      <details class="adm-danger mt-12 max-w-xl">
+        <summary>Delete this program</summary>
+        <form method="post" action={`/api/admin/volunteering/${program.id}`} class="grid gap-4 p-5">
+          <input type="hidden" name="action" value="delete" />
+          <p class="text-sm leading-relaxed text-ink-muted">
+            Removes “{program.name}” from the site.
+            {hasUploads && " Uploaded photos nothing else uses are deleted too."}
+            This can't be undone.
+          </p>
+          <div><button type="submit" class="btn-danger">Delete program</button></div>
+        </form>
+      </details>
+    </>
+  ) : (
+    <VolunteeringForm action="/api/admin/volunteering" submitLabel="Add program" />
+  )}
+</AdminLayout>
