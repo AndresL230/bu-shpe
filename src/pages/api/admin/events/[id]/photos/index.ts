@@ -28,7 +28,7 @@ export const POST: APIRoute = async ({ params, request, locals, redirect }) => {
 
   const urls: string[] = [];
   try {
-    for (const f of files) urls.push(await putEventPhoto(env.MEDIA, f, event.date.slice(0, 4)));
+    for (const f of files) urls.push(await putEventPhoto(env.MEDIA, f, event.date.slice(0, 4) || String(new Date().getFullYear())));
   } catch (err) {
     console.error("roll upload failed:", err);
     await Promise.all(urls.map((u) => deleteMediaPath(env.MEDIA, u).catch(() => {})));

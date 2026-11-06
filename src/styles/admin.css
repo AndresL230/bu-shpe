@@ -166,6 +166,7 @@
   /* Date field: show the day or month input depending on the precision radio */
   .adm-date:has(input[value="month"]:checked) .adm-date__day { display: none; }
   .adm-date:not(:has(input[value="month"]:checked)) .adm-date__month { display: none; }
+  .adm-date:has(input[value="tba"]:checked) .adm-date__day { display: none; }
 
   /* Checkbox row */
   .adm-check {

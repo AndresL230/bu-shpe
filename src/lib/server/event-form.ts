@@ -57,9 +57,11 @@ export function parseEventForm(fd: FormData): { ok: true; value: ParsedEventForm
   const title = str(fd, "title").replace(/\s+/g, " ");
   if (!title || title.length > 160) return { ok: false, error: "title" };
 
-  const precision = str(fd, "date_precision") === "month" ? "month" : "day";
-  const date = precision === "month" ? str(fd, "date_month") : str(fd, "date_day");
-  if (!isValidEventDate(date) || (precision === "month") !== (date.length === 7)) {
+  const rawPrecision = str(fd, "date_precision");
+  const precision = rawPrecision === "month" || rawPrecision === "tba" ? rawPrecision : "day";
+  // "Date TBA" stores an empty date; the site shows it as upcoming, "Date TBA".
+  const date = precision === "tba" ? "" : precision === "month" ? str(fd, "date_month") : str(fd, "date_day");
+  if (precision !== "tba" && (!isValidEventDate(date) || (precision === "month") !== (date.length === 7))) {
     return { ok: false, error: "date" };
   }
 

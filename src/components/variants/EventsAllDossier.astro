@@ -6,7 +6,7 @@ import siteData from "@/data/site.json";
 
 import EventPhotoFallback from "@/components/EventPhotoFallback.astro";
 import type { EventRecord } from "@/lib/server/events";
-import { academicYear, formatEventStamp } from "@/lib/events";
+import { academicYear, eventSortKey, formatEventStamp, isUpcoming } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
@@ -14,16 +14,15 @@ interface Props {
 
 const { events } = Astro.props;
 
-const today = new Date().toISOString().slice(0, 7);
 
 const categories = [...new Set(events.map((e) => e.category))];
 
 const upcoming = events
-  .filter((e) => e.date >= today)
-  .sort((a, b) => a.date.localeCompare(b.date));
+  .filter((e) => isUpcoming(e.date))
+  .sort((a, b) => eventSortKey(a.date).localeCompare(eventSortKey(b.date)));
 
 const past = events
-  .filter((e) => e.date < today)
+  .filter((e) => !isUpcoming(e.date))
   .sort((a, b) => b.date.localeCompare(a.date));
 
 const totalCount = events.length;
