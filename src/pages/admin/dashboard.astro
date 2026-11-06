@@ -19,7 +19,7 @@ async function count(sql: string, ...binds: (string | number)[]): Promise<number
 
 const [events, upcoming, drafts, subscribers, campaignsSent] = await Promise.all([
   count("SELECT COUNT(*) AS n FROM events"),
-  count("SELECT COUNT(*) AS n FROM events WHERE published = 1 AND date >= ?", thisMonth),
+  count("SELECT COUNT(*) AS n FROM events WHERE published = 1 AND (date = '' OR date >= ?)", thisMonth),
   count("SELECT COUNT(*) AS n FROM events WHERE published = 0"),
   count("SELECT COUNT(*) AS n FROM subscribers WHERE status = 'subscribed'"),
   count("SELECT COUNT(*) AS n FROM campaigns WHERE status IN ('sent','partial')"),

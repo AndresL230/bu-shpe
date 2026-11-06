@@ -6,7 +6,7 @@ import siteData from "@/data/site.json";
 
 import EventPhotoFallback from "@/components/EventPhotoFallback.astro";
 import type { EventRecord } from "@/lib/server/events";
-import { formatEventStamp } from "@/lib/events";
+import { eventSortKey, formatEventStamp, isUpcoming } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
@@ -14,15 +14,14 @@ interface Props {
 
 const { events } = Astro.props;
 
-const today = new Date().toISOString().slice(0, 7); // yyyy-mm
 const currentYear = new Date().getFullYear();
 
 const upcoming = events
-  .filter((e) => e.date >= today)
-  .sort((a, b) => a.date.localeCompare(b.date));
+  .filter((e) => isUpcoming(e.date))
+  .sort((a, b) => eventSortKey(a.date).localeCompare(eventSortKey(b.date)));
 
 const past = events
-  .filter((e) => e.date < today)
+  .filter((e) => !isUpcoming(e.date))
   .sort((a, b) => b.date.localeCompare(a.date));
 
 const monthNames = [
@@ -32,6 +31,7 @@ const monthNames = [
 
 // Oversized date for the "Next Up" feature: big month over a day·year sub-line.
 function bigDate(iso: string): { month: string; sub: string } {
+  if (!iso) return { month: "TBA", sub: "" };
   const [y, m, d] = iso.split("-");
   const month = monthNames[parseInt(m, 10) - 1] ?? "—";
   return { month, sub: d ? `${parseInt(d, 10)} · ${y}` : y };

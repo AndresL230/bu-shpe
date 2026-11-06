@@ -29,6 +29,7 @@ Git-connected **Cloudflare Workers static assets** (Worker name `bu-shpe`). Push
 - **Auth:** Google OAuth popup — `/admin` → `/api/auth/google` → `/admin/callback`. `src/middleware.ts` gates `/admin/*` + `/api/admin/*` and does the CSRF same-origin check for all writes (Astro's `checkOrigin` is off on purpose so RFC 8058 one-click unsubscribe works; `/api/unsubscribe` is the only exempt write).
 - **Email:** Resend via `fetch` (`src/lib/server/email.ts`), from `EMAIL_FROM` on `bushpe.org`. Batches of 100, run in `waitUntil`.
 - **Secrets** (`.dev.vars` locally, `wrangler secret put` in prod): `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`. See `.dev.vars.example`.
+- **Events MCP** (`tools/events-mcp/server.mjs`, registered in `.mcp.json` as `bu-shpe-events`): tools `list_events`, `get_event`, `create_event`, `update_event`, `add_event_photos`, `delete_event` against **production** D1/R2 via the user's `wrangler login`. Set `BU_SHPE_TARGET=local` to point it at the dev DB. It mirrors the admin portal's rules (slug collisions get -2, date `""` = TBA, uploads under `events/<yyyy>/`); keep the two in sync when event rules change.
 - Server-only code lives in `src/lib/server/`. Admin pages use `AdminLayout.astro` + `src/styles/admin.css` (`adm-*` classes) — keep new admin UI on those.
 
 ## File map

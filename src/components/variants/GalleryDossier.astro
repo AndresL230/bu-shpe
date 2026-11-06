@@ -27,8 +27,8 @@ const allPhotos = [
     .filter((e) => e.photo)
     .sort((a, b) => b.date.localeCompare(a.date))
     .flatMap((e) => [
-      { src: e.photo, alt: e.title, group: "Events", year: e.date.slice(0, 4) },
-      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events", year: e.date.slice(0, 4) })),
+      { src: e.photo, alt: e.title, group: "Events", year: e.date.slice(0, 4) || String(new Date().getFullYear()) },
+      ...(Astro.props.extraPhotos?.get(e.id) ?? []).map((p) => ({ src: p.url, alt: e.title, group: "Events", year: e.date.slice(0, 4) || String(new Date().getFullYear()) })),
     ]),
   ...volunteeringData.flatMap((v) =>
     v.photos.map((src) => ({ src, alt: v.name, group: "Volunteering", year: "" }))
