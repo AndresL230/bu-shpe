@@ -3,6 +3,7 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import type { BoardMember } from "@/types";
 import siteData from "@/data/site.json";
+import { PLACEHOLDER_PHOTO } from "@/lib/server/board";
 
 interface Props {
   members: (BoardMember & { isAdvisor: boolean })[];
@@ -16,7 +17,6 @@ const officers = allMembers.filter((m) => !m.isAdvisor);
 const advisor = allMembers.find((m) => m.isAdvisor);
 
 // Short form of the term for the banner watermark, e.g. "2025–2026" -> "25–26"
-const termShort = term.replace(/\d{4}/g, (y) => y.slice(-2));
 
 /** "Class of 2028 · Miami, FL", skipping blanks and old "—"/"TBD" fillers. */
 const details = (m: BoardMember) =>
@@ -33,6 +33,24 @@ const contactEmail = (m: BoardMember, fallback = "") => m.bio.match(EMAIL)?.[0] 
 const advisorEmail = advisor ? contactEmail(advisor, siteData.facultyAdvisorEmail) : "";
 const pastTerms = terms.filter((t) => t !== term);
 
+// No real portrait (blank, the seeded placeholder silhouette, or an unfilled
+// TBD seat): render a quiet initials monogram instead of the loud silhouette.
+const hasPhoto = (m: BoardMember) => !!m.photo && m.photo !== PLACEHOLDER_PHOTO && m.name !== "TBD";
+/** "Enrique Gutierrez-Wing, Ph.D." -> "EG"; "TBD" -> "". */
+const initials = (m: BoardMember) => {
+  if (m.name === "TBD") return "";
+  const words = m.name.split(",")[0].trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return "";
+  const first = words[0][0];
+  const last = words.length > 1 ? words[words.length - 1][0] : "";
+  return (first + last).toUpperCase();
+};
+
+// Last-row fillers so the hairline grid shows no gray holes:
+// 2 columns at md (sm keeps its own behaviour), 5 at lg.
+const fillMd = officers.length % 2;
+const fillLg = (5 - (officers.length % 5)) % 5;
+
 const visionItems = [
   "Fostering a sense of community for Hispanic engineers on campus.",
   "Providing direct pipelines to industry-leading Fortune 500 companies.",
@@ -41,8 +59,8 @@ const visionItems = [
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">
       Leadership · Term {term}
     </p>
@@ -57,9 +75,6 @@ const visionItems = [
   </div>
 
   <!-- Decorative term watermark -->
-  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
-    <span class="display text-[200px] lg:text-[280px] leading-none text-cream translate-y-1/4 inline-block">{termShort}</span>
-  </div>
 </header>
 
 <!-- 01 — ROSTER -->
@@ -73,15 +88,21 @@ const visionItems = [
     {!isLatest && <a href="/about/board" class="text-accent underline underline-offset-4 max-md:py-3.5">See the current board.</a>}
   </p>
 
-  <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-outline-soft border-t sm:border border-outline-soft">
+  <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-outline-soft border-t sm:border border-outline-soft">
     {officers.map((member) => (
-      <div class="bg-bg py-4 sm:p-7 flex flex-row items-center gap-4 sm:items-stretch sm:flex-col sm:gap-0">
-        <div class="w-16 shrink-0 sm:w-auto aspect-square sm:aspect-[4/5] bg-surface-soft overflow-hidden sm:mb-5">
-          <img src={member.photo} alt={member.name === "TBD" ? "" : member.name} class="w-full h-full object-cover" loading="lazy" />
+      <div class="bg-bg py-4 sm:p-7 lg:p-5 flex flex-row items-center gap-4 sm:items-stretch sm:flex-col sm:gap-0">
+        <div class="w-16 shrink-0 sm:w-auto aspect-square sm:aspect-[4/5] bg-surface-soft overflow-hidden sm:mb-5 lg:mb-4">
+          {hasPhoto(member) ? (
+            <img src={member.photo} alt={member.name} class="w-full h-full object-cover" loading="lazy" />
+          ) : (
+            <div class="w-full h-full flex items-center justify-center" aria-hidden="true">
+              <span class="display text-2xl sm:text-6xl lg:text-5xl text-ink-muted/70 tracking-normal">{initials(member)}</span>
+            </div>
+          )}
         </div>
         <div class="min-w-0 flex flex-1 flex-col">
-          <p class="font-mono text-xs sm:text-sm text-accent tracking-wide uppercase mb-1 sm:mb-3">{member.role}</p>
-          <h3 class="display text-2xl md:text-3xl text-ink">{member.name}</h3>
+          <p class="font-mono text-xs sm:text-sm lg:text-xs text-accent tracking-wide uppercase mb-1 sm:mb-3 lg:mb-2 lg:min-h-[2lh]">{member.role}</p>
+          <h3 class="display text-2xl md:text-3xl lg:text-2xl text-ink">{member.name}</h3>
           {quoteBio(member) && <p class="font-serif italic text-ink-muted mt-2 sm:mt-3">"{quoteBio(member)}"</p>}
           {(member.major || details(member)) && (
             <div class="mt-auto pt-2 sm:pt-6">
@@ -92,8 +113,10 @@ const visionItems = [
         </div>
       </div>
     ))}
-    {/* Fill the last 3-column row so the hairline grid doesn't show gray holes. */}
-    {Array.from({ length: (3 - (officers.length % 3)) % 3 }, () => (
+    {Array.from({ length: fillMd }, () => (
+      <div class="hidden md:block lg:hidden bg-bg" aria-hidden="true"></div>
+    ))}
+    {Array.from({ length: fillLg }, () => (
       <div class="hidden lg:block bg-bg" aria-hidden="true"></div>
     ))}
   </div>
@@ -125,9 +148,15 @@ const visionItems = [
         </p>
       </div>
       <div class="md:col-span-7">
-        <div class="bg-bg py-5 sm:p-7 border-t sm:border border-outline-soft flex flex-row gap-5 sm:gap-6">
+        <div class="bg-bg py-5 sm:p-7 border-t sm:border border-outline-soft md:border-0 md:p-0 flex flex-row gap-5 sm:gap-6 md:gap-8">
           <div class="w-24 sm:w-44 shrink-0 self-start sm:self-auto aspect-[4/5] bg-surface-soft overflow-hidden">
-            <img src={advisor.photo} alt={advisor.name} class="w-full h-full object-cover" loading="lazy" />
+            {hasPhoto(advisor) ? (
+              <img src={advisor.photo} alt={advisor.name} class="w-full h-full object-cover" loading="lazy" />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center" aria-hidden="true">
+                <span class="display text-4xl sm:text-6xl text-ink-muted/70 tracking-normal">{initials(advisor)}</span>
+              </div>
+            )}
           </div>
           <div class="min-w-0 flex flex-col">
             <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{advisor.role}</p>
@@ -155,8 +184,8 @@ const visionItems = [
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — VISION -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-  <div class="md:col-span-5">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-x-12 md:gap-y-10">
+  <div class="md:col-span-6 md:row-start-1">
     <SectionIndex label="Vision" accent="scarlet" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">A collaborative engine.</h2>
     <p class="mt-4 text-ink-muted max-w-md">
@@ -164,20 +193,20 @@ const visionItems = [
       engagement, corporate sponsorships, and the implementation of our
       "SHPE Familia" core values.
     </p>
-    <div class="mt-8 aspect-[16/9] overflow-hidden bg-deep">
-      <img
-        src="/assets/events/leadershpe-live-2023.jpg"
-        alt="BU SHPE at LeaderSHPE Live 2023"
-        class="w-full h-full object-cover"
-        loading="lazy"
-      />
-    </div>
   </div>
-  <div class="md:col-span-7">
-    <div class="grid grid-cols-1 gap-px bg-outline-soft border-t sm:border border-outline-soft">
+  <div class="aspect-[16/9] md:aspect-auto md:relative md:min-h-[22rem] md:col-start-7 md:col-span-6 md:row-start-1 md:row-span-2 overflow-hidden bg-deep">
+    <img
+      src="/assets/events/leadershpe-live-2023.jpg"
+      alt="BU SHPE at LeaderSHPE Live 2023"
+      class="w-full h-full object-cover md:absolute md:inset-0"
+      loading="lazy"
+    />
+  </div>
+  <div class="md:col-span-6 md:row-start-2">
+    <div class="grid grid-cols-1 gap-px bg-outline-soft border-t sm:border border-outline-soft md:border-x-0">
       {visionItems.map((text, i) => (
-        <div class="bg-bg py-5 sm:p-7 flex gap-5 items-start">
-          <span class="font-mono text-sm text-accent tracking-wide shrink-0 pt-0.5">
+        <div class="bg-bg py-5 sm:p-7 md:px-0 md:py-5 flex gap-5 items-start">
+          <span class="font-mono text-sm text-accent tracking-wide shrink-0 pt-0.5 md:hidden">
             {String(i + 1).padStart(2, "0")}
           </span>
           <p class="text-ink">{text}</p>

@@ -1,4 +1,5 @@
 ---
+import Icon from "@/components/Icon.astro";
 import conventionData from "@/data/conventions.json";
 import type { Convention } from "@/types";
 import { formatDate, formatDateRange } from "@/lib/conferences";
@@ -41,7 +42,7 @@ const state =
   <div data-countdown-panel="returned" hidden={state !== "returned"}>
     <p class="mono-label mb-3 lede">Delegation returned <span class="text-accent">·</span> {rangeShort}</p>
     <a href="/conferences/record" class="group inline-flex min-h-11 items-center gap-3 display text-3xl md:text-4xl text-cream hover:text-accent transition-colors">
-      The record <span aria-hidden="true" class="text-accent transition-transform group-hover:translate-x-1">→</span>
+      The record <span aria-hidden="true" class="text-accent transition-transform group-hover:translate-x-1 md:hidden">→</span><Icon name="arrow-forward" class="hidden md:block w-7 h-7 text-accent transition-transform group-hover:translate-x-1" />
     </a>
   </div>
 </div>
@@ -66,10 +67,14 @@ const state =
     const stateAt = (t) => (t >= end ? "returned" : t >= target ? "onsite" : "upcoming");
 
     // Key dates on the same page (KeyDatesTimeline) — mark the ones that
-    // have passed since the build.
-    document.querySelectorAll("[data-keydate]").forEach((el) => {
-      if (Date.now() > new Date(el.getAttribute("data-keydate-end")).getTime()) el.setAttribute("data-past", "");
-    });
+    // have passed since the build. All passed → "complete" (no per-row
+    // done state; the section header's Completed tag shows instead).
+    const keyDates = Array.from(document.querySelectorAll("[data-keydate]"));
+    const passed = keyDates.map((el) => Date.now() > new Date(el.getAttribute("data-keydate-end")).getTime());
+    const complete = keyDates.length > 0 && passed.every(Boolean);
+    keyDates.forEach((el, i) => el.toggleAttribute("data-past", !complete && passed[i]));
+    document.querySelectorAll("[data-keydates]").forEach((el) => el.toggleAttribute("data-complete", complete));
+    document.querySelectorAll("[data-keydates-tag]").forEach((el) => (el.hidden = !complete));
 
     const state = stateAt(Date.now());
     show(state);

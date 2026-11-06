@@ -1,14 +1,21 @@
 ---
 /** Not-found page. Also the target of Astro.rewrite("/404") for unknown or draft events. */
 import Base from "@/layouts/Base.astro";
+import Icon from "@/components/Icon.astro";
+
+const suggestions = [
+  { href: "/events", label: "Events", note: "The calendar and the full record" },
+  { href: "/conferences", label: "Conferences", note: "The national convention delegation" },
+  { href: "/join", label: "Join", note: "Mailing list and membership" },
+];
 
 // On-demand so event pages can Astro.rewrite("/404") for unknown/draft slugs.
 export const prerender = false;
 ---
 <Base title="Page not found" description="This page isn't in the BU SHPE record.">
-  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-24 md:py-32">
-    <div class="relative z-10 mx-auto max-w-[1200px]">
-      <p class="mb-5 font-mono text-sm uppercase tracking-[0.18em] text-cream/60">Error 404 · Not on file</p>
+  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-16 md:py-28">
+    <div class="relative z-10 mx-auto max-w-[1152px]">
+      <p class="mb-5 font-mono text-xs uppercase tracking-[0.14em] text-cream/60 md:text-sm md:tracking-[0.18em]">Error 404 · Not on file</p>
       <h1 class="display max-w-3xl text-5xl leading-[1.02] text-cream md:text-7xl">
         This page isn't in the <em class="font-serif font-normal lowercase italic tracking-normal text-accent">record</em>.
       </h1>
@@ -16,9 +23,29 @@ export const prerender = false;
         The link may be old, or the event may not be published yet.
       </p>
       <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-        <a href="/" class="btn-dossier">Back to home →</a>
+        <a href="/" class="group inline-flex items-center gap-2 btn-dossier max-sm:w-full max-sm:justify-center">
+          Back to home
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
         <a href="/events" class="inline-flex min-h-11 items-center border-b border-current text-cream hover:text-accent md:min-h-0">Browse events</a>
       </div>
     </div>
   </header>
+
+  <section class="mx-auto max-w-[1200px] px-6 py-16 md:py-20">
+    <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-muted md:text-sm md:tracking-[0.18em]">Try instead</p>
+    <ul class="mt-6 border-t border-outline-soft md:grid md:grid-cols-3 md:gap-x-10 md:border-t-0">
+      {suggestions.map((s) => (
+        <li class="border-b border-outline-soft md:border-t md:border-b-0">
+          <a href={s.href} class="group flex items-baseline justify-between gap-4 py-5">
+            <span>
+              <span class="display block text-2xl text-ink transition-colors group-hover:text-accent">{s.label}</span>
+              <span class="mt-1 block text-sm text-ink-muted">{s.note}</span>
+            </span>
+            <Icon name="arrow-forward" class="w-4 h-4 shrink-0 text-accent transition-transform group-hover:translate-x-1" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 </Base>

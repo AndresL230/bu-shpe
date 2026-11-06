@@ -19,8 +19,8 @@ const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
   description="Where BU SHPE members and alumni work — aerospace, technology, energy and biotech companies shaping the future of engineering."
 >
   <!-- HERO -->
-  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-16 md:py-32">
-    <div class="relative z-10 mx-auto max-w-[1200px]">
+  <header class="relative w-full overflow-hidden bg-deep blueprint-deep px-6 py-16 md:py-28">
+    <div class="relative z-10 mx-auto max-w-[1152px]">
       <p class="mb-5 font-mono text-xs uppercase tracking-[0.14em] text-cream/60 md:text-sm md:tracking-[0.18em]">About · Careers</p>
       <h1 class="display max-w-3xl text-5xl leading-[1.02] text-cream md:text-7xl max-md:text-balance">
         Where SHPE takes <em class="font-serif font-normal lowercase italic tracking-normal text-accent">us</em>.
@@ -37,15 +37,21 @@ const companyCount = groups.reduce((n, g) => n + g.companies.length, 0);
     </div>
   </header>
 
-  <!-- INDUSTRY GROUPS -->
+  <!-- INDUSTRY GROUPS. md+: one open ledger, industry label left, logos in a
+       five-up row right, hairline between industries (no numbering: unordered). -->
+  <div class="md:mx-auto md:max-w-[1200px] md:px-6 md:py-28">
+  <div class="md:border-t md:border-outline-soft">
   {groups.map((group, gi) => (
-    <section class:list={["mx-auto max-w-[1200px] px-6", gi === 0 ? "pt-16 md:pt-28" : "pt-12 md:pt-20", gi === groups.length - 1 && "pb-16 md:pb-28"]}>
-      <SectionIndex index={String(gi + 1).padStart(2, "0")} label={group.industry} />
-      <div class="mt-6 md:mt-8 grid grid-cols-2 border-l border-t border-outline-soft sm:grid-cols-3 lg:grid-cols-4">
+    <section class:list={["mx-auto max-w-[1200px] px-6", gi === 0 ? "pt-16 md:pt-0" : "pt-12 md:pt-0", gi === groups.length - 1 && "pb-16 md:pb-0", "md:grid md:grid-cols-12 md:items-center md:gap-x-8 md:border-b md:border-outline-soft md:px-0 md:py-5"]}>
+      <div class="md:hidden"><SectionIndex index={String(gi + 1).padStart(2, "0")} label={group.industry} /></div>
+      <div class="max-md:hidden md:col-span-3"><SectionIndex label={group.industry} /></div>
+      <div class="mt-6 md:mt-0 grid grid-cols-2 border-l border-t border-outline-soft sm:grid-cols-3 md:col-span-9 md:grid-cols-5 md:border-0">
         {group.companies.map((company) => <EmployerCell company={company} variant="careers" />)}
       </div>
     </section>
   ))}
+  </div>
+  </div>
 
   <CtaBand
     eyebrow="YOUR NEXT STEP"

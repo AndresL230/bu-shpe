@@ -39,26 +39,13 @@ const primaryExternal = /^https?:/.test(primary.href);
           Here's what it becomes.
         </p>
 
-        <!-- Give actions — editorial text links, underline resolves into an arrow -->
+        <!-- Give actions — the site's standard primary button + underlined text link -->
         <div class="mt-8 md:mt-10 flex flex-col items-start gap-5 max-md:order-last max-md:items-center max-md:gap-3">
           <a
             href={primary.href}
             target={primaryExternal ? "_blank" : undefined}
             rel={primaryExternal ? "noopener" : undefined}
-            class="give-action max-md:hidden!"
-          >
-            <span class="give-action-label">{primary.label}</span>
-            <svg class="give-arrowhead" width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true">
-              <path d="M1 5h10M8 1.5 11.5 5 8 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </a>
-
-          <!-- Phones: the standard primary button replaces the display-text link -->
-          <a
-            href={primary.href}
-            target={primaryExternal ? "_blank" : undefined}
-            rel={primaryExternal ? "noopener" : undefined}
-            class="group inline-flex w-full items-center justify-center gap-2 btn-dossier md:hidden"
+            class="group inline-flex w-full items-center justify-center gap-2 btn-dossier md:w-auto md:whitespace-nowrap"
           >
             {primary.label}
             <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -66,17 +53,19 @@ const primaryExternal = /^https?:/.test(primary.href);
 
           <a href={secondary.href} class="give-secondary group">
             <span class="give-secondary-label">{secondary.label}</span>
-            <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1 md:hidden" />
+            <Icon name="arrow-forward" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </a>
         </div>
       </div>
 
-      <!-- Outcome cards -->
-      <div class="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-rule/30 bg-rule/30 sm:grid-cols-2 md:col-span-8 max-md:mt-10">
+      <!-- Outcome cards (phones/sm); md+: an open two-column hairline ledger,
+           no tick or number since the outcomes have no order. The tick is the
+           .rule-accent bar, inlined as utilities so md: can switch it off. -->
+      <div class="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-rule/30 bg-rule/30 sm:grid-cols-2 md:col-span-8 max-md:mt-10 md:gap-x-12 md:gap-y-0 md:self-start md:overflow-visible md:rounded-none md:border-0 md:border-t md:border-outline-soft md:bg-transparent">
         {givingImpact.map((item, i) => (
-          <div class="rule-accent group bg-surface p-6 transition-colors hover:bg-bg md:p-8">
-            <p class="font-cond text-sm tracking-widest text-accent/70 tabular-nums">0{i + 1}</p>
-            <p class="display mt-3 text-2xl leading-[1.08] text-ink">{item.headline}</p>
+          <div class="group bg-surface p-6 transition-colors hover:bg-bg before:mb-4 before:block before:h-[3px] before:w-[44px] before:bg-accent before:content-[''] md:border-b md:border-outline-soft md:bg-transparent md:px-0 md:py-8 md:hover:bg-transparent md:before:hidden">
+            <p class="font-cond text-sm tracking-widest text-accent/70 tabular-nums md:hidden">0{i + 1}</p>
+            <p class="display mt-3 text-2xl leading-[1.08] text-ink md:mt-0">{item.headline}</p>
             <p class="mt-3 text-sm leading-relaxed text-ink-muted">{item.detail}</p>
           </div>
         ))}
@@ -86,139 +75,32 @@ const primaryExternal = /^https?:/.test(primary.href);
 </section>
 
 <style>
-  /* ---- Primary action: text link whose underline resolves into an arrow ---- */
-  .give-action {
+  /* Secondary action: the site's standard text link (matches CtaBand's
+     secondary): Inter, sentence case, always-on underline, 44px tall. */
+  .give-secondary {
     position: relative;
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-cond);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 1.4rem;
-    line-height: 1.1;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1rem;
     color: var(--color-ink);
     text-decoration: none;
-    padding-bottom: 0.32em;
-  }
-
-  .give-action-label {
-    position: relative;
-  }
-  .give-action-label::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -0.32em;
-    height: 2px;
-    width: 100%;
-    background: var(--color-accent);
-    transition: width 250ms cubic-bezier(0.2, 0.7, 0.2, 1), background-color 250ms ease;
-  }
-
-  .give-arrowhead {
-    position: absolute;
-    left: 100%;
-    bottom: 0;
-    transform: translate(-10px, -14px);
-    color: var(--color-accent);
-    opacity: 0;
-    transition:
-      opacity 250ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      transform 250ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      color 250ms ease;
-  }
-
-  .give-action:hover .give-action-label::after,
-  .give-action:focus-visible .give-action-label::after {
-    width: calc(100% + 34px);
-    background: var(--color-accent-deep);
-  }
-  .give-action:hover .give-arrowhead,
-  .give-action:focus-visible .give-arrowhead {
-    opacity: 1;
-    transform: translate(22px, -14px);
-    color: var(--color-accent-deep);
-  }
-
-  .give-action:focus-visible {
-    outline: none;
-  }
-  .give-action:focus-visible .give-action-label {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 6px;
-    border-radius: 2px;
-  }
-
-  /* ---- Secondary action: quiet text link ---- */
-  .give-secondary {
-    position: relative;
-    font-family: var(--font-cond);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 1rem;
-    color: var(--color-ink-muted);
-    text-decoration: none;
-    padding-bottom: 0.32em;
     transition: color 200ms ease;
   }
-  .give-secondary::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0.06em;
-    height: 1px;
-    width: 100%;
-    background: currentColor;
-    opacity: 0;
-    transition: opacity 200ms ease;
+  .give-secondary-label {
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 0.125rem;
   }
   .give-secondary:hover,
   .give-secondary:focus-visible {
-    color: var(--color-ink);
-  }
-  .give-secondary:hover::after,
-  .give-secondary:focus-visible::after {
-    opacity: 0.5;
+    color: var(--color-accent);
   }
 
-  /* Phones: grow the quiet secondary link to a ~44px tap target without
-     shifting layout (padding offset by an equal negative margin). */
-  /* Phones: the secondary becomes the site's standard text link (matches
-     CtaBand's secondary): Inter, sentence case, always-on underline, 44px tall. */
-  @media (max-width: 767px) {
-    .give-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-height: 2.75rem;
-      padding-bottom: 0;
-      font-family: var(--font-sans);
-      font-weight: 500;
-      text-transform: none;
-      letter-spacing: normal;
-      color: var(--color-ink);
-    }
-    .give-secondary::after {
-      display: none;
-    }
-    .give-secondary-label {
-      border-bottom: 1px solid currentColor;
-      padding-bottom: 0.125rem;
-    }
-    .give-secondary:hover,
-    .give-secondary:focus-visible {
-      color: var(--color-accent);
-    }
-  }
-
-  /* Reduced motion: arrow still appears on hover, just without the slide. */
   @media (prefers-reduced-motion: reduce) {
-    .give-action-label::after,
-    .give-arrowhead,
-    .give-secondary,
-    .give-secondary::after {
+    .give-secondary {
       transition: none;
     }
   }

@@ -10,6 +10,12 @@
  * padding inside the 36px box (28px mark, labels stay aligned). Keyed by
  * domain because most of these logos come from unavatar, not a repo file.
  * Add a domain here if a new square mark looks too heavy.
+ *
+ * md+ (both variants): an open logo row: no cell borders, every logo in the
+ * same 40px-tall box (max 80% of the cell) with mix-blend-multiply so white
+ * logo backgrounds drop out. Heavy square marks get inset to 32px; wordmarks
+ * that sit small inside a square white canvas (unavatar) get a taller box so
+ * the mark itself lands near the others.
  */
 import { logoSrc, faviconSrc } from "@/lib/logos";
 
@@ -29,6 +35,8 @@ const HEAVY_SQUARE_MARKS = new Set([
   "gene.com",
 ]);
 const heavy = company.domain ? HEAVY_SQUARE_MARKS.has(company.domain) : false;
+const WORDMARK_IN_SQUARE = new Set(["jpl.nasa.gov", "amazon.com"]);
+const padded = company.domain ? WORDMARK_IN_SQUARE.has(company.domain) && !company.logo : false;
 const careers = variant === "careers";
 ---
 <div
@@ -38,6 +46,8 @@ const careers = variant === "careers";
     // of-type, not last/odd: dev mode renders the script tag inside the first grid
     "max-sm:h-24 max-sm:gap-2.5 max-sm:p-3 max-sm:last-of-type:nth-of-type-[2n+1]:col-span-2",
     careers ? "sm:aspect-[4/3] sm:gap-4 sm:p-6" : "sm:aspect-[4/3] sm:p-6",
+    "md:aspect-auto md:border-0 md:bg-transparent md:p-3 md:hover:bg-transparent",
+    careers ? "md:h-28 md:gap-3" : "md:h-24",
   ]}
 >
   <img
@@ -51,6 +61,9 @@ const careers = variant === "careers";
       "max-sm:h-9 max-sm:max-w-[104px] max-sm:mix-blend-multiply",
       heavy && "max-sm:p-1",
       careers ? "mix-blend-multiply sm:max-h-14 sm:max-w-[70%]" : "sm:max-h-16 sm:max-w-[72%]",
+      "md:mix-blend-multiply md:max-w-[80%]",
+      padded ? "md:-my-3 md:h-16 md:max-h-16" : "md:h-10 md:max-h-10",
+      heavy && "md:p-1",
     ]}
   />
   {!careers && (

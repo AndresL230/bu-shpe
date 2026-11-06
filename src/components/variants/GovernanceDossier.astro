@@ -1,6 +1,7 @@
 ---
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
 
 import governanceData from "@/data/governance.json";
 import siteData from "@/data/site.json";
@@ -10,8 +11,8 @@ const gov = governanceData as GovernanceData;
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">About · Governance</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       How the chapter <em class="font-serif italic font-normal lowercase tracking-normal text-accent">runs</em>.
@@ -44,8 +45,8 @@ const gov = governanceData as GovernanceData;
   <!--
     Phones (<md): collapsible article rows — title + article number visible,
     summary behind a native <details> (same + / × pattern as the /conferences
-    FAQ). md+: the original open grid. Two renderings because <details> can't
-    be forced open by CSS alone.
+    FAQ). md+: open article rows (Art. no. / title / summary). Two renderings
+    because <details> can't be forced open by CSS alone.
   -->
   <div class="md:hidden mt-8 divide-y divide-outline-soft border-y border-outline-soft">
     {gov.articles.map((article) => (
@@ -60,14 +61,12 @@ const gov = governanceData as GovernanceData;
     ))}
   </div>
 
-  <div class="hidden md:grid mt-8 sm:mt-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-soft border-t sm:border border-outline-soft">
+  <div class="hidden md:block mt-10 border-b border-outline-soft">
     {gov.articles.map((article) => (
-      <div class="bg-bg py-5 sm:p-7">
-        <div class="flex flex-row-reverse items-baseline justify-between gap-4 mb-2 sm:block sm:mb-0">
-          <p class="font-mono text-xs text-ink-muted shrink-0 sm:mb-4">Art. {article.number}</p>
-          <p class="font-mono text-sm text-accent tracking-wide uppercase sm:mb-3">{article.title}</p>
-        </div>
-        <p class="text-ink text-sm leading-relaxed">{article.summary}</p>
+      <div class="grid grid-cols-[9rem_1fr_2fr] gap-x-8 items-baseline border-t border-outline-soft py-5">
+        <p class="font-mono text-xs text-ink-muted tracking-wide uppercase">Art. {article.number}</p>
+        <h3 class="display text-xl text-ink">{article.title}</h3>
+        <p class="text-ink text-sm leading-relaxed max-w-xl">{article.summary}</p>
       </div>
     ))}
   </div>
@@ -76,10 +75,11 @@ const gov = governanceData as GovernanceData;
     href={siteData.constitutionUrl}
     target="_blank"
     rel="noopener noreferrer"
-    class="mt-5 md:mt-8 min-h-11 md:min-h-0 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-accent/80 transition-colors"
+    class="group mt-5 md:mt-8 min-h-11 md:min-h-0 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wide text-accent hover:text-accent/80 md:font-sans md:text-base md:font-medium md:normal-case md:tracking-normal md:text-ink md:hover:text-accent transition-colors"
   >
     <span class="border-b border-current pb-0.5">Download the constitution (PDF)</span>
-    <span aria-hidden="true">→</span>
+    <span aria-hidden="true" class="md:hidden">→</span>
+    <Icon name="arrow-forward" class="hidden md:block w-4 h-4 transition-transform group-hover:translate-x-1" />
   </a>
 </section>
 
@@ -107,7 +107,7 @@ const gov = governanceData as GovernanceData;
     {gov.officers.map((officer, i) => (
       <div class="bg-bg py-5 sm:p-7">
         <div class="flex flex-row-reverse items-baseline justify-between gap-4 mb-2 sm:block sm:mb-0">
-          <p class="font-mono text-xs text-ink-muted shrink-0 sm:mb-4">{String(i + 1).padStart(2, "0")}</p>
+          <p class="font-mono text-xs text-ink-muted shrink-0 sm:mb-4 md:hidden">{String(i + 1).padStart(2, "0")}</p>
           <p class="font-mono text-sm text-accent tracking-wide uppercase sm:mb-3">{officer.role}</p>
         </div>
         <p class="text-ink text-sm leading-relaxed">{officer.duty}</p>
@@ -133,11 +133,11 @@ const gov = governanceData as GovernanceData;
     </p>
   </div>
   <div class="md:col-span-7">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-outline-soft border-t sm:border border-outline-soft">
+    <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-px bg-outline-soft border-t sm:border border-outline-soft md:border-x-0">
       {gov.process.map((item) => (
-        <div class="bg-bg py-5 sm:p-7">
-          <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3">{item.label}</p>
-          <p class="text-ink text-sm leading-relaxed">{item.detail}</p>
+        <div class="bg-bg py-5 sm:p-7 md:px-0 md:py-6 md:grid md:grid-cols-[9rem_1fr] md:gap-x-8 md:items-baseline">
+          <p class="font-mono text-sm text-accent tracking-wide uppercase mb-3 md:mb-0">{item.label}</p>
+          <p class="text-ink text-sm leading-relaxed md:text-base">{item.detail}</p>
         </div>
       ))}
     </div>
@@ -155,8 +155,8 @@ const gov = governanceData as GovernanceData;
     <p class="font-mono text-xs text-ink-muted tracking-wide uppercase mt-1">{gov.advisor.school}</p>
   </div>
   <div class="md:col-span-7">
-    <div class="grid grid-cols-1 gap-px bg-outline-soft border-t sm:border border-outline-soft">
-      <div class="bg-bg py-5 sm:p-7">
+    <div class="grid grid-cols-1 gap-px bg-outline-soft border-t sm:border border-outline-soft md:border-0 md:bg-transparent">
+      <div class="bg-bg py-5 sm:p-7 md:p-0">
         <p class="text-ink leading-relaxed">{gov.advisor.bio}</p>
         <ul class="mt-6 flex flex-col gap-2">
           {gov.advisor.duties.map((duty) => (

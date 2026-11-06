@@ -3,29 +3,21 @@ import recruitersData from "@/data/recruiters.json";
 import type { EmployerGroup } from "@/types";
 const groups = recruitersData as EmployerGroup[];
 ---
-<div class="space-y-6 sm:space-y-8 md:space-y-10">
+<!-- Phones: label + rule, then names as an inline dot-separated line.
+     md+: a dossier table — one hairline-ruled 12-col row per industry,
+     label in the first 3 columns, names inline in the other 9. -->
+<div class="space-y-6 sm:space-y-8 md:space-y-0 md:border-b md:border-outline-soft">
   {groups.map((g) => (
-    <div>
-      <div class="flex items-center gap-3 mb-2 md:mb-4">
-        <span class="font-mono text-xs tracking-[0.12em] uppercase text-ink md:bg-surface-soft md:border md:border-outline-soft md:px-2.5 md:py-1">{g.industry}</span>
-        <span class="flex-1 border-t border-outline-soft"></span>
+    <div class="md:grid md:grid-cols-12 md:gap-6 md:items-baseline md:border-t md:border-outline-soft md:py-5">
+      <div class="flex items-center gap-3 mb-2 md:mb-0 md:col-span-3">
+        <span class="font-mono text-xs tracking-[0.12em] uppercase text-ink">{g.industry}</span>
+        <span class="flex-1 border-t border-outline-soft md:hidden"></span>
       </div>
-      <!-- Phones: names as an inline, dot-separated line — no boxes. -->
-      <ul class="md:hidden text-sm text-ink-muted leading-relaxed">
+      <ul class="text-sm text-ink-muted leading-relaxed md:col-span-9 md:text-base md:text-ink">
         {g.companies.map((co, i) => (
           <li class="inline"><span class="whitespace-nowrap">{co.name}{i < g.companies.length - 1 && <span class="text-ink-muted/50" aria-hidden="true">&nbsp;·</span>}</span>{i < g.companies.length - 1 && " "}</li>
         ))}
       </ul>
-      <!-- md+: the logo wall. -->
-      <div class="hidden md:grid grid-cols-2 sm:grid-cols-4 border-l border-t border-outline-soft">
-        {g.companies.map((co) => (
-          <div class="bg-bg h-16 p-3 last:odd:col-span-2 sm:h-auto sm:aspect-[3/2] sm:p-4 sm:last:odd:col-span-1 grid place-items-center border-b border-r border-outline-soft">
-            {co.logo
-              ? <img src={co.logo} alt={co.name} class="max-h-10 w-auto object-contain" loading="lazy" />
-              : <span class="font-mono text-sm text-ink-muted text-center">{co.name}</span>}
-          </div>
-        ))}
-      </div>
     </div>
   ))}
 </div>

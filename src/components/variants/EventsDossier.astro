@@ -1,5 +1,6 @@
 ---
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import Icon from "@/components/Icon.astro";
 import CtaBand from "@/components/CtaBand.astro";
 
 import siteData from "@/data/site.json";
@@ -43,7 +44,8 @@ const restUpcoming = upcoming.slice(1);
 // Archive mosaic: the 6 most-recent past events that have a photo, tiled
 // asymmetrically. A photo-less tile reads as a broken image, so those only top
 // the mosaic up (with the typographic fallback) when fewer than 6 have photos.
-// Pattern tiles a 4-col grid into a clean rectangle: big 2×2, then wides + squares.
+// md+: a 3-col grid, big 2×2 lead then five singles — a clean 3×3 rectangle in
+// which every tile shares one landscape aspect (no letterbox-thin wides).
 // Phones (2-col): the first and last tiles run full width (single height, so a
 // landscape photo isn't cropped to a portrait), and the four between pair up.
 const MOSAIC_SIZE = 6;
@@ -51,17 +53,20 @@ const withPhoto = past.filter((e) => e.photo);
 const recordTiles = [...withPhoto, ...past.filter((e) => !e.photo)].slice(0, MOSAIC_SIZE);
 const mosaicSpans = [
   "col-span-2 row-span-2 max-sm:row-span-1",
-  "md:col-span-2",
   "",
   "",
-  "md:col-span-2",
-  "col-span-2",
+  "",
+  "",
+  "col-span-2 md:col-span-1",
 ];
+// Group shots put people in the lower-middle of the frame; on the big lead tile
+// the default centre crop keeps the ceiling and loses feet under the caption.
+const mosaicFocus = ["md:object-[center_65%]", "", "", "", "", ""];
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Chapter Calendar · {currentYear}</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       Events &amp; <em class="font-serif italic font-normal lowercase tracking-normal text-accent">opportunities</em>.
@@ -72,14 +77,12 @@ const mosaicSpans = [
   </div>
 
   <!-- Decorative year watermark -->
-  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
-    <span class="display text-[200px] lg:text-[280px] leading-none text-cream translate-y-1/4 inline-block">{currentYear}</span>
-  </div>
 </header>
 
 <!-- 01 — UPCOMING -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 md:items-end">
+<!-- md+ with nothing scheduled: the whole section collapses to one ruled strip -->
+<section class:list={["max-w-[1200px] mx-auto px-6 py-16 md:py-28", !nextUp && "md:pt-16 md:pb-0"]}>
+  <div class:list={["grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 md:items-end", !nextUp && "md:hidden"]}>
     <div class="md:col-span-8">
       <SectionIndex label="Upcoming" />
       <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">What's on the docket.</h2>
@@ -92,15 +95,33 @@ const mosaicSpans = [
         href={siteData.calendarEmbedUrl}
         target="_blank"
         rel="noopener"
-        class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors min-h-11 -my-3 md:min-h-0 md:my-0"
+        class="group inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors min-h-11 -my-3 md:min-h-0 md:my-0 md:font-sans md:text-base md:font-medium md:normal-case md:tracking-normal md:text-ink md:hover:text-accent"
       >
-        <span class="border-b border-current pb-0.5">Subscribe to calendar →</span>
+        <span class="border-b border-current pb-0.5">Subscribe to calendar<span class="md:hidden"> →</span></span>
+        <Icon name="arrow-forward" class="hidden md:block w-4 h-4 transition-transform group-hover:translate-x-1" />
       </a>
     </div>
   </div>
 
   {upcoming.length === 0 ? (
-    <p class="mt-10 md:mt-12 text-ink-muted italic">Nothing scheduled right now — subscribe to the calendar for updates.</p>
+    <>
+      <p class="mt-10 text-ink-muted italic md:hidden">Nothing scheduled right now — subscribe to the calendar for updates.</p>
+      <div class="hidden md:flex md:items-baseline md:justify-between md:gap-8 border-y border-outline-soft py-6">
+        <div class="flex items-baseline gap-6">
+          <SectionIndex label="Upcoming" />
+          <p class="text-ink-muted italic">Nothing scheduled right now — subscribe to the calendar for updates.</p>
+        </div>
+        <a
+          href={siteData.calendarEmbedUrl}
+          target="_blank"
+          rel="noopener"
+          class="group inline-flex shrink-0 items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors"
+        >
+          <span class="border-b border-current pb-0.5">Subscribe to calendar</span>
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+    </>
   ) : (
     <div class="mt-10 md:mt-12">
       <!-- Next Up — featured -->
@@ -132,8 +153,9 @@ const mosaicSpans = [
             <h3 class="display text-3xl text-ink mt-3 leading-tight transition-colors group-hover:text-accent">{nextUp.title}</h3>
             <p class="mt-3 text-ink-muted leading-relaxed">{nextUp.description}</p>
           </div>
-          <span class="mt-8 inline-flex items-center gap-2 font-mono text-sm tracking-wide uppercase text-accent">
-            <span class="border-b border-current pb-0.5">View details →</span>
+          <span class="mt-8 inline-flex items-center gap-2 font-mono text-sm tracking-wide uppercase text-accent md:font-sans md:text-base md:font-medium md:normal-case md:tracking-normal md:text-ink md:group-hover:text-accent md:transition-colors">
+            <span class="border-b border-current pb-0.5">View details<span class="md:hidden"> →</span></span>
+            <Icon name="arrow-forward" class="hidden md:block w-4 h-4 transition-transform group-hover:translate-x-1" />
           </span>
         </div>
       </a>
@@ -144,10 +166,11 @@ const mosaicSpans = [
           {restUpcoming.map((event) => (
             <a
               href={`/events/${event.slug}`}
-              class="group flex items-stretch bg-bg transition-colors hover:bg-surface-soft"
+              class="group flex flex-col bg-bg transition-colors hover:bg-surface-soft sm:flex-row sm:items-stretch"
             >
+              <!-- Phones: full-width photo on top (a narrow thumb cropped logos and squeezed the copy); sm+: photo beside the copy -->
               {event.photo && (
-                <div class="relative w-28 shrink-0 overflow-hidden photo-warm bg-surface-soft sm:w-48">
+                <div class="relative aspect-[3/2] w-full shrink-0 overflow-hidden photo-warm bg-surface-soft sm:aspect-auto sm:w-48">
                   <img
                     src={event.photo}
                     alt={event.title}
@@ -170,10 +193,10 @@ const mosaicSpans = [
   )}
 </section>
 
-<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
+<div class:list={["max-w-[1200px] mx-auto px-6", !nextUp && "md:hidden"]}><div class="border-t border-outline-soft"></div></div>
 
 <!-- 02 — THE RECORD -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
+<section class:list={["max-w-[1200px] mx-auto px-6 py-16 md:py-28", !nextUp && "md:pt-20"]}>
   <SectionIndex label="The Record" accent="scarlet" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Recently in the books.</h2>
   <p class="mt-4 text-ink-muted max-w-md">
@@ -183,7 +206,7 @@ const mosaicSpans = [
   {past.length === 0 ? (
     <p class="mt-10 md:mt-12 text-ink-muted italic">The archive is just getting started.</p>
   ) : (
-    <div class="mt-10 md:mt-12 grid grid-cols-2 auto-rows-[180px] max-sm:auto-rows-[200px] gap-px border border-outline-soft bg-outline-soft md:grid-cols-4 md:auto-rows-[210px]">
+    <div class="mt-10 md:mt-12 grid grid-cols-2 auto-rows-[180px] max-sm:auto-rows-[200px] gap-px border border-outline-soft bg-outline-soft md:grid-cols-3 md:auto-rows-[240px]">
       {recordTiles.map((event, i) => (
         <a
           href={`/events/${event.slug}`}
@@ -193,7 +216,7 @@ const mosaicSpans = [
             <img
               src={event.photo}
               alt={event.title}
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              class:list={["absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105", mosaicFocus[i]]}
               loading="lazy"
             />
           ) : (
@@ -202,7 +225,7 @@ const mosaicSpans = [
           <span class="mono-label absolute left-0 top-0 z-10 bg-deep px-3 py-1.5 text-cream">
             {formatEventStamp(event.date)}
           </span>
-          <div class="absolute inset-x-0 bottom-0 z-10 bg-deep/85 px-3 py-2.5 sm:px-4 sm:py-3">
+          <div class="absolute inset-x-0 bottom-0 z-10 bg-deep/85 px-3 py-2.5 sm:px-4 sm:py-3 md:right-auto md:max-w-[calc(100%-3rem)] md:bg-deep md:py-2">
             <p class="mono-label text-accent hidden sm:block">{event.category}</p>
             <h3 class="display text-base md:text-lg text-cream leading-tight sm:mt-0.5 line-clamp-2">{event.title}</h3>
           </div>
@@ -214,9 +237,10 @@ const mosaicSpans = [
   <div class="mt-10 md:mt-12">
     <a
       href="/events/all"
-      class="inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors min-h-11 -my-3 md:min-h-0 md:my-0"
+      class="group inline-flex items-center gap-2 font-mono text-sm text-accent tracking-wide uppercase hover:text-ink transition-colors min-h-11 -my-3 md:min-h-0 md:my-0 md:font-sans md:text-base md:font-medium md:normal-case md:tracking-normal md:text-ink md:hover:text-accent"
     >
-      <span class="border-b border-current pb-0.5">See all events →</span>
+      <span class="border-b border-current pb-0.5">See all events<span class="md:hidden"> →</span></span>
+      <Icon name="arrow-forward" class="hidden md:block w-4 h-4 transition-transform group-hover:translate-x-1" />
     </a>
   </div>
 </section>

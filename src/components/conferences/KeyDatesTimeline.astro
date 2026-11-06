@@ -8,16 +8,25 @@ const dates = [...c.keyDates].sort((a, b) => a.date.localeCompare(b.date));
 const tz = c.countdownTarget.match(/(Z|[+-]\d{2}:\d{2})$/)?.[1] ?? "Z";
 const endOf = (iso: string) => `${iso}T23:59:59${tz}`;
 // Build-time state (pages prerender); Countdown's inline script refreshes
-// data-past in the browser.
+// data-past / data-complete in the browser.
 const now = Date.now();
+const isPast = (iso: string) => now > new Date(endOf(iso)).getTime();
+// Every date passed → the whole timeline reads as a calm, complete record
+// (normal ink, no per-row DONE); the page header carries one "Completed" tag.
+// Only some passed → those rows get the muted per-row done state.
+const complete = dates.every((kd) => isPast(kd.date));
 ---
-<ol class="relative border-l border-outline-soft pl-6 space-y-8">
+<ol
+  class="relative border-l border-outline-soft pl-6 space-y-8"
+  data-keydates
+  data-complete={complete ? "" : undefined}
+>
   {dates.map((kd) => (
     <li
       class="group/kd relative"
       data-keydate
       data-keydate-end={endOf(kd.date)}
-      data-past={now > new Date(endOf(kd.date)).getTime() ? "" : undefined}
+      data-past={!complete && isPast(kd.date) ? "" : undefined}
     >
       <span class="absolute -left-[1.65rem] top-1.5 h-2.5 w-2.5 bg-accent group-data-past/kd:bg-outline-soft" aria-hidden="true"></span>
       <p class="font-mono text-sm text-ink tracking-wide group-data-past/kd:text-ink-muted">

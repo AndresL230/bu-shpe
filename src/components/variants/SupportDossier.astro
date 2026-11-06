@@ -17,6 +17,7 @@ interface PathRow {
   title: string;
   descriptor: string;
   href: string;
+  cta: string;
 }
 
 const paths: PathRow[] = [
@@ -26,6 +27,7 @@ const paths: PathRow[] = [
     descriptor:
       "Sponsor the chapter and recruit top Hispanic STEM talent at our events and the SHPE National Convention.",
     href: "/support/corporate",
+    cta: "Partner with us",
   },
   {
     number: "02",
@@ -33,14 +35,15 @@ const paths: PathRow[] = [
     descriptor:
       "Alumni, parents, and friends: fund the trips, workshops, and experiences that move students forward.",
     href: "/support/individual",
+    cta: "Give to the chapter",
   },
 ];
 
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">Boston University<span class="max-md:hidden"> ·</span> <span class="whitespace-nowrap max-md:block">Backers &amp; Benefactors</span></p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl max-md:text-balance">
       The people behind the <em class="font-serif italic font-normal lowercase tracking-normal text-accent">mission</em>.
@@ -51,21 +54,18 @@ const paths: PathRow[] = [
   </div>
 
   <!-- Decorative watermark -->
-  <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none select-none hidden md:block">
-    <span class="display text-[160px] lg:text-[220px] leading-none text-cream translate-y-1/4 inline-block">SHPE</span>
-  </div>
 </header>
 
 <!-- 01 — THE LEDGER -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-  <div class="md:col-span-5">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+  <div class="lg:col-span-5">
     <SectionIndex label="The Ledger" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">Support is how a chapter thrives.</h2>
     <p class="mt-4 text-ink-muted max-w-md">
       BU SHPE exists because people show up with funding, mentorship, open doors, and belief in what this community can become — alongside the BU College of Engineering and the Student Activities Office.
     </p>
   </div>
-  <div class="md:col-span-7 md:pt-2">
+  <div class="lg:col-span-7 lg:pt-2">
     <div class="grid grid-cols-1 sm:grid-cols-3 border-t border-outline-soft sm:divide-x sm:divide-outline-soft max-sm:divide-y max-sm:divide-outline-soft">
       {stats.map((s) => (
         <div class="py-6 sm:px-7 sm:first:pl-0 max-sm:py-4 max-sm:[&>div]:flex max-sm:[&>div]:items-center max-sm:[&>div]:gap-5 max-sm:[&_[data-countup]]:w-24 max-sm:[&_[data-countup]]:shrink-0 max-sm:[&_.mono-label]:mt-0">
@@ -76,31 +76,32 @@ const paths: PathRow[] = [
   </div>
 </section>
 
-<div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
-
 <!-- 02 — SUPPORT PATHS -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 max-md:pb-0 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 pb-4 md:pb-0">
   <SectionIndex label="Support Paths" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">Two ways to invest in the familia.</h2>
 
-  <div class="mt-8 md:mt-12 border-t border-outline-soft">
+  <!-- Two cards: white on the off-white page, an accent bar on top -->
+  <div class="mt-8 md:mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
     {paths.map((p) => (
       <a
         href={p.href}
-        class="group grid grid-cols-1 items-baseline gap-3 border-b border-outline-soft max-md:relative max-md:pr-8 md:px-2 md:-mx-2 py-8 transition-colors hover:bg-surface-soft md:grid-cols-12 md:gap-8 md:py-10"
+        class="group relative flex flex-col bg-surface border border-outline-soft p-7 transition-colors hover:border-accent md:p-10"
       >
-        <span class="font-mono text-sm tracking-wide text-accent md:col-span-1">{p.number}</span>
-        <h3 class="display text-3xl leading-none text-ink transition-colors group-hover:text-accent md:col-span-4 md:text-4xl">
+        <span class="absolute inset-x-0 top-0 h-[3px] bg-accent" aria-hidden="true"></span>
+        <span class="font-mono text-sm tracking-wide text-accent">{p.number}</span>
+        <h3 class="display mt-4 text-3xl leading-none text-ink transition-colors group-hover:text-accent md:mt-6 md:text-4xl">
           {p.title}
         </h3>
-        <p class="leading-relaxed text-ink-muted md:col-span-6">{p.descriptor}</p>
-        <span class="text-accent max-md:absolute max-md:right-0 max-md:top-[4.5rem] md:col-span-1 md:flex md:justify-end md:translate-y-1" aria-hidden="true"><Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
+        <p class="mt-4 flex-grow leading-relaxed text-ink-muted md:max-w-md">{p.descriptor}</p>
+        <span class="mt-8 inline-flex min-h-11 items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-accent md:min-h-0">
+          {p.cta}
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </span>
       </a>
     ))}
   </div>
 </section>
-
-<div class="max-w-[1200px] mx-auto px-6 max-md:hidden"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — WHERE SHPE TAKES US -->
 <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
@@ -110,14 +111,16 @@ const paths: PathRow[] = [
     BU SHPE members and alumni have gone on to work at companies shaping the future of engineering, technology, and science.
   </p>
 
+  <div class="md:mt-12 md:border-t md:border-outline-soft">
   {groups.map((group) => (
-    <div class="mt-10 md:mt-12">
-      <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-4 md:mb-5">{group.industry}</p>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 border-l border-t border-outline-soft">
+    <div class="mt-10 md:mt-0 md:grid md:grid-cols-12 md:items-center md:gap-x-8 md:border-b md:border-outline-soft md:py-4">
+      <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mb-4 md:mb-0 md:col-span-3">{group.industry}</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 border-l border-t border-outline-soft md:col-span-9 md:grid-cols-5 md:border-0">
         {group.companies.map((company) => <EmployerCell company={company} variant="support" />)}
       </div>
     </div>
   ))}
+  </div>
 </section>
 
 <!-- CTA -->

@@ -3,6 +3,8 @@ import SectionIndex from "@/components/conferences/SectionIndex.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import LogoMarquee from "@/components/LogoMarquee.astro";
 import EmployerSpread from "@/components/EmployerSpread.astro";
+import EventCard from "@/components/EventCard.astro";
+import Icon from "@/components/Icon.astro";
 
 import siteData from "@/data/site.json";
 import sponsorsRaw from "@/data/sponsors.json";
@@ -47,13 +49,15 @@ const pillars = [
 ---
 
 <!-- HERO — split: dossier text panel + campus photo -->
-<header class="relative w-full bg-bg blueprint grid grid-cols-1 md:grid-cols-2 md:min-h-[calc(100vh-72px)] overflow-hidden">
+<header class="relative w-full bg-bg blueprint overflow-hidden">
+  <!-- md+: an 5:6 split of the window, photo-heavy; text starts and the photo ends on the shared container edges -->
+  <div class="grid grid-cols-1 md:min-h-[calc(100vh-72px)] md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
   <!-- LEFT — text / CTA panel -->
-  <div class="flex items-center px-6 md:px-12 lg:px-16 xl:px-24 pt-12 pb-10 md:py-12 relative z-10">
+  <div class="flex items-center px-6 md:pl-[max(1.5rem,calc((100vw-1152px)/2))] md:pr-12 pt-12 pb-10 md:py-12 relative z-10">
     <div class="max-w-[672px] w-full">
       <p class="font-mono text-ink-muted text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Boston University · SHPE Region 4</p>
       <div class="w-8 h-[3px] bg-accent mb-6"></div>
-      <h1 class="display text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl text-ink leading-[1.02]">
+      <h1 class="display text-[2.5rem] sm:text-5xl md:text-5xl lg:text-6xl text-ink leading-[1.02]">
         SHPE Boston University — building the next generation of Hispanic engineers, <em class="font-serif italic font-normal lowercase tracking-normal text-accent">together</em>.
       </h1>
       <p class="mt-6 md:mt-7 text-ink-muted md:text-lg">¡Bienvenidos a la familia! {siteData.mission}</p>
@@ -63,21 +67,21 @@ const pillars = [
           class="group inline-flex items-center gap-2 btn-dossier max-sm:w-full max-sm:justify-center"
         >
           Explore Chapter
-          <span aria-hidden="true">→</span>
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </a>
         <a
           href="/events"
           class="group inline-flex min-h-11 items-center gap-2 font-sans text-base font-medium text-ink transition-colors hover:text-accent md:min-h-0"
         >
           <span class="border-b border-current pb-0.5">View Events</span>
-          <span aria-hidden="true">→</span>
+          <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </a>
       </div>
     </div>
   </div>
 
   <!-- RIGHT — campus photo, dossier-framed -->
-  <div class="relative flex flex-col px-6 pb-12 md:py-12 md:pr-12 lg:pr-16 xl:pr-24 md:pl-0">
+  <div class="relative flex flex-col px-6 pb-12 md:py-12 md:pl-0 md:pr-[max(1.5rem,calc((100vw-1152px)/2))]">
     <div class="photo-warm relative w-full aspect-[16/10] md:aspect-auto md:flex-1 md:min-h-[280px] overflow-hidden border border-outline-soft">
       <img
         src="/assets/campus/Boston-University-Center-For-Computing-Data-Sciences-Building-Located-Near-The-Charles-River-In-Boston-Massachusetts-USA.jpg"
@@ -89,6 +93,7 @@ const pillars = [
       />
     </div>
   </div>
+  </div>
 </header>
 
 <!-- PARTNER LOGO MARQUEE -->
@@ -96,7 +101,7 @@ const pillars = [
 
 <!-- 01 — MISSION -->
 <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12">
-  <div class="md:col-span-5">
+  <div class="md:col-span-5 md:sticky md:top-28 md:self-start">
     <SectionIndex label="Mission" accent="scarlet" />
     <h2 class="display text-3xl md:text-4xl text-ink mt-5">Paving a pathway for Hispanic brilliance in STEM.</h2>
   </div>
@@ -106,7 +111,7 @@ const pillars = [
       Our chapter at Boston University provides a home-away-from-home for engineers, designers, and scientists, offering a unique blend of professional mentorship and academic rigor.
     </p>
     <p class="pullquote text-ink mt-10 max-w-2xl">
-      "Diversity is not just a metric; it is the catalyst for the innovation that will solve the next century's most pressing engineering challenges."
+      “Diversity is not just a metric; it is the catalyst for the innovation that will solve the next century’s most pressing engineering challenges.”
     </p>
     <p class="font-mono text-sm text-ink-muted tracking-wide uppercase mt-6">— BU SHPE Executive Board</p>
   </div>
@@ -122,10 +127,10 @@ const pillars = [
     Conferences, service, and professional development — the load-bearing work of the chapter.
   </p>
 
-  <div class="mt-10 -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 pb-2 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-px md:bg-outline-soft md:border md:border-outline-soft">
+  <div class="mt-10 -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 pb-2 md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-8 lg:gap-12">
     {pillars.map((pillar) => (
-      <div class="bg-bg w-[82%] shrink-0 snap-start border border-outline-soft flex flex-col md:w-auto md:border-0 md:p-7">
-        <div class="photo-warm relative aspect-[3/2] overflow-hidden bg-surface-soft md:mb-5 md:-mt-1">
+      <div class="bg-bg w-[82%] shrink-0 snap-start border border-outline-soft flex flex-col md:w-auto md:border-0">
+        <div class="photo-warm relative aspect-[3/2] overflow-hidden bg-surface-soft md:mb-6">
           <img
             src={pillar.image}
             alt={pillar.imageAlt}
@@ -165,26 +170,28 @@ const pillars = [
       class="group inline-flex min-h-11 items-center gap-2 font-sans text-base font-medium text-ink hover:text-accent transition-colors shrink-0 md:min-h-0"
     >
       <span class="border-b border-current pb-0.5">View all</span>
-      <span aria-hidden="true">→</span>
+      <span class="md:hidden" aria-hidden="true">→</span>
+      <Icon name="arrow-forward" class="hidden md:block w-4 h-4 transition-transform group-hover:translate-x-1" />
     </a>
   </div>
 
-  <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+  <!-- Phones: text-only cards -->
+  <div class="mt-10 grid grid-cols-1 gap-px bg-outline-soft border border-outline-soft md:hidden">
     {recentEvents.map((event) => (
       <a href={`/events/${event.slug}`} class="block">
-        <article class="bg-bg group p-6 md:p-8 flex flex-col h-full hover:bg-surface-soft transition-colors">
-          <p class="font-mono text-sm text-accent tracking-wide uppercase"><span class="md:hidden">{formatEventStamp(event.date)} · </span>{event.category}</p>
-          <div class="hidden md:block display text-4xl lg:text-5xl whitespace-nowrap text-ink leading-[0.8] opacity-10 group-hover:opacity-20 transition my-6">
-            {formatEventStamp(event.date)}
-          </div>
-          <h3 class="display text-2xl text-ink mt-3 md:mt-0 mb-2 md:mb-4 group-hover:text-accent transition">{event.title}</h3>
-          <p class="text-ink-muted text-sm flex-grow line-clamp-2 md:line-clamp-none md:mb-8">{event.description}</p>
-          <div class="hidden md:flex border-t border-outline-soft pt-4 justify-between items-center">
-            <span class="font-mono uppercase tracking-wide text-xs text-ink-muted">{event.category}</span>
-            <span class="text-accent" aria-hidden="true">→</span>
-          </div>
+        <article class="bg-bg group p-6 flex flex-col h-full hover:bg-surface-soft transition-colors">
+          <p class="font-mono text-sm text-accent tracking-wide uppercase">{formatEventStamp(event.date)} · {event.category}</p>
+          <h3 class="display text-2xl text-ink mt-3 mb-2 group-hover:text-accent transition">{event.title}</h3>
+          <p class="text-ink-muted text-sm flex-grow line-clamp-2">{event.description}</p>
         </article>
       </a>
+    ))}
+  </div>
+
+  <!-- md+: the same photo-on-top card as /events/all -->
+  <div class="hidden md:grid mt-12 grid-cols-3 gap-px bg-outline-soft border border-outline-soft">
+    {recentEvents.map((event) => (
+      <EventCard event={event} />
     ))}
   </div>
 </section>

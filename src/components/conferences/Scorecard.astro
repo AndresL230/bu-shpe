@@ -2,25 +2,30 @@
 import competitionsData from "@/data/competitions.json";
 import type { CompetitionsData } from "@/types";
 const { tracks } = competitionsData as CompetitionsData;
+// Header and rows share one grid + one padding scheme (every column pads
+// right only), so each header sits flush-left over its column.
+// Phones: open hairline rows (no side borders, no inset), numbered.
+// md+: tracks are unordered, so the 01–06 index drops.
+const cols = "md:grid-cols-[1.4fr_2fr_1fr_0.8fr]";
 ---
-<div class="border border-outline-soft overflow-hidden">
-  <div class="hidden md:grid grid-cols-[1.4fr_2fr_1fr_0.8fr] bg-deep">
+<div class="border border-outline-soft overflow-hidden max-md:border-x-0">
+  <div class={`hidden md:grid ${cols} bg-deep px-5`}>
     {["Track", "What it is", "Format", "Prize"].map((h) => (
-      <span class="font-mono text-xs tracking-[0.12em] uppercase text-cream px-5 py-3">{h}</span>
+      <span class="font-mono text-xs tracking-[0.12em] uppercase text-cream text-left py-3 pr-6">{h}</span>
     ))}
   </div>
   <div class="divide-y divide-outline-soft">
     {tracks.map((t, i) => (
-      <div class="grid grid-cols-1 md:grid-cols-[1.4fr_2fr_1fr_0.8fr] gap-2 md:gap-0 px-5 py-5 hover:bg-surface-soft transition-colors">
-        <div class="flex items-baseline gap-3">
-          <span class="font-mono text-accent text-sm">{String(i + 1).padStart(2, "0")}</span>
+      <div class={`grid grid-cols-1 ${cols} gap-2 md:gap-0 px-5 max-md:px-0 py-5 hover:bg-surface-soft transition-colors`}>
+        <div class="flex items-baseline gap-3 md:pr-6">
+          <span class="font-mono text-accent text-sm md:hidden">{String(i + 1).padStart(2, "0")}</span>
           <span class="display text-xl text-ink leading-tight">{t.name}</span>
         </div>
-        <p class="text-ink-muted text-sm md:px-5">{t.blurb}</p>
-        <p class="font-mono text-xs text-ink-muted md:px-2">{t.format}</p>
+        <p class="text-ink-muted text-sm md:pr-6">{t.blurb}</p>
+        <p class="font-mono text-xs text-ink-muted md:pr-6 md:pt-1">{t.format}</p>
         {t.prize
-          ? <p class="font-mono text-xs text-ink-muted">{t.prize}</p>
-          : <p class="hidden md:block font-mono text-xs text-ink-muted" aria-hidden="true">—</p>}
+          ? <p class="font-mono text-xs text-ink-muted md:pt-1">{t.prize}</p>
+          : <p class="hidden md:block font-mono text-xs text-ink-muted md:pt-1" aria-hidden="true">—</p>}
       </div>
     ))}
   </div>

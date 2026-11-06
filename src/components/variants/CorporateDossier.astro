@@ -34,7 +34,7 @@ const valuePitches = [
 // Supported-events mosaic — differently sized image tiles filling one rectangle.
 const eventCollage = [
   { src: "/assets/events/leadershpe-live-2023.jpg", alt: "LeaderSHPE Live 2023", cls: "col-span-2 row-span-2" },
-  { src: "/assets/events/national-convention-2022.jpg", alt: "SHPE National Convention", cls: "col-span-4 row-span-1" },
+  { src: "/assets/events/national-convention-2022.jpg", alt: "SHPE National Convention", cls: "col-span-4 row-span-1", pos: "md:object-[center_28%]" },
   { src: "/assets/events/capital-one-workshop.jpg", alt: "Money Matters Workshop with Capital One", cls: "col-span-2 row-span-1" },
   { src: "/assets/events/boston-scientific-visit.jpg", alt: "Boston Scientific company visit", cls: "col-span-2 row-span-1" },
 ];
@@ -44,20 +44,20 @@ const fieldClass =
   "w-full rounded-[var(--radius-card)] border border-rule/40 bg-white px-4 py-3 text-ink placeholder:text-ink-muted/60 focus:border-accent focus:outline-none";
 const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-ink";
 
-// Tri-color asymmetric bento for the five benefits (migrated from the classic
-// page; numerals re-set in the dossier mono face).
+// Tri-color asymmetric bento for the five benefits at sm only; phones and md+
+// render the same list as an open hairline ledger (mono index + title).
 const benefitTiles = [
-  { wrap: "bg-deep sm:col-span-3 min-h-[150px] sm:min-h-[220px] md:min-h-[260px]", text: "text-cream text-2xl md:text-3xl", num: "text-cream/10" },
-  { wrap: "bg-accent sm:col-span-3 min-h-[150px] sm:min-h-[220px] md:min-h-[260px]", text: "text-white text-2xl md:text-3xl", num: "text-white/15" },
-  { wrap: "bg-cream sm:col-span-2 min-h-[120px] sm:min-h-[190px]", text: "text-ink text-xl md:text-2xl", num: "text-accent/20" },
-  { wrap: "bg-surface-soft sm:col-span-2 min-h-[120px] sm:min-h-[190px]", text: "text-ink text-xl md:text-2xl", num: "text-ink/10" },
-  { wrap: "bg-accent/10 sm:col-span-2 min-h-[120px] sm:min-h-[190px]", text: "text-ink text-xl md:text-2xl", num: "text-accent/25" },
+  { wrap: "bg-deep sm:col-span-3 min-h-[150px] sm:min-h-[220px]", text: "text-cream text-2xl", num: "text-cream/10" },
+  { wrap: "bg-accent sm:col-span-3 min-h-[150px] sm:min-h-[220px]", text: "text-white text-2xl", num: "text-white/15" },
+  { wrap: "bg-cream sm:col-span-2 min-h-[120px] sm:min-h-[190px]", text: "text-ink text-xl", num: "text-accent/20" },
+  { wrap: "bg-surface-soft sm:col-span-2 min-h-[120px] sm:min-h-[190px]", text: "text-ink text-xl", num: "text-ink/10" },
+  { wrap: "bg-accent/10 sm:col-span-2 min-h-[120px] sm:min-h-[190px]", text: "text-ink text-xl", num: "text-accent/25" },
 ];
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5">BU SHPE · Corporate · 2026</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       <em class="font-serif italic font-normal lowercase tracking-normal text-accent">Partner</em> with <span class="whitespace-nowrap">BU SHPE.</span>
@@ -81,9 +81,9 @@ const benefitTiles = [
       <div class="sm:px-8 sm:first:pl-0 sm:last:pr-0 max-sm:grid max-sm:grid-cols-[auto_1fr] max-sm:items-baseline max-sm:gap-x-5 max-sm:py-6">
         <span
           aria-hidden="true"
-          class="block font-mono text-5xl sm:text-7xl leading-none tabular-nums text-transparent [-webkit-text-stroke:2px_var(--color-accent)] md:text-8xl max-sm:text-sm max-sm:tracking-wide max-sm:text-accent max-sm:[-webkit-text-stroke:0]"
+          class="block font-mono text-5xl sm:text-7xl leading-none tabular-nums text-transparent [-webkit-text-stroke:2px_var(--color-accent)] md:text-sm md:tracking-wide md:text-accent md:[-webkit-text-stroke:0] max-sm:text-sm max-sm:tracking-wide max-sm:text-accent max-sm:[-webkit-text-stroke:0]"
         >0{i + 1}</span>
-        <h3 class="display mt-4 sm:mt-6 text-2xl leading-tight text-ink md:text-3xl max-sm:mt-0">{pitch.title}</h3>
+        <h3 class="display mt-4 sm:mt-6 text-2xl leading-tight text-ink md:mt-4 md:text-3xl max-sm:mt-0">{pitch.title}</h3>
         <p class="mt-3 leading-relaxed text-ink-muted max-sm:col-start-2">{pitch.description}</p>
       </div>
     ))}
@@ -93,30 +93,35 @@ const benefitTiles = [
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 02 — WHAT'S INCLUDED -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28">
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 lg:grid lg:grid-cols-12 lg:gap-x-12">
+  <div class="lg:col-span-4">
   <SectionIndex index="02" label="What's included" />
   <h2 class="display text-3xl md:text-4xl text-ink mt-5 max-w-2xl">What partnership includes.</h2>
-  <div class="mt-8 md:mt-12 grid gap-3 sm:grid-cols-6 max-sm:gap-0 max-sm:border-t max-sm:border-outline-soft">
+  </div>
+  <div class="mt-8 md:mt-12 grid gap-3 sm:grid-cols-6 max-sm:gap-0 max-sm:border-t max-sm:border-outline-soft md:grid-cols-2 md:gap-x-12 md:gap-y-0 md:border-t md:border-outline-soft lg:col-span-8 lg:mt-0">
     {partnerBenefits.map((b, i) => {
       const s = benefitTiles[i];
       return (
         <article
           class:list={[
-            "group relative isolate flex flex-col justify-end overflow-hidden rounded-[var(--radius-card)] p-6 sm:p-8 md:p-9",
+            "group relative isolate flex flex-col justify-end overflow-hidden rounded-[var(--radius-card)] p-6 sm:p-8",
             // Phones: hairline ledger row (mono index + title) instead of a coloured tile.
             "max-sm:min-h-0 max-sm:flex-row max-sm:items-baseline max-sm:justify-start max-sm:gap-5 max-sm:rounded-none max-sm:border-b max-sm:border-outline-soft max-sm:last:border-b-0 max-sm:bg-transparent max-sm:px-0 max-sm:py-5",
             s.wrap,
+            // md+: the same hairline ledger, two columns.
+            "md:col-span-1 md:min-h-0 md:flex-row md:items-baseline md:justify-start md:gap-5 md:overflow-visible md:rounded-none md:border-b md:border-outline-soft md:bg-transparent md:px-0 md:py-6",
           ]}
         >
           <span
             aria-hidden="true"
             class:list={[
-              "pointer-events-none absolute -bottom-5 sm:-bottom-8 -right-2 select-none font-mono text-[5rem] sm:text-[7rem] leading-none tabular-nums transition-transform duration-500 group-hover:-translate-y-1 md:text-[8rem]",
+              "pointer-events-none absolute -bottom-5 sm:-bottom-8 -right-2 select-none font-mono text-[5rem] sm:text-[7rem] leading-none tabular-nums transition-transform duration-500 group-hover:-translate-y-1",
               s.num,
               "max-sm:static max-sm:shrink-0 max-sm:text-sm max-sm:tracking-wide max-sm:text-accent max-sm:group-hover:translate-y-0",
+              "md:static md:shrink-0 md:text-sm md:tracking-wide md:text-accent md:group-hover:translate-y-0",
             ]}
           >0{i + 1}</span>
-          <p class:list={["display relative z-10 leading-tight", s.text, "max-sm:text-xl max-sm:text-ink"]}>{b}</p>
+          <p class:list={["display relative z-10 leading-tight", s.text, "max-sm:text-xl max-sm:text-ink md:text-xl md:text-ink"]}>{b}</p>
         </article>
       );
     })}
@@ -126,23 +131,23 @@ const benefitTiles = [
 <div class="max-w-[1200px] mx-auto px-6"><div class="border-t border-outline-soft"></div></div>
 
 <!-- 03 — GET STARTED -->
-<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 md:items-center">
-  <div class="md:col-span-5">
-    <SectionIndex index="03" label="Get started" accent="scarlet" />
+<section class="max-w-[1200px] mx-auto px-6 py-16 md:py-28 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:items-center">
+  <div class="lg:col-span-4">
+    <SectionIndex index="03" label="Get started" />
     <p class="pullquote mt-5 text-ink">
       Support here turns into convention trips, workshops, and <em class="text-accent">first jobs</em>.
     </p>
   </div>
-  <div class="md:col-span-7">
+  <div class="lg:col-span-8">
     <h3 class="display text-2xl md:text-3xl text-ink leading-tight">
       Two ways to start the conversation.
     </h3>
-    <div class="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center">
-      <a href={siteData.sponsorshipPacketUrl} target="_blank" rel="noopener" class="group inline-flex items-center justify-center gap-2 btn-dossier max-sm:w-full max-sm:px-4 max-sm:text-[0.8rem] max-sm:tracking-[0.06em]">
+    <div class="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center md:flex-wrap">
+      <a href={siteData.sponsorshipPacketUrl} target="_blank" rel="noopener" class="group inline-flex items-center justify-center gap-2 btn-dossier md:whitespace-nowrap max-sm:w-full max-sm:px-4 max-sm:text-[0.8rem] max-sm:tracking-[0.06em]">
         Download the Sponsorship Packet
         <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </a>
-      <button type="button" data-open-modal-d="corporate-d" class="group inline-flex items-center justify-center gap-2 btn-dossier-ghost max-sm:min-h-11 max-sm:border-0 max-sm:p-0 max-sm:font-sans max-sm:text-base max-sm:font-medium max-sm:normal-case max-sm:tracking-normal max-sm:hover:bg-transparent max-sm:hover:text-accent">
+      <button type="button" data-open-modal-d="corporate-d" class="group inline-flex items-center justify-center gap-2 btn-dossier-ghost md:whitespace-nowrap max-sm:min-h-11 max-sm:border-0 max-sm:p-0 max-sm:font-sans max-sm:text-base max-sm:font-medium max-sm:normal-case max-sm:tracking-normal max-sm:hover:bg-transparent max-sm:hover:text-accent">
         <span class="max-sm:border-b max-sm:border-current max-sm:pb-0.5">Become a Partner</span>
         <Icon name="arrow-forward" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </button>
@@ -158,7 +163,7 @@ const benefitTiles = [
   <div class="grid aspect-[16/9] sm:aspect-[3/1] w-full grid-cols-6 grid-rows-2 gap-px bg-outline-soft border border-outline-soft">
     {eventCollage.map((p) => (
       <figure class:list={["group photo-warm overflow-hidden bg-bg", p.cls]}>
-        <img src={p.src} alt={p.alt} loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img src={p.src} alt={p.alt} loading="lazy" class:list={["h-full w-full object-cover transition-transform duration-500 group-hover:scale-105", p.pos]} />
       </figure>
     ))}
   </div>
@@ -173,16 +178,16 @@ const benefitTiles = [
   <p class="mt-4 max-w-2xl font-serif text-lg italic text-ink-muted">
     With continued support from the BU College of Engineering and the Student Activities Office.
   </p>
-  <div class="mt-8 md:mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border-l border-t border-outline-soft">
+  <div class="mt-8 md:mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border-l border-t border-outline-soft md:border-l-0 md:border-b">
     {corporate.map((s) => (
       <a
         href={s.url}
         target="_blank"
         rel="noopener"
-        class="group flex items-center justify-center border-b border-r border-outline-soft bg-bg p-5 sm:p-7 max-sm:h-24 sm:aspect-[4/3] max-sm:last:odd:col-span-2 transition-colors hover:bg-surface-soft max-sm:flex-col max-sm:gap-2.5 max-sm:p-3"
+        class="group flex items-center justify-center border-b border-r border-outline-soft bg-bg p-5 sm:p-7 max-sm:h-24 sm:aspect-[4/3] max-sm:last:odd:col-span-2 transition-colors hover:bg-surface-soft max-sm:flex-col max-sm:gap-2.5 max-sm:p-3 md:aspect-auto md:h-28 md:border-0 md:bg-transparent md:p-3 md:hover:bg-transparent"
         aria-label={s.name}
       >
-        <img src={s.logo} alt={s.name} loading="lazy" class="max-h-10 sm:max-h-12 w-auto max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100 max-sm:h-9 max-sm:max-w-[104px] max-sm:mix-blend-multiply max-sm:opacity-100" />
+        <img src={s.logo} alt={s.name} loading="lazy" class="max-h-10 sm:max-h-12 w-auto max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100 max-sm:h-9 max-sm:max-w-[104px] max-sm:mix-blend-multiply max-sm:opacity-100 md:h-10 md:max-h-10 md:max-w-[80%] md:mix-blend-multiply" />
         {/* Phones: same cell as EmployerCell on /support + /careers (h-24, 36px logo box, name under) */}
         <span class="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-muted sm:hidden">{s.name}</span>
       </a>

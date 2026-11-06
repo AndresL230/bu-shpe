@@ -2,6 +2,7 @@
 import StatCountUp from "@/components/conferences/StatCountUp.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import SectionIndex from "@/components/conferences/SectionIndex.astro";
+import Icon from "@/components/Icon.astro";
 
 // PLACEHOLDER — chapter stats. Update with real numbers when known.
 const chapterStats = [
@@ -77,8 +78,8 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
 ---
 
 <!-- HERO -->
-<header class="relative w-full bg-deep blueprint-deep py-16 md:py-32 px-6 overflow-hidden">
-  <div class="max-w-[1200px] mx-auto relative z-10">
+<header class="relative w-full bg-deep blueprint-deep py-16 md:py-28 px-6 overflow-hidden">
+  <div class="max-w-[1152px] mx-auto relative z-10">
     <p class="font-mono text-cream/60 text-xs tracking-[0.14em] md:text-sm md:tracking-[0.18em] uppercase mb-5 text-balance">Boston University</p>
     <h1 class="display text-5xl md:text-7xl text-cream leading-[1.02] max-w-3xl">
       A <em class="font-serif italic font-normal lowercase tracking-normal text-accent">familia</em> of engineers.
@@ -96,7 +97,9 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
   content hangs to the right (mobile: thread sits at the left edge).
 -->
 <section class="max-w-[1200px] mx-auto px-6">
-  <div class="relative pt-16 pb-16 md:pt-24 md:pb-28">
+  <div class="pb-16 md:pb-28">
+  <!-- md+: the thread ends just above the gatherings photo plate, so it never runs behind the photos. -->
+  <div class="relative pt-16 md:pt-24 md:pb-10">
     <!-- the thread -->
     <span class="max-md:hidden absolute inset-y-0 left-0 md:left-1/3 w-px bg-rule/50" aria-hidden="true"></span>
     <span class="max-md:hidden absolute top-0 left-0 md:left-1/3 -translate-x-1/2 h-2 w-2 rotate-45 bg-accent" aria-hidden="true"></span>
@@ -115,13 +118,13 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
         </div>
       </div>
 
-      <div class="mt-6">
+      <div class="mt-6 md:mt-10">
         {values.map((v) => (
-          <div class:list={[ROW, "md:items-baseline py-4 md:py-7"]}>
-            <p class="md:pl-0 md:pr-10 md:text-right">
+          <div class:list={[ROW, "md:items-baseline py-4 md:py-0"]}>
+            <p class="md:pl-0 md:pr-10 md:py-3 md:text-right">
               <span class="display text-4xl md:text-6xl leading-none text-ink">{v.label}</span>
             </p>
-            <p class="md:pl-10 mt-2 md:mt-0 text-ink-muted max-w-md">{v.gloss}</p>
+            <p class="md:pl-10 mt-2 md:mt-0 text-ink-muted max-w-md md:max-w-none md:pb-3 md:border-b md:border-rule/50">{v.gloss}</p>
           </div>
         ))}
       </div>
@@ -150,7 +153,8 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
             <div class="md:pl-10">
               <p class="display text-3xl md:text-4xl text-ink transition-colors group-hover:text-accent">
                 {link.title}
-                <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1.5">→</span>
+                <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1.5 md:hidden">→</span>
+                <Icon name="arrow-forward" class="hidden md:inline-block w-6 h-6 ml-1 -mt-1 align-middle transition-transform group-hover:translate-x-1.5" />
               </p>
               <p class="mt-2 text-sm text-ink-muted max-w-md">{link.description}</p>
             </div>
@@ -181,7 +185,7 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
           md: gap-8 keeps the row inside its column at 768 (gap-14 overflowed
           and pushed the block 16px left of the thread).
         -->
-        <div class="md:pl-10 mt-6 md:mt-0 flex flex-col sm:flex-row sm:gap-10 md:gap-8 lg:gap-20 max-sm:[&>div]:grid max-sm:[&>div]:grid-cols-[7.5rem_1fr] max-sm:[&>div]:items-baseline max-sm:[&>div]:gap-x-6 max-sm:[&>div]:py-4 max-sm:[&>div~div]:border-t max-sm:[&>div~div]:border-outline-soft max-sm:[&_.mono-label]:mt-0">
+        <div class="md:pl-10 mt-6 md:mt-0 flex flex-col sm:flex-row sm:gap-10 md:grid md:grid-cols-3 md:gap-8 lg:gap-12 max-sm:[&>div]:grid max-sm:[&>div]:grid-cols-[7.5rem_1fr] max-sm:[&>div]:items-baseline max-sm:[&>div]:gap-x-6 max-sm:[&>div]:py-4 max-sm:[&>div~div]:border-t max-sm:[&>div~div]:border-outline-soft max-sm:[&_.mono-label]:mt-0">
           {chapterStats.map((stat) => (
             <StatCountUp value={stat.value} label={stat.label} accent />
           ))}
@@ -202,9 +206,11 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
           </p>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- full-width photo plate; the thread passes behind it -->
-      <div class="mt-8 md:mt-14 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5">
+      <!-- full-width photo plate, below the end of the thread -->
+      <div class="mt-8 md:mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5">
         {eventCategories.map((cat) => (
           <a
             href={cat.href}
@@ -227,7 +233,6 @@ const ROW = "md:grid md:grid-cols-[1fr_2fr]";
           </a>
         ))}
       </div>
-    </div>
   </div>
 </section>
 
