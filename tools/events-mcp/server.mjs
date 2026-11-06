@@ -154,8 +154,13 @@ async function uploadImage(filePath, folderYear) {
   return `/media/${key}`;
 }
 
+/** Deletes an uploaded image, unless another event or photo roll still uses it. */
 async function deleteMedia(path) {
   if (!path?.startsWith("/media/events/")) return;
+  const [{ n }] = await sql(
+    `SELECT (SELECT COUNT(*) FROM events WHERE photo = ${q(path)}) + (SELECT COUNT(*) FROM event_photos WHERE url = ${q(path)}) AS n`,
+  );
+  if (n > 0) return;
   await wrangler(["r2", "object", "delete", `${BUCKET}/${path.slice("/media/".length)}`, `--${TARGET}`]).catch(() => {});
 }
 
