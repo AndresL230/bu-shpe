@@ -81,3 +81,26 @@ export function isUpcoming(date: string): boolean {
 export function eventSortKey(date: string): string {
   return date || "9999-12-31";
 }
+
+/**
+ * Splits event copy into text and link runs. Supports `[label](https://…)`
+ * and bare http(s) URLs; a bare URL is labelled with its host and path,
+ * shortened. Only http(s) links are produced; everything else stays text.
+ */
+export function linkRuns(text: string): { text: string; href?: string }[] {
+  const runs: { text: string; href?: string }[] = [];
+  const re = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<]+[^\s<.,;:!?)\]'"])/g;
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    if (m.index > last) runs.push({ text: text.slice(last, m.index) });
+    if (m[1]) runs.push({ text: m[1], href: m[2] });
+    else {
+      const url = new URL(m[3]);
+      const label = `${url.host}${url.pathname}`.replace(/\/$/, "");
+      runs.push({ text: label.length > 40 ? `${label.slice(0, 38)}…` : label, href: m[3] });
+    }
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) runs.push({ text: text.slice(last) });
+  return runs;
+}
