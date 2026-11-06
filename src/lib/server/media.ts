@@ -4,7 +4,7 @@
  */
 import { randomToken } from "@/lib/server/auth";
 
-export const MEDIA_PREFIXES = ["events/", "gallery/", "board/"] as const;
+export const MEDIA_PREFIXES = ["events/", "gallery/", "board/", "partners/", "employers/", "conventions/", "volunteering/"] as const;
 export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 
 const IMAGE_TYPES: Record<string, string> = {
@@ -53,6 +53,22 @@ export async function deleteMediaPath(bucket: R2Bucket, path: string | null | un
 export async function putBoardPhoto(bucket: R2Bucket, file: File, term: string): Promise<string> {
   const ext = IMAGE_TYPES[file.type];
   const key = `board/${term.slice(0, 4)}/${randomToken(12)}.${ext}`;
+  await bucket.put(key, await file.arrayBuffer(), {
+    httpMetadata: { contentType: file.type, cacheControl: "public, max-age=31536000, immutable" },
+  });
+  return `/media/${key}`;
+}
+
+/**
+ * Stores an image under a content folder; returns its public path
+ * (/media/<folder>/<sub>/<random>.<ext>). `folder` must be one of MEDIA_PREFIXES
+ * (without the slash); `sub` is usually a year.
+ */
+export async function putImage(bucket: R2Bucket, file: File, folder: string, sub: string | number): Promise<string> {
+  const ext = IMAGE_TYPES[file.type];
+  if (!ext) throw new Error("unsupported image type");
+  if (!MEDIA_PREFIXES.includes(`${folder}/` as (typeof MEDIA_PREFIXES)[number])) throw new Error(`unknown media folder ${folder}`);
+  const key = `${folder}/${String(sub).replace(/[^\w-]/g, "") || "misc"}/${randomToken(12)}.${ext}`;
   await bucket.put(key, await file.arrayBuffer(), {
     httpMetadata: { contentType: file.type, cacheControl: "public, max-age=31536000, immutable" },
   });
