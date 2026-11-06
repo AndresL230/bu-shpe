@@ -11,13 +11,13 @@ import sponsorsRaw from "@/data/sponsors.json";
 
 import type { Sponsor } from "@/types";
 import type { EventRecord } from "@/lib/server/events";
-import { formatEventStamp } from "@/lib/events";
+import { eventSortKey, formatEventStamp } from "@/lib/events";
 
 interface Props {
   events: EventRecord[];
 }
 
-const events = [...Astro.props.events].sort((a, b) => b.date.localeCompare(a.date));
+const events = [...Astro.props.events].sort((a, b) => eventSortKey(b.date).localeCompare(eventSortKey(a.date)));
 const recentEvents = events.slice(0, 3);
 
 const sponsors = sponsorsRaw as Sponsor[];

@@ -14,10 +14,11 @@ interface Props {
 
 const { action, event, submitLabel } = Astro.props;
 
+const tba = event ? event.date === "" : false;
 const monthOnly = event ? event.date.length === 7 : false;
 const today = new Date().toISOString().slice(0, 10);
-const dayValue = event ? (monthOnly ? `${event.date}-01` : event.date) : today;
-const monthValue = event ? event.date.slice(0, 7) : today.slice(0, 7);
+const dayValue = event && !tba ? (monthOnly ? `${event.date}-01` : event.date) : today;
+const monthValue = event && !tba ? event.date.slice(0, 7) : today.slice(0, 7);
 const published = event ? event.published : true;
 ---
 <form method="post" action={action} enctype="multipart/form-data" class="grid gap-8 lg:grid-cols-[1fr_300px]">
@@ -33,8 +34,9 @@ const published = event ? event.published : true;
       <fieldset class="adm-date">
         <legend class="adm-label">Date</legend>
         <div class="adm-segment mb-3">
-          <label><input type="radio" name="date_precision" value="day" checked={!monthOnly} />Full date</label>
+          <label><input type="radio" name="date_precision" value="day" checked={!monthOnly && !tba} />Full date</label>
           <label><input type="radio" name="date_precision" value="month" checked={monthOnly} />Month only</label>
+          <label><input type="radio" name="date_precision" value="tba" checked={tba} />TBA</label>
         </div>
         <div class="adm-date__day">
           <input type="date" name="date_day" class="adm-input" value={dayValue} aria-label="Event date" />
@@ -42,7 +44,7 @@ const published = event ? event.published : true;
         <div class="adm-date__month">
           <input type="month" name="date_month" class="adm-input" value={monthValue} aria-label="Event month" placeholder="yyyy-mm" />
         </div>
-        <p class="adm-hint">Month only renders as “October 2026”.</p>
+        <p class="adm-hint">Month only renders as “October 2026”. TBA shows “Date TBA” and lists the event as upcoming.</p>
       </fieldset>
 
       <div>

@@ -22,6 +22,7 @@ const MONTHS = [
  * date ("October 15, 2026") so members know exactly when to show up.
  */
 export function formatEventDate(date: string, opts: { withDay?: boolean } = {}): string {
+  if (!date) return "Date TBA";
   const [y, m, d] = date.split("-");
   const month = MONTHS[parseInt(m, 10) - 1] ?? "";
   if (opts.withDay && d) {
@@ -43,6 +44,7 @@ const MONTH_ABBR = [
  * surrounding header already states the calendar year ("28 OCT", "SEP").
  */
 export function formatEventStamp(date: string, opts: { withYear?: boolean } = {}): string {
+  if (!date) return "Date TBA";
   const { withYear = true } = opts;
   const [y, m, d] = date.split("-");
   const month = MONTH_ABBR[parseInt(m, 10) - 1] ?? "—";
@@ -55,14 +57,27 @@ export function formatEventStamp(date: string, opts: { withYear?: boolean } = {}
  * "2026-03" -> "2025–26". `start` is the August calendar year, for sorting.
  */
 export function academicYear(date: string): { start: number; label: string } {
+  if (!date) date = new Date().toISOString().slice(0, 7);
   const y = parseInt(date.slice(0, 4), 10);
   const m = parseInt(date.slice(5, 7), 10);
   const start = m >= 8 ? y : y - 1;
   return { start, label: `${start}–${String((start + 1) % 100).padStart(2, "0")}` };
 }
 
-/** True when the event is in the future relative to the current month. */
+/**
+ * True when the event is in the future relative to the current month.
+ * An empty date means "date TBA", which always counts as upcoming.
+ */
 export function isUpcoming(date: string): boolean {
+  if (!date) return true;
   const today = new Date().toISOString().slice(0, 7); // yyyy-mm
   return date >= today;
+}
+
+/**
+ * Sort key for an event date. "Date TBA" (empty) sorts after every dated
+ * event, so it lands last among upcoming events and first in newest-first lists.
+ */
+export function eventSortKey(date: string): string {
+  return date || "9999-12-31";
 }

@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ params, request, locals, redirect }) => {
   let photo = photoPath;
   if (upload) {
     try {
-      photo = await putEventPhoto(env.MEDIA, upload, input.date.slice(0, 4));
+      photo = await putEventPhoto(env.MEDIA, upload, input.date.slice(0, 4) || String(new Date().getFullYear()));
     } catch (err) {
       console.error("event photo upload failed:", err);
       return redirect(`${back}?error=upload_failed`, 303);
